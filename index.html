@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BelajarBareng — Microlearning 5 menit</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#06b6d4; --muted:#94a3b8;
+      --glass: rgba(255,255,255,0.03);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; background:linear-gradient(180deg,#071029 0%, #07172b 100%); color:#e6eef6;
+      display:flex; align-items:flex-start; justify-content:center; padding:28px;
+    }
+    .container{width:1100px; max-width:100%; display:grid; grid-template-columns: 1fr 360px; gap:20px;}
+    header{grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:4px}
+    h1{font-size:20px; margin:0}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:18px; box-shadow: 0 6px 20px rgba(2,6,23,0.6); border:1px solid rgba(255,255,255,0.03)}
+    .left{display:flex; flex-direction:column; gap:16px}
+    .video-wrap{display:flex; gap:12px; align-items:flex-start}
+    video{width:100%; height:320px; background:#000; border-radius:8px; outline:1px solid rgba(255,255,255,0.02)}
+    .topic-list{display:flex; gap:10px; flex-wrap:wrap}
+    .topic-btn{background:var(--glass); padding:8px 12px; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.02)}
+    .topic-btn.active{background:linear-gradient(90deg,var(--accent),#7dd3fc); color:#07203b; font-weight:600}
+    .controls{display:flex; gap:8px; align-items:center; margin-top:6px}
+    .btn{background:transparent; border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:8px; cursor:pointer}
+    .progress-line{height:10px; background:rgba(255,255,255,0.03); border-radius:10px; overflow:hidden}
+    .progress-line > i{display:block; height:100%; background:linear-gradient(90deg,var(--accent),#60a5fa); width:0%}
+    .quiz{margin-top:10px}
+    .question{margin-top:12px}
+    .options{display:flex; flex-direction:column; gap:8px; margin-top:8px}
+    .option{padding:10px; border-radius:8px; background:rgba(255,255,255,0.02); cursor:pointer; border:1px solid rgba(255,255,255,0.02)}
+    .option.correct{border-color:rgba(34,197,94,0.6); background:rgba(34,197,94,0.08)}
+    .option.wrong{border-color:rgba(239,68,68,0.6); background:rgba(239,68,68,0.06)}
+    .sidebar{display:flex; flex-direction:column; gap:14px}
+    .stats{display:flex; gap:12px; align-items:center; justify-content:space-between}
+    .mentor{height:420px; overflow:auto; padding:12px; background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)); border-radius:10px}
+    .mentor .msg{margin-bottom:10px; padding:8px 10px; border-radius:8px; max-width:90%}
+    .mentor .ai{background:rgba(6,182,212,0.08); border:1px solid rgba(6,182,212,0.12); color: #dff9ff}
+    .mentor .user{background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02)}
+    .mentor-input{display:flex; gap:8px; margin-top:8px}
+    input[type="text"]{flex:1; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:inherit}
+    .small{font-size:13px; color:var(--muted)}
+    footer{grid-column:1/-1; margin-top:8px; color:var(--muted); font-size:13px; text-align:center}
+    .timer{font-weight:700; font-size:16px}
+    @media (max-width:1000px){
+      .container{grid-template-columns: 1fr; }
+      .sidebar{order:2}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>BelajarBareng</h1>
+        <div class="small">Microlearning — 5 menit per topik · Video ≤ 3 menit · Quiz adaptif · AI Mentor</div>
+      </div>
+      <div style="display:flex; gap:12px; align-items:center">
+        <div class="small">Poin: <strong id="points">0</strong></div>
+        <div class="small">Progress: <strong id="completedCount">0</strong>/<span id="topicCount">0</span></div>
+      </div>
+    </header>
+
+    <main class="left">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start">
+          <div style="flex:1">
+            <div class="video-wrap">
+              <video id="topicVideo" controls preload="metadata">
+                <!-- Ganti dengan file video Anda di /videos/topic-1.mp4 -->
+                <source src="videos/topic1.mp4" type="video/mp4">
+                Browser Anda tidak mendukung elemen video. Untuk demo, tambahkan file video di folder /videos.
+              </video>
+              <div style="width:260px; display:flex; flex-direction:column; gap:8px">
+                <div class="small">Topik</div>
+                <div id="topicTitle" style="font-weight:700; font-size:16px">-</div>
+                <div class="small">Durasi video: <span id="videoDuration">-</span></div>
+                <div class="small">Timer sisa (total sesi 5m): <span class="timer" id="sessTimer">05:00</span></div>
+                <div class="controls">
+                  <button class="btn" id="startSession">Mulai Sesi 5m</button>
+                  <button class="btn" id="skipTopic">Lewati</button>
+                </div>
+                <div class="small">Progress topik</div>
+                <div class="progress-line"><i id="progBar"></i></div>
+              </div>
+            </div>
+            <div style="margin-top:12px">
+              <div class="small">Pilih topik</div>
+              <div class="topic-list" id="topicsWrap"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz" id="quizArea" style="display:none">
+          <hr style="border:none; height:1px; background:rgba(255,255,255,0.03); margin:12px 0" />
+          <div id="quizHeader" style="display:flex; justify-content:space-between; align-items:center">
+            <div style="font-weight:700">Kuis Singkat</div>
+            <div class="small">Soal tersisa: <span id="remainingQ">0</span></div>
+          </div>
+          <div id="questionWrap"></div>
+          <div style="margin-top:10px; display:flex; gap:8px">
+            <button class="btn" id="nextQ" style="display:none">Lanjut</button>
+            <button class="btn" id="endSession" style="display:none">Akhiri Sesi</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:12px">
+        <div class="card" style="flex:1">
+          <div style="font-weight:700">Riwayat Cepat</div>
+          <div class="small" id="history">Belum ada riwayat.</div>
+        </div>
+        <div class="card" style="width:260px">
+          <div style="font-weight:700">Tips singkat</div>
+          <div class="small" id="tips">Mulai sesi dan tonton video sampai habis. Jawab kuis untuk dapat poin.</div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="sidebar">
+      <div class="card">
+        <div style="font-weight:700">Statistik</div>
+        <div style="margin-top:8px">
+          <div class="small">Topik selesai: <strong id="doneTopics">0</strong></div>
+          <div class="small">Total poin: <strong id="totalPoints">0</strong></div>
+        </div>
+      </div>
+
+      <div class="card mentor">
+        <div style="font-weight:700; margin-bottom:8px">AI Mentor</div>
+        <div id="mentorLog">
+          <div class="msg ai">Halo! Saya Mentor AI kamu. Ketik pertanyaan, atau minta ringkasan singkat setelah menonton.</div>
+        </div>
+
+        <div class="mentor-input">
+          <input id="mentorInput" type="text" placeholder="Tanya Mentor (contoh: ringkasan, tips, ulang soal...)" />
+          <button class="btn" id="sendMentor">Kirim</button>
+        </div>
+        <div style="margin-top:8px" class="small">
+          <div>Integrasi OpenAI: letakkan API key di <code>appState.openaiApiKey</code> dan uncomment fetch di script untuk panggilan nyata.</div>
+        </div>
+      </div>
+    </aside>
+
+    <footer>
+      Made with ♥ — Salin file ini ke repo dan letakkan video di folder <code>/videos</code>. Aktifkan GitHub Pages (branch utama, root).
+    </footer>
+  </div>
+
+<script>
+/* =========================
+   Aplikasi BelajarBareng
+   ========================= */
+
+const SAMPLE_TOPICS = [
+  {
+    id: "t1",
+    title: "Dasar Sistem Pencernaan",
+    video: "videos/topic1.mp4",
+    description: "Video: organ & proses pencernaan (≤3 menit).",
+    questions: [
+      { id: "q1", q: "Organ pencernaan pertama yang makanan masuki?", opts:["Lambung","Mulut","Usus Halus","Hati"], a:1 },
+      { id: "q2", q: "Bagian yang menyerap nutrisi utama?", opts:["Usus Halus","Usus Besar","Mulut","Kerongkongan"], a:0 }
+    ]
+  },
+  {
+    id: "t2",
+    title: "Sirkulasi Darah Singkat",
+    video: "videos/topic2.mp4",
+    description: "Sirkulasi darah ringkas (≤3 menit).",
+    questions: [
+      { id: "q1", q: "Organ yang memompa darah?", opts:["Paru","Jantung","Hati","Ginjal"], a:1 },
+      { id: "q2", q: "Pembuluh darah yang membawa darah dari jantung?", opts:["Vena","Arteri","Kapiler","Bronkus"], a:1 }
+    ]
+  },
+  {
+    id: "t3",
+    title: "Kebersihan Diri Singkat",
+    video: "videos/topic3.mp4",
+    description: "Cara menjaga kebersihan harian.",
+    questions: [
+      { id: "q1", q: "Berapa frekuensi cuci tangan sebelum makan?", opts:["Sekali sehari","Sebelum makan","Setiap 5 menit","Hanya setelah pergi ke luar"], a:1 },
+      { id: "q2", q: "Mengapa menyikat gigi penting?", opts:["Agar gigi panjang","Mencegah karies dan bau","Agar terlihat rapi","Tidak perlu"], a:1 }
+    ]
+  }
+];
+
+const appState = {
+  topics: SAMPLE_TOPICS,
+  currentTopicIndex: 0,
+  sessionSeconds: 300, // 5 minutes
+  timerHandle: null,
+  remainingSeconds: 300,
+  quizQueue: [],
+  points: 0,
+  completed: {}, // topicId -> boolean
+  mistakes: {}, // topicId -> { questionId: failCount }
+  history: [],
+  openaiApiKey: '' // OPTIONAL: user can put key here & enable fetch code (commented)
+};
+
+// Load stored state
+function loadState(){
+  try{
+    const raw = localStorage.getItem('bb_state_v1');
+    if(raw){
+      const s = JSON.parse(raw);
+      if(s.points) appState.points = s.points;
+      if(s.completed) appState.completed = s.completed;
+      if(s.mistakes) appState.mistakes = s.mistakes;
+      if(s.history) appState.history = s.history;
+    }
+  }catch(e){ console.warn("loadState err", e); }
+}
+function saveState(){
+  const toSave = {
+    points: appState.points,
+    completed: appState.completed,
+    mistakes: appState.mistakes,
+    history: appState.history
+  };
+  localStorage.setItem('bb_state_v1', JSON.stringify(toSave));
+}
+
+/* UI binding */
+const topicsWrap = document.getElementById('topicsWrap');
+const topicTitle = document.getElementById('topicTitle');
+const topicVideo = document.getElementById('topicVideo');
+const videoDurationEl = document.getElementById('videoDuration');
+const sessTimer = document.getElementById('sessTimer');
+const startSessionBtn = document.getElementById('startSession');
+const skipTopicBtn = document.getElementById('skipTopic');
+const progBar = document.getElementById('progBar');
+const quizArea = document.getElementById('quizArea');
+const questionWrap = document.getElementById('questionWrap');
+const remainingQ = document.getElementById('remainingQ');
+const nextQBtn = document.getElementById('nextQ');
+const endSessionBtn = document.getElementById('endSession');
+const pointsEl = document.getElementById('points');
+const totalPointsEl = document.getElementById('totalPoints');
+const completedCountEl = document.getElementById('completedCount');
+const topicCountEl = document.getElementById('topicCount');
+const doneTopicsEl = document.getElementById('doneTopics');
+const historyEl = document.getElementById('history');
+const tipsEl = document.getElementById('tips');
+
+const mentorLog = document.getElementById('mentorLog');
+const mentorInput = document.getElementById('mentorInput');
+const sendMentorBtn = document.getElementById('sendMentor');
+
+/* Initialize */
+loadState();
+function init(){
+  topicCountEl.textContent = appState.topics.length;
+  renderTopics();
+  loadTopic(0);
+  updateStats();
+  renderHistory();
+}
+function renderTopics(){
+  topicsWrap.innerHTML = '';
+  appState.topics.forEach((t, idx)=>{
+    const b = document.createElement('button');
+    b.className = 'topic-btn' + (idx===appState.currentTopicIndex ? ' active':'');
+    b.textContent = t.title;
+    b.onclick = ()=>{ loadTopic(idx); };
+    topicsWrap.appendChild(b);
+  });
+}
+function loadTopic(index){
+  appState.currentTopicIndex = index;
+  const t = appState.topics[index];
+  document.querySelectorAll('.topic-btn').forEach((n,i)=> n.classList.toggle('active', i===index));
+  topicTitle.textContent = t.title;
+  topicVideo.querySelector('source').src = t.video;
+  topicVideo.load();
+  // Update duration when metadata loaded:
+  topicVideo.onloadedmetadata = ()=>{
+    const sec = Math.round(topicVideo.duration||0);
+    videoDurationEl.textContent = sec? formatTime(sec) + 's':'unknown';
+    if(sec > 180){
+      tipsEl.textContent = 'Peringatan: Video melebihi 3 menit. Disarankan ganti dengan video ≤3 menit agar sesuai microlearning.';
+    } else {
+      tipsEl.textContent = t.description;
+    }
+  };
+  // prepare quiz queue
+  appState.quizQueue = shuffleArray(t.questions.map(q=> ({...q, attempts:0}) ));
+  renderQuiz();
+  renderTopics();
+  updateProgBar();
+}
+
+/* Timer (session total 5 minutes) */
+function formatTime(sec){
+  const m = Math.floor(sec/60).toString().padStart(2,'0');
+  const s = (sec%60).toString().padStart(2,'0');
+  return `${m}:${s}`;
+}
+startSessionBtn.addEventListener('click', ()=>{
+  startSession();
+});
+skipTopicBtn.addEventListener('click', ()=>{
+  markCompleted(false); // mark as skipped (not completed) but advance
+  nextTopic();
+});
+
+function startSession(){
+  // reset timer and show quiz when video ends OR when timer ends
+  if(appState.timerHandle) clearInterval(appState.timerHandle);
+  appState.remainingSeconds = appState.sessionSeconds;
+  sessTimer.textContent = formatTime(appState.remainingSeconds);
+  appState.timerHandle = setInterval(()=>{
+    appState.remainingSeconds--;
+    sessTimer.textContent = formatTime(appState.remainingSeconds);
+    if(appState.remainingSeconds <= 0){
+      clearInterval(appState.timerHandle);
+      endSession(true);
+    }
+  }, 1000);
+  // auto-play video (if allowed)
+  topicVideo.play().catch(()=>{ /* autoplay may be blocked */ });
+  // show quiz area
+  quizArea.style.display = 'block';
+  updateStats();
+}
+
+/* Quiz rendering and adaptivity */
+function renderQuiz(){
+  questionWrap.innerHTML = '';
+  if(!appState.quizQueue || appState.quizQueue.length === 0){
+    questionWrap.innerHTML = '<div class="small">Tidak ada soal untuk topik ini.</div>';
+    remainingQ.textContent = 0;
+    return;
+  }
+  const q = appState.quizQueue[0];
+  const container = document.createElement('div');
+  container.className = 'question card';
+  container.style.padding = '12px';
+  const html = `
+    <div style="font-weight:700">${q.q}</div>
+  `;
+  container.innerHTML = html;
+  const optsWrap = document.createElement('div');
+  optsWrap.className = 'options';
+  q.opts.forEach((o, i)=>{
+    const op = document.createElement('div');
+    op.className = 'option';
+    op.textContent = o;
+    op.onclick = ()=> handleAnswer(q, i, op);
+    optsWrap.appendChild(op);
+  });
+  container.appendChild(optsWrap);
+  questionWrap.appendChild(container);
+  remainingQ.textContent = appState.quizQueue.length;
+  nextQBtn.style.display = 'none';
+  endSessionBtn.style.display = 'none';
+}
+
+function handleAnswer(question, selectedIndex, elNode){
+  const correct = (selectedIndex === question.a);
+  // disable options
+  elNode.parentElement.querySelectorAll('.option').forEach(node=> node.style.pointerEvents='none');
+  if(correct){
+    elNode.classList.add('correct');
+    // reward points (e.g., 10 points)
+    appState.points += 10;
+    appState.history.unshift({ t: new Date().toISOString(), topic: currentTopic().id, q: question.id, result:'correct' });
+    // remove question from queue
+    appState.quizQueue.shift();
+  } else {
+    elNode.classList.add('wrong');
+    appState.history.unshift({ t: new Date().toISOString(), topic: currentTopic().id, q: question.id, result:'wrong' });
+    // record mistake count
+    if(!appState.mistakes[currentTopic().id]) appState.mistakes[currentTopic().id] = {};
+    appState.mistakes[currentTopic().id][question.id] = (appState.mistakes[currentTopic().id][question.id]||0) + 1;
+    // adaptivity: push the question to end of queue so user will reattempt later
+    question.attempts = (question.attempts||0) + 1;
+    // only re-enqueue up to 2 times
+    if(question.attempts < 3){
+      appState.quizQueue.push(question);
+    } else {
+      // if failed 3x, show hint in mentor and don't requeue
+      postMentorMessage(`Sepertinya kamu belum paham soal: "${question.q}". Coba tinjau kembali video atau minta ringkasan pada Mentor.` , 'ai');
+    }
+    // keep the current head (we already shifted? we didn't shift on wrong)
+    // shift the current first (we will remove it now so it goes to end if requeued)
+    appState.quizQueue.shift();
+  }
+  saveState();
+  updateStats();
+  // show small delay then next question or show buttons
+  setTimeout(()=>{
+    if(appState.quizQueue.length > 0){
+      renderQuiz();
+    } else {
+      questionWrap.innerHTML = '<div class="small">Selamat! Semua soal selesai untuk topik ini.</div>';
+      remainingQ.textContent = 0;
+      nextQBtn.style.display = 'inline-block';
+      endSessionBtn.style.display = 'inline-block';
+    }
+  }, 700);
+}
+
+nextQBtn.addEventListener('click', ()=>{
+  // next topic automatically when pressing next
+  markCompleted(true);
+  nextTopic();
+});
+endSessionBtn.addEventListener('click', ()=>{
+  endSession(false);
+});
+
+function endSession(timedOut=false){
+  if(appState.timerHandle) clearInterval(appState.timerHandle);
+  // award small completion bonus if at least 50% questions correct (simple rule)
+  const t = currentTopic();
+  const mistakesForTopic = appState.mistakes[t.id] || {};
+  const wrongs = Object.keys(mistakesForTopic).length;
+  const totalQs = t.questions.length;
+  const successRate = Math.max(0, totalQs - wrongs) / totalQs;
+  if(successRate >= 0.5) {
+    appState.points += 20; // completion bonus
+    appState.history.unshift({ t: new Date().toISOString(), topic: t.id, q: 'session', result: 'completed', timedOut });
+    markCompleted(true);
+    postMentorMessage(`Bagus! Kamu mendapat bonus penyelesaian untuk topik "${t.title}".`, 'ai');
+  } else {
+    appState.history.unshift({ t: new Date().toISOString(), topic: t.id, q: 'session', result: 'partial', timedOut });
+    markCompleted(false);
+    postMentorMessage(`Sesi selesai. Perlu latihan lagi untuk topik "${t.title}". Mentor siap bantu merangkum.`, 'ai');
+  }
+  saveState();
+  updateStats();
+  quizArea.style.display = 'none';
+}
+
+function markCompleted(success){
+  const t = currentTopic();
+  if(success) appState.completed[t.id] = true;
+  else appState.completed[t.id] = appState.completed[t.id] || false;
+  saveState();
+  updateStats();
+}
+
+function nextTopic(){
+  const next = (appState.currentTopicIndex + 1) % appState.topics.length;
+  loadTopic(next);
+}
+
+/* small utilities */
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()* (i+1));
+    [arr[i], arr[j]]=[arr[j], arr[i]];
+  }
+  return arr;
+}
+function currentTopic(){ return appState.topics[appState.currentTopicIndex]; }
+
+function updateProgBar(){
+  const t = currentTopic();
+  const done = appState.completed[t.id] ? 100 : 0;
+  progBar.style.width = done + '%';
+}
+
+function updateStats(){
+  pointsEl.textContent = appState.points;
+  totalPointsEl.textContent = appState.points;
+  const doneCount = Object.values(appState.completed).filter(v=>v).length;
+  doneTopicsEl.textContent = doneCount;
+  completedCountEl.textContent = doneCount;
+  topicCountEl.textContent = appState.topics.length;
+  updateProgBar();
+  renderHistory();
+}
+
+/* History render */
+function renderHistory(){
+  if(!appState.history || appState.history.length===0){
+    historyEl.textContent = 'Belum ada riwayat.';
+    return;
+  }
+  const lines = appState.history.slice(0,8).map(h=>{
+    const t = appState.topics.find(x=>x.id===h.topic);
+    const when = new Date(h.t).toLocaleString();
+    return `${when} · ${t? t.title : h.topic} · ${h.result}`;
+  });
+  historyEl.innerHTML = lines.join('<br>');
+}
+
+/* Mentor (simple rule-based chat + placeholder for OpenAI) */
+function appendMentor(msg, who='ai'){
+  const div = document.createElement('div');
+  div.className = 'msg ' + (who==='ai' ? 'ai' : 'user');
+  div.textContent = msg;
+  mentorLog.appendChild(div);
+  mentorLog.scrollTop = mentorLog.scrollHeight;
+}
+
+function postMentorMessage(text, who='ai'){
+  appendMentor(text, who);
+}
+
+sendMentorBtn.addEventListener('click', ()=>{
+  const v = mentorInput.value.trim();
+  if(!v) return;
+  appendMentor(v, 'user');
+  mentorInput.value = '';
+  // simple local "AI" behaviors
+  const lower = v.toLowerCase();
+  if(lower.includes('ringkas') || lower.includes('ringkasan') || lower.includes('resume')){
+    // produce short summary of current topic based on questions
+    const t = currentTopic();
+    const bullets = t.questions.map(q=> '- '+ q.q);
+    postMentorMessage(`Ringkasan singkat untuk "${t.title}":\n${bullets.join('\n')}`, 'ai');
+    return;
+  }
+  if(lower.includes('ulang soal') || lower.includes('latihan') || lower.includes('soal')){
+    // push wrong questions back to front
+    const t = currentTopic();
+    const wrongs = appState.mistakes[t.id] || {};
+    const keys = Object.keys(wrongs);
+    if(keys.length===0){
+      postMentorMessage('Belum ada catatan kesalahan untuk topik ini. Coba jawab kuis dulu.', 'ai');
+    } else {
+      postMentorMessage('Saya masukkan ulang soal yang pernah salah agar kamu latihan lagi.', 'ai');
+      // Re-enqueue those questions at front
+      const wrongQs = t.questions.filter(q=> keys.includes(q.id)).map(q=> ({...q, attempts:0}));
+      appState.quizQueue = wrongQs.concat(appState.quizQueue);
+      renderQuiz();
+    }
+    return;
+  }
+  // Default small heuristics
+  if(lower.includes('halo') || lower.includes('hi')){
+    postMentorMessage('Halo! Mau ringkasan, latihan soal ulang, atau tips belajar 5 menit? Ketik "ringkasan" atau "ulang soal".', 'ai');
+    return;
+  }
+  // OPTIONAL: Integrate with OpenAI (user must add API key to appState.openaiApiKey)
+  if(appState.openaiApiKey && appState.openaiApiKey.length > 10){
+    postMentorMessage('Menghubungkan ke layanan AI eksternal untuk jawaban yang lebih detail...', 'ai');
+    // Example fetch outline (commented — to use, open CORS & API access; do NOT include real key in public repos)
+    /*
+    fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization': 'Bearer ' + appState.openaiApiKey
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini", // example
+        messages: [{role:'system', content:'You are a helpful microlearning mentor in Indonesian.'}, {role:'user', content: v}],
+        max_tokens: 300
+      })
+    }).then(r=>r.json()).then(res=>{
+       const aiText = res.choices?.[0]?.message?.content || 'Maaf, respons kosong.';
+       postMentorMessage(aiText, 'ai');
+    }).catch(err=>{
+       postMentorMessage('Gagal menghubungi AI: ' + err.message, 'ai');
+    });
+    */
+  } else {
+    postMentorMessage('Maaf, saya belum dihubungkan ke layanan AI eksternal. Coba kata "ringkasan" atau "ulang soal". (Untuk integrasi OpenAI, masukkan API key di appState.openaiApiKey di kode.)', 'ai');
+  }
+});
+
+/* detect video duration on load */
+topicVideo.addEventListener('loadedmetadata', ()=>{
+  const d = Math.round(topicVideo.duration || 0);
+  videoDurationEl.textContent = d ? formatTime(d) + 's' : '-';
+  if(d > 180){
+    tipsEl.textContent = 'Peringatan: Video melebihi 3 menit. Disarankan ganti dengan video ≤3 menit agar sesuai microlearning.';
+  }
+});
+
+/* Helper: format minute:second already above */
+
+/* Keyboard: press Enter to send mentor */
+mentorInput.addEventListener('keydown', (e)=> {
+  if(e.key === 'Enter') sendMentorBtn.click();
+});
+
+/* Start app */
+init();
+
+/* Expose for console debugging */
+window.BelajarBareng = {
+  state: appState,
+  saveState,
+  loadState,
+  startSession,
+  endSession,
+  nextTopic
+};
+</script>
+</body>
+</html>
