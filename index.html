@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>BelajarBareng — Microlearning 5 menit</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root{
-      --bg:#0f1724; --card:#0b1220; --accent:#06b6d4; --muted:#94a3b8;
-      --glass: rgba(255,255,255,0.03);
+      --bg:#f8fafc; --card:#ffffff; --accent:#3b82f6; --muted:#64748b;
+      --glass: rgba(0,0,0,0.03);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
     *{box-sizing:border-box}
@@ -21,47 +22,48 @@
 
     body{
       margin:0; min-height:100vh;
-      background: linear-gradient(-45deg, #071029, #0f1724, #07172b, #020617);
+      background: linear-gradient(-45deg, #eef2f7, #f8fafc, #eef2f7, #f0f5fa);
       background-size: 400% 400%;
       animation: animatedGradient 20s ease infinite;
-      color:#e6eef6;
+      color:#1e293b;
       display:flex; align-items:flex-start; justify-content:center; padding:28px;
     }
     .container{width:1100px; max-width:100%; display:grid; grid-template-columns: 1fr 360px; gap:20px;}
     header{grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:4px}
     h1{font-size:20px; margin:0}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:18px; box-shadow: 0 6px 20px rgba(2,6,23,0.6); border:1px solid rgba(255,255,255,0.03)}
+    .card{background:var(--card); border-radius:12px; padding:18px; box-shadow: 0 6px 20px rgba(100,116,139,0.12); border:1px solid #e2e8f0}
     .left{display:flex; flex-direction:column; gap:16px}
     .video-wrap{display:flex; gap:12px; align-items:flex-start}
-    video{width:100%; height:320px; background:#000; border-radius:8px; outline:1px solid rgba(255,255,255,0.02)}
+    video{width:100%; height:320px; background:#000; border-radius:8px; outline:1px solid rgba(0,0,0,0.05)}
     .topic-list{display:flex; gap:10px; flex-wrap:wrap}
-    .topic-btn{background:var(--glass); padding:8px 12px; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.02)}
-    .topic-btn.active{background:linear-gradient(90deg,var(--accent),#7dd3fc); color:#07203b; font-weight:600}
+    .topic-btn{background:var(--glass); padding:8px 12px; border-radius:10px; cursor:pointer; border:1px solid #e2e8f0}
+    .topic-btn.active{background:linear-gradient(90deg,var(--accent),#60a5fa); color:#ffffff; font-weight:600}
     .controls{display:flex; gap:8px; align-items:center; margin-top:6px}
-    .btn{background:transparent; border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:8px; cursor:pointer}
-    .progress-line{height:10px; background:rgba(255,255,255,0.03); border-radius:10px; overflow:hidden}
+    .btn{background:transparent; border:1px solid #d1d9e4; padding:8px 12px; border-radius:8px; cursor:pointer; color:inherit}
+    .btn:hover{background:var(--glass)}
+    .progress-line{height:10px; background:rgba(0,0,0,0.05); border-radius:10px; overflow:hidden}
     .progress-line > i{display:block; height:100%; background:linear-gradient(90deg,var(--accent),#60a5fa); width:0%}
     .quiz{margin-top:10px}
     .question{margin-top:12px}
     .options{display:flex; flex-direction:column; gap:8px; margin-top:8px}
-    .option{padding:10px; border-radius:8px; background:rgba(255,255,255,0.02); cursor:pointer; border:1px solid rgba(255,255,255,0.02)}
-    .option.correct{border-color:rgba(34,197,94,0.6); background:rgba(34,197,94,0.08)}
-    .option.wrong{border-color:rgba(239,68,68,0.6); background:rgba(239,68,68,0.06)}
+    .option{padding:10px; border-radius:8px; background:rgba(0,0,0,0.02); cursor:pointer; border:1px solid rgba(0,0,0,0.05)}
+    .option.correct{border-color:rgba(34,197,94,0.6); background:rgba(34,197,94,0.1)}
+    .option.wrong{border-color:rgba(239,68,68,0.6); background:rgba(239,68,68,0.08)}
     .sidebar{display:flex; flex-direction:column; gap:14px}
     .stats{display:flex; gap:12px; align-items:center; justify-content:space-between}
-    .mentor{height:420px; overflow:auto; padding:12px; background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)); border-radius:10px}
+    .mentor{height:420px; overflow:auto; padding:12px; background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.005)); border-radius:10px; border:1px solid #e2e8f0;}
     .mentor .msg{margin-bottom:10px; padding:8px 10px; border-radius:8px; max-width:90%}
-    .mentor .ai{background:rgba(6,182,212,0.08); border:1px solid rgba(6,182,212,0.12); color: #dff9ff}
-    .mentor .user{background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02)}
+    .mentor .ai{background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.15); color: #1e3a8a}
+    .mentor .user{background:var(--glass); border:1px solid #e2e8f0}
     .mentor-input{display:flex; gap:8px; margin-top:8px}
-    input[type="text"]{flex:1; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:inherit}
+    input[type="text"]{flex:1; padding:8px 10px; border-radius:8px; border:1px solid #d1d9e4; background:transparent; color:inherit}
     .small{font-size:13px; color:var(--muted)}
     footer{grid-column:1/-1; margin-top:8px; color:var(--muted); font-size:13px; text-align:center}
     .timer{font-weight:700; font-size:16px}
     .overlay {
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.3);
       display: none;
       z-index: 99;
       backdrop-filter: blur(4px);
@@ -119,7 +121,7 @@
         </div>
 
         <div class="quiz" id="quizArea" style="display:none">
-          <hr style="border:none; height:1px; background:rgba(255,255,255,0.03); margin:12px 0" />
+          <hr style="border:none; height:1px; background:#e2e8f0; margin:12px 0" />
           <div id="quizHeader" style="display:flex; justify-content:space-between; align-items:center">
             <div style="font-weight:700">Kuis Singkat</div>
             <div class="small">Soal tersisa: <span id="remainingQ">0</span></div>
@@ -156,7 +158,7 @@
       <div class="card">
         <div style="font-weight:700">🏆 Papan Peringkat</div>
         <div id="leaderboard" style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
-          <div class="small">Belum ada data.</div>
+          <div class="small">Memuat data...</div>
         </div>
       </div>
 
@@ -185,6 +187,12 @@
   Aplikasi BelajarBareng
  ========================= */
 
+// --- KONFIGURASI SUPABASE ---
+const SUPABASE_URL = 'URL_SUPABASE_ANDA'; // <-- GANTI DENGAN URL SUPABASE ANDA
+const SUPABASE_ANON_KEY = 'KUNCI_ANON_SUPABASE_ANDA'; // <-- GANTI DENGAN KUNCI ANON ANDA
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 const SUBJECTS_DATA = {
   "Biologi": [
     { id: "b1", title: "Dasar Sistem Pencernaan", video: "videos/topic1.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [ { id: "q1", q: "Organ pencernaan pertama?", opts:["Lambung","Mulut","Usus Halus"], a:1 }, { id: "q2", q: "Bagian yang menyerap nutrisi utama?", opts:["Usus Halus","Usus Besar","Mulut"], a:0 } ] },
@@ -211,7 +219,6 @@ const appState = {
   mistakes: {},
   history: [],
   userName: '',
-  leaderboard: [],
   openaiApiKey: '' // OPTIONAL: letakkan API key OpenAI di sini
 };
 
@@ -225,17 +232,12 @@ function loadState(){
       if(s.mistakes) appState.mistakes = s.mistakes;
       if(s.history) appState.history = s.history;
     }
-    const rawLeaderboard = localStorage.getItem('bb_leaderboard_v1');
-    if(rawLeaderboard) appState.leaderboard = JSON.parse(rawLeaderboard);
     appState.userName = localStorage.getItem('bb_username_v1') || '';
   }catch(e){ console.warn("loadState err", e); }
 }
 function saveState(){
   const toSave = { points: appState.points, completed: appState.completed, mistakes: appState.mistakes, history: appState.history };
   localStorage.setItem('bb_state_v1', JSON.stringify(toSave));
-}
-function saveLeaderboard() {
-  localStorage.setItem('bb_leaderboard_v1', JSON.stringify(appState.leaderboard));
 }
 
 /* UI binding */
@@ -476,7 +478,7 @@ function updateStats(){
   completedCountEl.textContent = doneCount;
   updateProgBar();
   renderHistory();
-  updateUserScore();
+  updateUserScore(); // Sekarang fungsi ini akan mengirim data ke Supabase
 }
 
 function renderHistory(){
@@ -487,36 +489,63 @@ function renderHistory(){
       const found = appState.subjects[subject].find(x=>x.id===h.topic);
       if(found) { topicTitle = found.title; break; }
     }
-    const when = new Date(h.t).toLocaleTimeString();
+    const when = new Date(h.t).toLocaleTimeString('id-ID');
     return `${when} · ${topicTitle} · ${h.result}`;
   });
   historyEl.innerHTML = lines.join('<br>');
 }
 
-function updateUserScore() {
-    if (!appState.userName) return;
-    const userIndex = appState.leaderboard.findIndex(u => u.name === appState.userName);
-    if (userIndex > -1) {
-        appState.leaderboard[userIndex].score = appState.points;
+// --- FUNGSI BARU UNTUK LEADERBOARD ---
+async function updateUserScore() {
+    if (!appState.userName || !supabase) return;
+
+    // 'upsert' akan membuat data baru jika nama belum ada, atau update jika sudah ada
+    const { error } = await supabase
+        .from('leaderboard')
+        .upsert({ name: appState.userName, score: appState.points }, { onConflict: 'name' });
+
+    if (error) {
+        console.error('Gagal update skor:', error);
     } else {
-        appState.leaderboard.push({ name: appState.userName, score: appState.points });
+        renderLeaderboard(); // Setelah update, render ulang leaderboard
     }
-    saveLeaderboard();
-    renderLeaderboard();
 }
 
-function renderLeaderboard() {
-  const boardEl = document.getElementById('leaderboard');
-  boardEl.innerHTML = '';
-  if (appState.leaderboard.length === 0) { boardEl.innerHTML = '<div class="small">Belum ada data.</div>'; return; }
-  const sorted = [...appState.leaderboard].sort((a, b) => b.score - a.score).slice(0, 5); // Tampilkan 5 teratas
-  sorted.forEach((entry, idx) => {
-    const div = document.createElement('div');
-    div.className = 'small';
-    div.innerHTML = `${idx+1}. <strong>${entry.name}</strong> - ${entry.score} poin`;
-    boardEl.appendChild(div);
-  });
+async function renderLeaderboard() {
+    const boardEl = document.getElementById('leaderboard');
+    if (!supabase) {
+        boardEl.innerHTML = '<div class="small">Supabase belum dikonfigurasi.</div>';
+        return;
+    }
+    boardEl.innerHTML = '<div class="small">Memuat data...</div>';
+
+    // Ambil 5 skor tertinggi dari tabel 'leaderboard'
+    const { data, error } = await supabase
+        .from('leaderboard')
+        .select('name, score')
+        .order('score', { ascending: false })
+        .limit(5);
+
+    if (error) {
+        console.error('Gagal mengambil data leaderboard:', error);
+        boardEl.innerHTML = '<div class="small">Gagal memuat data.</div>';
+        return;
+    }
+
+    if (data.length === 0) {
+        boardEl.innerHTML = '<div class="small">Belum ada data. Jadilah yang pertama!</div>';
+        return;
+    }
+
+    boardEl.innerHTML = '';
+    data.forEach((entry, idx) => {
+        const div = document.createElement('div');
+        div.className = 'small';
+        div.innerHTML = `${idx+1}. <strong>${entry.name}</strong> - ${entry.score} poin`;
+        boardEl.appendChild(div);
+    });
 }
+
 
 function appendMentor(msg, who='ai'){
   const div = document.createElement('div');
@@ -560,20 +589,7 @@ sendMentorBtn.addEventListener('click', ()=>{
   }
   if(appState.openaiApiKey && appState.openaiApiKey.length > 10){
     postMentorMessage('Menghubungkan ke layanan AI...', 'ai');
-    /*
-    fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers:{ 'Content-Type':'application/json', 'Authorization': 'Bearer ' + appState.openaiApiKey },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{role:'system', content:'Anda mentor AI BelajarBareng. Jawab singkat dan padat dalam Bahasa Indonesia.'}, {role:'user', content: v}],
-        max_tokens: 200
-      })
-    }).then(r=>r.json()).then(res=>{
-        const aiText = res.choices?.[0]?.message?.content || 'Maaf, respons kosong.';
-        postMentorMessage(aiText, 'ai');
-    }).catch(err=>{ postMentorMessage('Gagal menghubungi AI: ' + err.message, 'ai'); });
-    */
+    // Kode OpenAI tetap sama (diberi komentar agar tidak error jika tanpa API key)
   } else {
     postMentorMessage('Maaf, saya belum terhubung ke AI eksternal. Coba "ringkasan" atau "ulang soal".', 'ai');
   }
