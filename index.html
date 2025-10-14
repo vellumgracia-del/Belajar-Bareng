@@ -442,69 +442,60 @@ try {
   console.error("Supabase client could not be initialized. Please check your URL and Key.", e);
 }
 
-// GANTI SEMUA URL DI BAWAH INI DENGAN TAUTAN VIDEO AKTUAL ANDA (.mp4, .webm, dll.)
 const SUBJECTS_DATA = {
+
   "Biologi": [
-    { 
-      id: "b1", 
-      title: "Sistem Pencernaan", 
-      // GANTI DENGAN URL VIDEO SISTEM PENCERNAAN ANDA
-      video: "https://youtu.be/ZEA6KapImI4?si=WrolbtT_gMhapZoi.mp4", 
-      description: "Video: organ & proses pencernaan (≤3 menit).", 
-      questions: [
-        { id: "q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
-        { id: "q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
-        { id: "q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 }
-      ] 
-    },
-    { 
-      id: "b2", 
-      title: "Sirkulasi Darah", 
-      // GANTI DENGAN URL VIDEO SIRKULASI DARAH ANDA
-      video: "https://example.com/video-biologi/sirkulasi-darah.mp4", 
-      description: "Sirkulasi darah ringkas (≤3 menit).", 
-      questions: [
-        { id: "q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
-        { id: "q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 }
-      ] 
-    }
+
+    { id: "b1", title: "Sistem Pencernaan", video: "videos/topic1.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
+
+      { id: "q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
+
+      { id: "q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
+
+      { id: "q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 }
+
+    ] },
+
+    { id: "b2", title: "Sirkulasi Darah", video: "videos/topic2.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
+
+      { id: "q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
+
+      { id: "q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 }
+
+    ] }
+
   ],
+
   "Matematika": [
-    { 
-      id: "m1", 
-      title: "Konsep Pecahan", 
-      // GANTI DENGAN URL VIDEO KONSEP PECAHAN ANDA
-      video: "https://example.com/video-matematika/konsep-pecahan.mp4", 
-      description: "Apa itu pembilang dan penyebut?", 
-      questions: [
-        { id: "q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
-        { id: "q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 }
-      ] 
-    },
-    { 
-      id: "m2", 
-      title: "Dasar Aljabar", 
-      // GANTI DENGAN URL VIDEO DASAR ALJABAR ANDA
-      video: "https://example.com/video-matematika/dasar-aljabar.mp4", 
-      description: "Variabel dan konstanta (≤3 menit).", 
-      questions: [
-        { id: "q1", q: "Jika 2x + 5 = 11, berapakah nilai x?", opts:["2","3","4"], a:1 }
-      ] 
-    }
+
+    { id: "m1", title: "Konsep Pecahan", video: "videos/math1.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
+
+      { id: "q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
+
+      { id: "q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 }
+
+    ] },
+
+    { id: "m2", title: "Dasar Aljabar", video: "videos/math2.mp4", description: "Variabel dan konstanta (≤3 menit).", questions: [
+
+      { id: "q1", q: "Jika 2x + 5 = 11, berapakah nilai x?", opts:["2","3","4"], a:1 }
+
+    ] }
+
   ],
+
   "Ekonomi": [
-    { 
-      id: "e1", 
-      title: "Pengantar Permintaan & Penawaran", 
-      // GANTI DENGAN URL VIDEO PERMINTAAN & PENAWARAN ANDA
-      video: "https://example.com/video-ekonomi/permintaan-penawaran.mp4", 
-      description: "Mengenal kurva D dan S (≤3 menit).", 
-      questions: [
-        { id: "q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
-        { id: "q2", q: "Titik pertemuan antara kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 }
-      ] 
-    }
+
+    { id: "e1", title: "Pengantar Permintaan & Penawaran", video: "videos/eco1.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
+
+      { id: "q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
+
+      { id: "q2", q: "Titik pertemuan antara kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 }
+
+    ] }
+
   ]
+
 };
 
 
