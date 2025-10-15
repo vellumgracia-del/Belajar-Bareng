@@ -58,7 +58,7 @@ const appState = {
   mistakes: {},
   history: [],
   userName: '',
-  openaiApiKey: 'https://api.openai.com/v1/organization/projects/{project_id}/api_keys' // OPTIONAL: letakkan API key OpenAI di sini
+  openaiApiKey: 'https://api.openai.com/v1 /respons/{response_id}' // OPTIONAL: letakkan API key OpenAI di sini
 };
 
 function loadState(){
