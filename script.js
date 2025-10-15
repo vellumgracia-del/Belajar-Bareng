@@ -4,7 +4,7 @@
 
 // --- KONFIGURASI SUPABASE ---
 const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co'; // <-- GANTI DENGAN URL SUPABASE ANDA
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJnbnR1Znl1YXRsa2lrd3V5cnh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0NjY4MjAsImV4cCI6MjA3NjA0MjgyMH0.YgsVxfv3PHiUY1ee2fsLGPFzvQIRlHwD7eBqhs6mm-Y'; // <-- GANTI DENGAN KUNCI ANON ANDA
+const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0'; // <-- GANTI DENGAN KUNCI ANON ANDA
 
 let supabase = null;
 try {
