@@ -1,2 +1,136 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Belajar Bareng — Microlearning 5 menit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="overlay" id="completionOverlay"></div>
 
+  <div id="landingScreen" class="screen active">
+    <div class="card landing-card">
+      <h1>Selamat Datang di BelajarBareng! 🚀</h1>
+      <div style="margin-top:10px; color:var(--text-secondary)">Platform microlearning 5 menit. Video pendek, kuis adaptif, dan AI mentor untuk percepat pemahaman Anda.</div>
+      <div style="margin-top:24px; font-weight:600">Sebelum Mulai, masukkan nama Anda:</div>
+      <div class="mentor-input">
+        <input id="userNameInput" type="text" placeholder="Nama Anda (untuk Papan Peringkat)" />
+        <button class="btn accent-btn" id="startAppBtn">Mulai Belajar!</button>
+      </div>
+      <div class="small" style="margin-top:12px; opacity:0.8;">Nama akan disimpan di browser Anda dan dikirim ke Papan Peringkat.</div>
+    </div>
+  </div>
+
+  <div id="mainScreen" class="screen">
+    <div class="container">
+      <header>
+        <div>
+          <h1>BelajarBareng</h1>
+          <div class="small">Microlearning — 5 menit per topik · Video ≤ 3 menit · Quiz adaptif · AI Mentor</div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:center">
+          <div class="small">Poin: <strong id="points" style="font-size:16px;">0</strong></div>
+          <div class="small">Progress: <strong id="completedCount">0</strong>/<span id="topicCount">0</span></div>
+        </div>
+      </header>
+
+      <main class="left">
+        <div class="card">
+          <div class="video-wrap">
+            <video id="topicVideo" controls preload="metadata">
+              <!-- Ganti sumber video di script.js atau pastikan file video ada di path yang benar -->
+              <source src="" type="video/mp4">
+              Browser Anda tidak mendukung elemen video.
+            </video>
+            <div style="flex-shrink:0; width:260px; display:flex; flex-direction:column; gap:8px">
+              <div class="small">Topik</div>
+              <div id="topicTitle" style="font-weight:700; font-size:18px">-</div>
+              <div class="small">Durasi video: <span id="videoDuration">-</span></div>
+              <div class="small">Timer sesi: <span class="timer" id="sessTimer">05:00</span></div>
+              <div class="controls">
+                <button class="btn" id="startSession">Mulai Sesi 5m</button>
+                <button class="btn" id="skipTopic">Lewati</button>
+              </div>
+              <div class="small" style="margin-top:8px">Progress topik</div>
+              <div class="progress-line"><i id="progBar"></i></div>
+            </div>
+          </div>
+          <div style="margin-top:16px">
+            <div class="small">Pilih Mata Pelajaran</div>
+            <div class="topic-list" id="subjectsWrap" style="margin-top:8px; margin-bottom:12px;"></div>
+            <div class="small">Pilih topik</div>
+            <div class="topic-list" id="topicsWrap" style="margin-top:8px;"></div>
+          </div>
+        </div>
+
+        <div class="card quiz" id="quizArea" style="display:none">
+          <div id="quizHeader" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+            <div style="font-weight:700; font-size:18px;">Kuis Singkat</div>
+            <div class="small">Soal tersisa: <span id="remainingQ">0</span></div>
+          </div>
+          <div id="questionWrap"></div>
+          <div style="margin-top:16px; display:flex; gap:8px">
+            <button class="btn" id="nextQ" style="display:none">Lanjut</button>
+            <button class="btn" id="endSession" style="display:none">Akhiri Sesi</button>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:24px;">
+          <div class="card" style="flex:1">
+            <div style="font-weight:700">Riwayat Cepat</div>
+            <div class="small" id="history" style="margin-top:8px; line-height:1.6;">Belum ada riwayat.</div>
+          </div>
+          <div class="card" style="width:260px; flex-shrink:0;">
+            <div style="font-weight:700">Tips singkat</div>
+            <div class="small" id="tips" style="margin-top:8px; line-height:1.6;">Mulai sesi dan tonton video sampai habis. Jawab kuis untuk dapat poin.</div>
+          </div>
+        </div>
+      </main>
+
+      <aside class="sidebar">
+        <div class="card">
+          <div style="font-weight:700">Statistik</div>
+          <div style="margin-top:12px; display:flex; flex-direction:column; gap:6px;">
+            <div class="small">Topik selesai: <strong id="doneTopics">0</strong></div>
+            <div class="small">Total poin: <strong id="totalPoints">0</strong></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-weight:700">🏆 Papan Peringkat</div>
+          <div id="leaderboard" style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+            <div class="small">Memuat data...</div>
+          </div>
+        </div>
+
+        <div class="card mentor">
+          <div style="font-weight:700; margin-bottom:12px; position:sticky; top:0;">AI Mentor</div>
+          <div id="mentorLog" style="display:flex; flex-direction:column; gap:10px;">
+            <div class="msg ai">Halo! Saya Mentor AI kamu. Ketik pertanyaan, atau minta ringkasan singkat setelah menonton.</div>
+          </div>
+          <div class="mentor-input">
+            <input id="mentorInput" type="text" placeholder="Tanya Mentor..." />
+            <button class="btn" id="sendMentor">Kirim</button>
+          </div>
+          <div style="margin-top:12px" class="small">
+            <div>Integrasi OpenAI: letakkan API key di <code>appState.openaiApiKey</code>.</div>
+          </div>
+        </div>
+      </aside>
+
+      <footer>
+        Made with Mind  <code>/videos</code>. Aktifkan GitHub Pages.
+      </footer>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
 
