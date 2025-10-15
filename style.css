@@ -116,7 +116,7 @@ h1 {
   cursor: pointer;
   color: var(--text-primary);
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 7s ease;
   font-family: inherit;
   font-size: 14px;
 }
