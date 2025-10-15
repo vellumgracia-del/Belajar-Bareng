@@ -59,7 +59,7 @@ const appState = {
   history: [],
   userName: '',
   // === BAGIAN PENTING UNTUK DIGANTI ===
-  openaiApiKey: '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' // <-- GANTI DENGAN KUNCI API OpenAI ASLI-MU
+  openaiApiKey: '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' // <-- GANTI DENGAN KUNCI API OpenAI ASLI-MU
   // ====================================
 };
 
