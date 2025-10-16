@@ -1,6 +1,6 @@
 # 🎓 BelajarBareng — Microlearning Interaktif dengan AI Mentor
 
-**BelajarBareng** adalah aplikasi web edukasi interaktif berbasis React + Vite yang dirancang untuk membantu anak dan orang tua belajar bersama dengan pendekatan microlearning.  
+**BelajarBareng** adalah aplikasi web edukasi interaktif berbasis Ai dan Mentor yang dirancang untuk membantu anak dan orang tua belajar bersama dengan pendekatan microlearning.  
 Aplikasi ini memiliki sistem poin, kuis adaptif, dan AI Mentor sederhana untuk pengalaman belajar yang menyenangkan dan personal.
 
 ---
@@ -20,8 +20,5 @@ Aplikasi ini memiliki sistem poin, kuis adaptif, dan AI Mentor sederhana untuk p
 - Bot sederhana untuk interaksi edukatif (bisa diintegrasikan dengan AI API di masa depan).
 
 ✅ **Desain Modern**
-- Menggunakan Tailwind CSS & Framer Motion untuk tampilan dinamis dan lembut.
+- Menggunakan CSS & Framer Motion untuk tampilan dinamis dan lembut.
 
----
-
-## 🧩 Struktur Folder
