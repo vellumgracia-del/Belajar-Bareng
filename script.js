@@ -1,23 +1,25 @@
 /* =========================
-  Aplikasi BelajarBareng
-  ========================= */
+ Aplikasi BelajarBareng
+ ========================= */
 
 // --- KONFIGURASI SUPABASE ---
-const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co'; // <-- GANTI DENGAN URL SUPABASE ANDA
-const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0'; // <-- GANTI DENGAN KUNCI ANON ANDA
+const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co'; // <-- URL Supabase Anda
+const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0'; // <-- Kunci Anon Supabase Anda (ini boleh publik)
 
 let supabase = null;
 try {
-  if (SUPABASE_URL !== 'URL_SUPABASE_ANDA' && SUPABASE_ANON_KEY !== 'KUNCI_ANON_SUPABASE_ANDA' && window.supabase) {
-      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
+  if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } else {
+    console.warn("Supabase client could not be initialized. Check URL, Key, and that the Supabase script is loaded.");
+  }
 } catch (e) {
-  console.error("Supabase client could not be initialized. Please check your URL and Key.", e);
+  console.error("Error initializing Supabase client:", e);
 }
 
 const SUBJECTS_DATA = {
   "Biologi": [
-    { id: "b1", title: "Sistem Pencernaan", video: "Belajar IPA Sistem Pencernaan Manusia #SiapNaikLevel (1).mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
+    { id: "b1", title: "Sistem Pencernaan", video: "videos/Belajar IPA Sistem Pencernaan Manusia #SiapNaikLevel (1).mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
       { id: "q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
       { id: "q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
       { id: "q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 }
@@ -44,7 +46,6 @@ const SUBJECTS_DATA = {
   ]
 };
 
-
 const appState = {
   subjects: SUBJECTS_DATA,
   currentSubject: "Biologi",
@@ -57,10 +58,8 @@ const appState = {
   completed: {},
   mistakes: {},
   history: [],
-  userName: '',
-  // === BAGIAN PENTING UNTUK DIGANTI ===
-  openaiApiKey: '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' // <-- GANTI DENGAN KUNCI API OpenAI ASLI-MU
-  // ====================================
+  userName: ''
+ // KUNCI RAHASIA OPENAI TELAH DIHAPUS DARI SINI
 };
 
 function loadState(){
@@ -107,8 +106,6 @@ const mentorLog = document.getElementById('mentorLog');
 const mentorInput = document.getElementById('mentorInput');
 const sendMentorBtn = document.getElementById('sendMentor');
 const completionOverlay = document.getElementById('completionOverlay');
-
-/* New UI bindings for Landing Screen */
 const landingScreen = document.getElementById('landingScreen');
 const mainScreen = document.getElementById('mainScreen');
 const userNameInput = document.getElementById('userNameInput');
@@ -118,9 +115,7 @@ const startAppBtn = document.getElementById('startAppBtn');
 loadState();
 
 function showScreen(screenId) {
-  document.querySelectorAll('.screen').forEach(s => {
-    s.classList.remove('active');
-  });
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const target = document.getElementById(screenId);
   if(target) target.classList.add('active');
 }
@@ -128,9 +123,9 @@ function showScreen(screenId) {
 function init(){
   if (appState.userName) {
     userNameInput.value = appState.userName;
-    showScreen('mainScreen'); // Langsung ke main screen jika nama sudah ada
+    showScreen('mainScreen');
   } else {
-    showScreen('landingScreen'); // Tampilkan landing screen
+    showScreen('landingScreen');
   }
 
   renderSubjects();
@@ -240,7 +235,6 @@ function renderQuiz(){
 function handleAnswer(question, selectedIndex, elNode){
   const correct = (selectedIndex === question.a);
   elNode.parentElement.querySelectorAll('.option').forEach(node=> node.style.pointerEvents='none');
-
   const correctAnswerNode = elNode.parentElement.querySelectorAll('.option')[question.a];
   correctAnswerNode.classList.add('correct');
 
@@ -255,12 +249,11 @@ function handleAnswer(question, selectedIndex, elNode){
     appState.mistakes[currentTopic().id][question.id] = (appState.mistakes[currentTopic().id][question.id]||0) + 1;
 
     question.attempts = (question.attempts||0) + 1;
-    // Put the question back if it's the first wrong answer
     if(question.attempts < 2){
-      appState.quizQueue.push(appState.quizQueue.shift()); // Move to back
+      appState.quizQueue.push(appState.quizQueue.shift());
     } else {
       postMentorMessage(`Sepertinya kamu belum paham soal: "${question.q}". Coba tinjau video lagi.`, 'ai');
-      appState.quizQueue.shift(); // Remove after 2nd mistake
+      appState.quizQueue.shift();
     }
   }
   saveState();
@@ -278,11 +271,11 @@ function handleAnswer(question, selectedIndex, elNode){
 }
 
 function triggerCompletionAnimation() {
-    if(window.confetti) {
-        completionOverlay.style.display = 'block';
-        window.confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
-        setTimeout(() => { completionOverlay.style.display = 'none'; }, 2000);
-    }
+  if(window.confetti) {
+    completionOverlay.style.display = 'block';
+    window.confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+    setTimeout(() => { completionOverlay.style.display = 'none'; }, 2000);
+  }
 }
 
 function endSession(timedOut=false){
@@ -360,7 +353,6 @@ function renderHistory(){
   historyEl.innerHTML = lines.join('');
 }
 
-// --- FUNGSI BARU UNTUK LEADERBOARD ---
 async function updateUserScore() {
     if (!appState.userName || !supabase) return;
     const { error } = await supabase
@@ -420,71 +412,41 @@ function postMentorMessage(text, who='ai'){ appendMentor(text, who); }
 
 
 // =======================================================
-// --- FUNGSI BARU UNTUK INTEGRASI OPENAI (TAMBAHAN) ---
+// --- FUNGSI BARU DAN AMAN UNTUK MENGHUBUNGI AI MENTOR ---
 // =======================================================
 
 /**
- * Menghubungi API Chat Completions OpenAI untuk mendapatkan respons
- * berdasarkan pesan pengguna dan konteks topik.
- * @param {string} userMessage - Pesan dari pengguna di kolom mentor.
- * @returns {Promise<string>} - Respons teks dari AI.
- */
-async function getOpenAIChatResponse(userMessage) {
-    // 1. Cek Kunci API
-    if (!appState.openaiApiKey || appState.openaiApiKey.length < 10 || appState.openaiApiKey.startsWith('KUNCI_API_OPENAI_ANDA_DI_SINI')) {
-        return "ERROR: Kunci API OpenAI tidak valid. Mohon periksa konfigurasi API Key.";
+ * Menghubungi backend Supabase Edge Function untuk mendapatkan respons AI.
+ * @param {string} userMessage - Pesan dari pengguna.
+ * @param {object} topicContext - Konteks topik saat ini.
+ * @returns {Promise<string>} - Respons teks dari AI.
+ */
+async function getAIResponseFromBackend(userMessage, topicContext) {
+    if (!supabase) {
+        return "Error: Klien Supabase belum siap.";
     }
 
-    const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
-    const currentTopicTitle = currentTopic().title;
-
-    // 2. Tentukan Konteks (System Prompt)
-    const messages = [
-        { 
-            "role": "system", 
-            "content": `Kamu adalah 'Mentor BelajarBareng' yang positif, sabar, dan suportif. Balas semua pertanyaan dalam Bahasa Indonesia. 
-                        Topik yang sedang dipelajari saat ini adalah **${currentTopicTitle}** (${appState.currentSubject}). 
-                        Jawablah sebagai mentor yang suportif, fokus pada konsep pelajaran, dan dorong pengguna untuk terus mencoba. Jangan gunakan emoji.`
-        },
-        // 3. Pesan Pengguna
-        { "role": "user", "content": userMessage }
-    ];
-
     try {
-        const response = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // PENTING: Menggunakan API Key untuk otentikasi
-                'Authorization': `Bearer ${appState.openaiApiKey}` 
+        // Memanggil Edge Function dengan nama 'openai-mentor'
+        const { data, error } = await supabase.functions.invoke('openai-mentor', {
+            // Body berisi data yang dikirim ke backend
+            body: { 
+                message: userMessage,
+                topic: topicContext.title,
+                subject: topicContext.subject
             },
-            body: JSON.stringify({
-                model: "gpt-3.5-turbo", // Model yang stabil dan cepat
-                messages: messages,
-                temperature: 0.7, // Keseimbangan antara faktual dan kreatif
-                max_tokens: 200 // Batas panjang respons
-            })
         });
 
-        if (!response.ok) {
-            // Menangkap error HTTP
-            const errorData = await response.json().catch(() => ({ message: "Unknown error format" }));
-            console.error("OpenAI API Error:", response.status, errorData);
-            return `Maaf, terjadi kesalahan saat menghubungi layanan AI (${response.status}). Detail: ${errorData.error ? errorData.error.message : 'Silakan cek konsol browser.'}`;
+        if (error) {
+            throw error; // Lemparkan error untuk ditangkap oleh blok catch
         }
-
-        const data = await response.json();
-
-        // Ambil teks respons dari hasil JSON
-        if (data.choices && data.choices.length > 0) {
-            return data.choices[0].message.content.trim();
-        } else {
-            return "Maaf, AI tidak memberikan respons yang jelas. Coba lagi dengan pertanyaan berbeda.";
-        }
+        
+        // 'data' adalah apa yang dikembalikan oleh Edge Function Anda
+        return data.reply;
 
     } catch (e) {
-        console.error("Kesalahan koneksi/fetch OpenAI:", e);
-        return "Terjadi kesalahan koneksi. Periksa jaringan atau konsol browser.";
+        console.error("Gagal memanggil Supabase Edge Function:", e);
+        return "Maaf, terjadi kesalahan teknis saat menghubungi mentor AI. Silakan cek konsol.";
     }
 }
 
@@ -508,52 +470,54 @@ nextQBtn.addEventListener('click', ()=>{ markCompleted(true); nextTopic(); });
 endSessionBtn.addEventListener('click', ()=>{ endSession(false); });
 mentorInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter') sendMentorBtn.click(); });
 
-sendMentorBtn.addEventListener('click', ()=>{
+// Event listener yang sudah di-update untuk menggunakan backend
+sendMentorBtn.addEventListener('click', async () => {
   const v = mentorInput.value.trim();
   if(!v) return;
+
   appendMentor(v, 'user');
   mentorInput.value = '';
+  mentorInput.disabled = true; // Nonaktifkan input saat menunggu
+  sendMentorBtn.disabled = true; // Nonaktifkan tombol saat menunggu
+
   const lower = v.toLowerCase();
-  
-  // Logika perintah khusus
+  
+  // Logika perintah khusus (lokal)
   if(lower.includes('ringkas')){
     const t = currentTopic();
     const bullets = t.questions.map(q=> '- '+ q.q);
     postMentorMessage(`Ringkasan singkat untuk "${t.title}":\n${bullets.join('\n')}`, 'ai');
-    return;
-  }
-  if(lower.includes('ulang soal')){
+  } else if(lower.includes('ulang soal')){
     const t = currentTopic();
     const wrongs = appState.mistakes[t.id] || {};
     const keys = Object.keys(wrongs);
-    if(keys.length===0){ postMentorMessage('Belum ada kesalahan untuk topik ini.', 'ai'); }
-    else {
+    if(keys.length === 0){ 
+        postMentorMessage('Belum ada kesalahan untuk topik ini.', 'ai'); 
+    } else {
       postMentorMessage('Saya masukkan ulang soal yang pernah salah.', 'ai');
       const wrongQs = t.questions.filter(q=> keys.includes(q.id)).map(q=> ({...q, attempts:0}));
       appState.quizQueue = wrongQs.concat(appState.quizQueue);
       renderQuiz();
     }
-    return;
-  }
-  
-  // --- INTEGRASI OPENAI DIMULAI DI SINI ---
-  // Cek apakah API Key sudah terisi dan tidak menggunakan placeholder
-  if(appState.openaiApiKey && appState.openaiApiKey.length > 10 && !appState.openaiApiKey.startsWith('KUNCI_API_OPENAI_ANDA_DI_SINI')){
-    postMentorMessage('Menghubungkan ke layanan AI, mohon tunggu...', 'ai');
-    
-    // Panggil fungsi asinkron dan tampilkan hasilnya
-    getOpenAIChatResponse(v)
-        .then(aiResponse => {
-            postMentorMessage(aiResponse, 'ai');
-        })
-        .catch(e => {
-            postMentorMessage('Gagal mendapatkan respons AI karena masalah teknis.', 'ai');
-            console.error("Kesalahan saat memanggil OpenAI:", e);
-        });
-    return;
   } else {
-    postMentorMessage('Maaf, Kunci API OpenAI belum diatur atau tidak valid. Coba "ringkasan" atau "ulang soal".', 'ai');
-  }
+    // --- INTEGRASI AMAN VIA SUPABASE DIMULAI DI SINI ---
+    postMentorMessage('Menghubungkan ke Mentor AI, mohon tunggu...', 'ai');
+
+    const topicContext = {
+        title: currentTopic().title,
+        subject: appState.currentSubject
+    };
+    
+    // Panggil fungsi backend dan tunggu responsnya
+    const aiResponse = await getAIResponseFromBackend(v, topicContext);
+    
+    // Tampilkan respons di chat
+    postMentorMessage(aiResponse, 'ai');
+  }
+
+  mentorInput.disabled = false; // Aktifkan kembali input
+  sendMentorBtn.disabled = false; // Aktifkan kembali tombol
+  mentorInput.focus();
 });
 
 /* Start app */
