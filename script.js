@@ -116,7 +116,7 @@ const appState = {
 
   history: [],
 
-  userName: '',
+  userName: 'belajarbareng17',
 
   // === BAGIAN PENTING UNTUK DIGANTI ===
 
@@ -1111,8 +1111,6 @@ sendMentorBtn.addEventListener('click', ()=>{
   }
 
 });
-
-
 
 /* Start app */
 
