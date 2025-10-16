@@ -120,7 +120,7 @@ const appState = {
 
   // === BAGIAN PENTING UNTUK DIGANTI ===
 
-  openaiApiKey: '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' // <-- GANTI DENGAN KUNCI API OpenAI ASLI-MU
+  openaiApiKey: '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' // <-- GANTI DENGAN KUNCI API OpenAI ASLI-MU
 
   // ====================================
 
