@@ -1,179 +1,219 @@
 /* =========================================
- * DESAIN BARU - BELAJARBARENG
- * Oleh:  Zulfa Fahmiy
- * Efek: Glassmorphism Modern
+ * DESAIN BARU - BELAJARBARENG (RESPONSIF)
+ * Oleh: Zulfa Fahmiy (Dioptimalkan oleh Partner Coding)
+ * Efek: Glassmorphism Modern + Layout Responsif
  * ========================================= */
 
 /* -- 1. Variabel & Pengaturan Dasar -- */
 :root {
-  --accent: #6a82fb;
-  --accent-darker: #5468d6;
-  --card-bg: rgba(255, 255, 255, 0.55);
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --border-color: rgba(255, 255, 255, 0.4);
-  --shadow-color: rgba(31, 38, 135, 0.17);
+  --accent: #6a82fb;
+  --accent-darker: #5468d6;
+  --card-bg: rgba(255, 255, 255, 0.55);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-color: rgba(255, 255, 255, 0.4);
+  --shadow-color: rgba(31, 38, 135, 0.17);
 
-  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
 }
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 @keyframes animatedGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 body {
-  min-height: 100vh;
-  background: linear-gradient(-45deg, #667eea, #764ba2, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: animatedGradient 15s ease infinite;
-  color: var(--text-primary);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 28px;
-  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(-45deg, #667eea, #764ba2, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: animatedGradient 15s ease infinite;
+  color: var(--text-primary);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 0; /* Ubah padding horizontal ke container */
+  position: relative;
 }
 
-/* -- 2. Layout Utama -- */
+/* * =======================================================
+ * -- 2. Layout Utama (Diperbaiki menggunakan Flexbox) --
+ * =======================================================
+ */
 .container {
-  width: 1100px;
-  max-width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 24px;
+  max-width: 1200px; /* Lebar maksimum desktop */
+  width: 100%;
+  margin: 0 auto;
+  display: flex; /* Menggunakan Flexbox untuk kolom utama */
+  flex-wrap: wrap; /* Memungkinkan wrap di bawah 1024px */
+  gap: 24px;
+  padding: 0 20px; /* Padding horizontal agar konten tidak menempel */
 }
 header {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 4px;
+  width: 100%; /* Header mengambil seluruh lebar */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+/* Mengatur kolom Kiri (Main) dan Kanan (Sidebar) */
+.left {
+  flex: 1; /* Konten utama mengambil sisa ruang yang tersedia */
+  min-width: 0; /* Penting untuk flexbox */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.sidebar {
+  width: 320px; /* Lebar sidebar di desktop */
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 footer {
-  grid-column: 1 / -1;
-  margin-top: 16px;
-  color: rgba(255,255,255,0.8);
-  font-size: 13px;
-  text-align: center;
+  width: 100%;
+  margin-top: 16px;
+  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+  text-align: center;
 }
 
 /* -- 3. Komponen Utama (Glassmorphism) -- */
 .card {
-  background: var(--card-bg);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 32px 0 var(--shadow-color);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px 0 var(--shadow-color);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
 }
 .mentor {
-    height: 420px;
-    overflow-y: auto;
+    height: 420px;
+    overflow-y: auto;
 }
 hr {
-  border: none;
-  height: 1px;
-  background: var(--border-color);
-  margin: 16px 0;
+  border: none;
+  height: 1px;
+  background: var(--border-color);
+  margin: 16px 0;
 }
 
 /* -- 4. Tipografi -- */
 h1 {
-  font-size: 24px;
-  margin: 0;
-  color: var(--text-primary);
+  font-size: 24px;
+  margin: 0;
+  color: var(--text-primary);
 }
 .small {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: 14px;
+  color: var(--text-secondary);
 }
 .timer {
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: 700;
+  font-size: 18px;
 }
 
 /* -- 5. Elemen Interaktif (Tombol, Input, dll) -- */
 .btn {
-  background: rgba(255, 255, 255, 0.3);
-  border: 1px solid var(--border-color);
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: var(--text-primary);
-  font-weight: 500;
-  transition: all 7s ease;
-  font-family: inherit;
-  font-size: 14px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--border-color);
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-weight: 500;
+  transition: all 0.2s ease; /* Transisi dipercepat */
+  font-family: inherit;
+  font-size: 14px;
 }
 .btn:hover {
-  background: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 .accent-btn {
-  background: var(--accent);
-  color: #ffffff;
-  font-weight: 600;
-  border-color: transparent;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+  border-color: transparent;
 }
 .accent-btn:hover {
-  background: var(--accent-darker);
+  background: var(--accent-darker);
 }
 input[type="text"] {
-  flex: 1;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  background: rgba(255, 255, 255, 0.3);
-  color: var(--text-primary);
-  font-size: 14px;
-  font-family: inherit;
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.3);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
 }
 input[type="text"]::placeholder {
-  color: var(--text-secondary);
+  color: var(--text-secondary);
 }
 input[type="text"]:focus {
-    outline: 2px solid var(--accent);
-    border-color: transparent;
+    outline: 2px solid var(--accent);
+    border-color: transparent;
 }
 .topic-btn {
-  background: rgba(255, 255, 255, 0.3);
-  padding: 8px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-  border: 1px solid var(--border-color);
-  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
 }
 .topic-btn:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.5);
 }
 .topic-btn.active {
-  background: var(--accent);
-  color: #ffffff;
-  font-weight: 600;
-  border-color: transparent;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* -- 6. Elemen Spesifik Aplikasi -- */
-.left { display: flex; flex-direction: column; gap: 16px; }
-.video-wrap { display: flex; gap: 16px; align-items: flex-start; }
-video { width: 100%; height: 320px; background: #000; border-radius: 12px; border: 1px solid var(--border-color); }
+.video-wrap { 
+    display: flex; 
+    gap: 16px; 
+    align-items: flex-start; 
+}
+video { 
+    width: 100%; 
+    max-width: 640px; 
+    height: auto; /* Penting: Dibuat auto agar proporsional di mobile */
+    background: #000; 
+    border-radius: 12px; 
+    border: 1px solid var(--border-color); 
+}
+.video-wrap > div {
+    flex-shrink: 0;
+    width: 260px; /* Lebar info video di desktop */
+}
+/* Dua kartu di bawah video */
+.left > div:last-child {
+    display: flex;
+    gap: 24px;
+}
+
 .topic-list { display: flex; gap: 10px; flex-wrap: wrap; }
 .controls { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
 .progress-line { height: 10px; background: rgba(0, 0, 0, 0.08); border-radius: 10px; overflow: hidden; }
@@ -190,105 +230,148 @@ video { width: 100%; height: 320px; background: #000; border-radius: 12px; borde
 
 /* -- 7. Overlay & Layar -- */
 .overlay {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  display: none;
-  z-index: 99;
-  backdrop-filter: blur(8px);
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 99;
+  backdrop-filter: blur(8px);
 }
 .screen {
-  display: none;
-  width: 100%;
-  min-height: 100vh;
-  position: absolute; top: 0; left: 0;
-  justify-content: center;
-  align-items: center;
-  padding: 28px;
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  position: absolute; top: 0; left: 0;
+  justify-content: center;
+  align-items: center;
+  padding: 28px 0;
 }
 .screen.active { display: flex; }
 #mainScreen { position: static; height: auto; }
 .landing-card {
-  max-width: 550px;
-  text-align: center;
-  padding: 48px 40px;
+  max-width: 550px;
+  text-align: center;
+  padding: 48px 40px;
 }
 .landing-card h1 {
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 32px;
+  font-weight: 700;
 }
 .landing-card .mentor-input {
-    margin-top: 16px;
+    margin-top: 16px;
 }
 
-/* -- 8. Responsif (Disempurnakan) -- */
-/* Untuk Tablet (lebar <= 1024px) */
+
+/* * =======================================================
+ * -- 8. Responsif (Dioptimalkan untuk Seluruh Perangkat) --
+ * =======================================================
+ */
+
+/* Untuk Tablet dan Layar Menengah (Lebar <= 1024px) */
 @media (max-width: 1024px) {
-.container { 
-grid-template-columns: 1fr; /* Ubah layout menjadi 1 kolom */
-gap: 20px;
-}
-.sidebar { 
-order: 2; /* Pindahkan sidebar ke bawah konten utama */
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Buat kartu di sidebar menjadi rapi */
-gap: 20px;
-}
-.mentor {
-height: auto; /* Atur tinggi mentor menjadi otomatis */
-}
+    /* 1. Tata Letak Utama (Flexbox bertumpuk) */
+    .container {
+        flex-direction: column; /* Main dan Sidebar bertumpuk */
+        gap: 30px;
+    }
+
+    /* 2. Header dibuat bertumpuk */
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* 3. Sidebar diubah agar mengisi lebar penuh dan mengelompokkan kartu */
+    .sidebar {
+        width: 100%;
+        order: 2; /* Pindahkan sidebar (AI Mentor, Statistik, Leaderboard) ke bawah konten utama */
+        display: grid;
+        /* Tata letak 2 kolom jika lebar memungkinkan */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    
+    /* 4. AI Mentor Card di sidebar dikembalikan ke tampilan kolom penuh */
+    .card.mentor {
+        grid-column: 1 / -1; /* Biarkan card mentor mengambil lebar penuh */
+        height: 420px; 
+    }
 }
 
-/* Untuk Ponsel Besar (lebar <= 768px) */
+
+/* Untuk Ponsel (Lebar <= 768px) */
 @media (max-width: 768px) {
-body {
-padding: 16px; /* Kurangi padding di body */
-}
-.header {
-flex-direction: column; /* Tumpuk header secara vertikal */
-align-items: flex-start;
-gap: 8px;
-}
-.video-wrap { 
-flex-direction: column; /* Tumpuk video dan infonya */
-}
-video { 
-height: auto; /* Tinggi video otomatis */
-}
-.video-wrap > div { 
-width: 100%; 
-margin-top: 16px; 
-}
-.card {
-padding: 16px; /* Kurangi padding di semua kartu */
-}
-h1 {
-font-size: 22px; /* Perkecil ukuran judul utama */
-}
-.landing-card {
-  padding: 32px 24px;
-}
-.landing-card h1 {
-  font-size: 28px;
-}
+    body {
+        padding: 16px 0; /* Kurangi padding vertikal di body */
+    }
+    
+    .container {
+        padding: 0 16px; /* Kurangi padding horizontal di container */
+    }
+
+    /* Video dan Kontrol dibuat bertumpuk */
+    .video-wrap {
+        flex-direction: column; 
+    }
+    
+    /* Memastikan bagian Video Info menyesuaikan lebar penuh */
+    .video-wrap > div {
+        width: 100%;
+        margin-top: 16px;
+    }
+    
+    /* Riwayat Cepat dan Tips Singkat dibuat bertumpuk */
+    .left > div:last-child {
+        flex-direction: column;
+    }
+
+    .card {
+        padding: 20px; /* Sedikit perkecil padding kartu */
+    }
+    
+    /* Card di sidebar (Statistik & Leaderboard) juga dibuat bertumpuk */
+    .sidebar {
+        grid-template-columns: 1fr;
+    }
+    
+    .landing-card {
+        padding: 32px 24px;
+        margin: 0 16px;
+    }
 }
 
-/* Untuk Ponsel Kecil (lebar <= 480px) */
+
+/* Untuk Ponsel Kecil (Lebar <= 480px) */
 @media (max-width: 480px) {
-body {
-padding: 12px;
-}
-.controls {
-flex-wrap: wrap; /* Tombol "Mulai Sesi" & "Lewati" bisa turun ke bawah jika tidak muat */
-}
-.btn {
-padding: 8px 12px; /* Perkecil ukuran tombol */
-font-size: 13px;
-}
-.landing-card .mentor-input {
-flex-direction: column; /* Tumpuk input nama dan tombol di landing page */
-}
-footer {
-font-size: 12px;
-}
+    .container {
+        padding: 0 12px;
+    }
+    .btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    /* Tombol Start Session dan Skip dibuat menyesuaikan lebar penuh */
+    .controls {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .controls .btn {
+        width: 100%;
+    }
+
+    /* Tumpuk semua input/tombol di landing page dan mentor */
+    .landing-card .mentor-input,
+    .mentor-input {
+        flex-direction: column;
+    }
+    .landing-card .mentor-input .btn,
+    .mentor-input .btn {
+        width: 100%;
+    }
+    
+    footer {
+        font-size: 12px;
+        padding: 0 12px;
+    }
 }
