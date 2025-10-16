@@ -42,7 +42,6 @@
         <div class="card">
           <div class="video-wrap">
             <video id="topicVideo" controls preload="metadata">
-              <!-- Ganti sumber video di script.js atau pastikan file video ada di path yang benar -->
               <source src="" type="video/mp4">
               Browser Anda tidak mendukung elemen video.
             </video>
@@ -117,19 +116,22 @@
             <button class="btn" id="sendMentor">Kirim</button>
           </div>
           <div style="margin-top:12px" class="small">
-            <div>Integrasi OpenAI: letakkan API key di <code>appState.openaiApiKey</code>.</div>
+             <div>Integrasi Gemini AI: letakkan API key di <code>appState.geminiApiKey</code>.</div>
           </div>
         </div>
       </aside>
 
       <footer>
-        Made with Mind  <code>/videos</code>. Aktifkan GitHub Pages.
+        Made with Mind. Ganti path video di script.js.
       </footer>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@google/generative-ai/+esm"></script>
+
   <script src="script.js" defer></script>
 </body>
 </html>
