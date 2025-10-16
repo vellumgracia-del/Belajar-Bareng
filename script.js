@@ -16,32 +16,32 @@ try {
 }
 
 const SUBJECTS_DATA = {
-  "Biologi": [
-    { id: "b1", title: "Sistem Pencernaan", video: "Belajar IPA Sistem Pencernaan Manusia #SiapNaikLevel (1).mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
-      { id: "q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
-      { id: "q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
-      { id: "q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 }
-    ] },
-    { id: "b2", title: "Sirkulasi Darah", video: "videos/topic2.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
-      { id: "q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
-      { id: "q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 }
-    ] }
-  ],
-  "Matematika": [
-    { id: "m1", title: "Konsep Pecahan", video: "videos/math1.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
-      { id: "q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
-      { id: "q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 }
-    ] },
-    { id: "m2", title: "Dasar Aljabar", video: "videos/math2.mp4", description: "Variabel dan konstanta (≤3 menit).", questions: [
-      { id: "q1", q: "Jika 2x + 5 = 11, berapakah nilai x?", opts:["2","3","4"], a:1 }
-    ] }
-  ],
-  "Ekonomi": [
-    { id: "e1", title: "Pengantar Permintaan & Penawaran", video: "videos/eco1.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
-      { id: "q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
-      { id: "q2", q: "Titik pertemuan antara kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 }
-    ] }
-  ]
+  "Biologi": [
+    { id: "b1", title: "Sistem Pencernaan", video: "Belajar IPA Sistem Pencernaan Manusia #SiapNaikLevel (1).mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
+      { id: "q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
+      { id: "q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
+      { id: "q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 }
+    ] },
+    { id: "b2", title: "Sirkulasi Darah", video: "videos/topic2.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
+      { id: "q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
+      { id: "q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 }
+    ] }
+  ],
+  "Matematika": [
+    { id: "m1", title: "Konsep Pecahan", video: "videos/math1.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
+      { id: "q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
+      { id: "q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 }
+    ] },
+    { id: "m2", title: "Dasar Aljabar", video: "videos/math2.mp4", description: "Variabel dan konstanta (≤3 menit).", questions: [
+      { id: "q1", q: "Jika 2x + 5 = 11, berapakah nilai x?", opts:["2","3","4"], a:1 }
+    ] }
+  ],
+  "Ekonomi": [
+    { id: "e1", title: "Pengantar Permintaan & Penawaran", video: "videos/eco1.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
+      { id: "q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
+      { id: "q2", q: "Titik pertemuan antara kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 }
+    ] }
+  ]
 };
 
 
@@ -58,7 +58,7 @@ const appState = {
   mistakes: {},
   history: [],
   userName: '',
-  openaiApiKey: '' // OPTIONAL: letakkan API key OpenAI di sini
+  geminiApiKey: 'AIzaSyD3H9NyDS4A7wu9CBOCZOqhBWP9F1ILTSg' // <-- PENTING: Ganti dengan API key kamu
 };
 
 function loadState(){
@@ -417,6 +417,40 @@ function appendMentor(msg, who='ai'){
 }
 function postMentorMessage(text, who='ai'){ appendMentor(text, who); }
 
+
+// ================================================================
+// --- FUNGSI BARU DAN PERUBAHAN UNTUK INTEGRASI GEMINI API ---
+// ================================================================
+
+/**
+ * Menghubungi Google Gemini API untuk mendapatkan respons.
+ * @param {string} user_prompt - Pertanyaan dari pengguna beserta konteksnya.
+ * @returns {Promise<string>} - Jawaban dari AI.
+ */
+async function getGeminiResponse(user_prompt) {
+  // Pastikan API key sudah diisi
+  if (!appState.geminiApiKey || appState.geminiApiKey === 'MASUKKAN_KUNCI_API_GEMINI_ANDA_DI_SINI') {
+    return "Maaf, kunci API Gemini belum dikonfigurasi.";
+  }
+
+  try {
+    // Impor dan inisialisasi library
+    const { GoogleGenerativeAI } = await import('https://cdn.jsdelivr.net/npm/@google/generative-ai/+esm');
+    const genAI = new GoogleGenerativeAI(appState.geminiApiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+    // Kirim prompt dan tunggu hasilnya
+    const result = await model.generateContent(user_prompt);
+    const response = await result.response;
+    const text = response.text();
+    return text;
+
+  } catch (error) {
+    console.error("Error saat menghubungi Gemini API:", error);
+    return "Oops, sepertinya ada masalah saat menghubungi AI. Coba lagi nanti.";
+  }
+}
+
 /* Event Listeners */
 startAppBtn.addEventListener('click', ()=>{
   const name = userNameInput.value.trim();
@@ -434,39 +468,60 @@ startSessionBtn.addEventListener('click', startSession);
 skipTopicBtn.addEventListener('click', ()=>{ markCompleted(false); nextTopic(); });
 nextQBtn.addEventListener('click', ()=>{ markCompleted(true); nextTopic(); });
 endSessionBtn.addEventListener('click', ()=>{ endSession(false); });
-mentorInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter') sendMentorBtn.click(); });
-sendMentorBtn.addEventListener('click', ()=>{
-  const v = mentorInput.value.trim();
-  if(!v) return;
-  appendMentor(v, 'user');
+mentorInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMentorBtn.click(); } });
+
+// --- EVENT LISTENER BARU UNTUK MENTOR DENGAN GEMINI ---
+sendMentorBtn.addEventListener('click', async () => {
+  const userInput = mentorInput.value.trim();
+  if (!userInput) return;
+
+  // 1. Tampilkan pesan pengguna dan pesan "loading" dari AI
+  appendMentor(userInput, 'user');
   mentorInput.value = '';
-  const lower = v.toLowerCase();
-  if(lower.includes('ringkas')){
-    const t = currentTopic();
-    const bullets = t.questions.map(q=> '- '+ q.q);
-    postMentorMessage(`Ringkasan singkat untuk "${t.title}":\n${bullets.join('\n')}`, 'ai');
-    return;
+  mentorInput.disabled = true; // Nonaktifkan input sementara menunggu
+  sendMentorBtn.disabled = true;
+  postMentorMessage('BelajarBot sedang berpikir...', 'ai');
+
+  // 2. Bangun Konteks untuk AI
+  const t = currentTopic();
+  const mistakesForTopic = appState.mistakes[t.id] || {};
+  let mistakeContext = 'Pengguna belum membuat kesalahan pada topik ini.';
+  if (Object.keys(mistakesForTopic).length > 0) {
+    const wrongQuestions = t.questions.filter(q => mistakesForTopic[q.id]);
+    mistakeContext = 'Pengguna sebelumnya pernah salah menjawab soal berikut:\n' + wrongQuestions.map(q => `- ${q.q}`).join('\n');
   }
-  if(lower.includes('ulang soal')){
-    const t = currentTopic();
-    const wrongs = appState.mistakes[t.id] || {};
-    const keys = Object.keys(wrongs);
-    if(keys.length===0){ postMentorMessage('Belum ada kesalahan untuk topik ini.', 'ai'); }
-    else {
-      postMentorMessage('Saya masukkan ulang soal yang pernah salah.', 'ai');
-      const wrongQs = t.questions.filter(q=> keys.includes(q.id)).map(q=> ({...q, attempts:0}));
-      appState.quizQueue = wrongQs.concat(appState.quizQueue);
-      renderQuiz();
-    }
-    return;
-  }
-  if(appState.openaiApiKey && appState.openaiApiKey.length > 10){
-    postMentorMessage('Menghubungkan ke layanan AI...', 'ai');
-    // Kode OpenAI tetap sama (diberi komentar agar tidak error jika tanpa API key)
-  } else {
-    postMentorMessage('Maaf, saya masih dalam tahap pengembangan. Coba "ringkasan" atau "ulang soal".', 'ai');
-  }
+
+  // 3. Buat Prompt yang Lengkap
+  const fullPrompt = `
+    Anda adalah "BelajarBot", seorang mentor belajar yang ramah, suportif, dan cerdas.
+    Tugas Anda adalah membantu pengguna memahami materi pelajaran. Jawablah dengan singkat, jelas, dan dalam Bahasa Indonesia.
+
+    Konteks saat ini:
+    - Nama Pengguna: ${appState.userName}
+    - Mata Pelajaran: ${appState.currentSubject}
+    - Topik: "${t.title}"
+    - Deskripsi Topik: ${t.description}
+    - Riwayat Kesalahan Pengguna di Topik Ini: ${mistakeContext}
+
+    Pertanyaan Pengguna: "${userInput}"
+
+    Berikan jawaban yang membantu berdasarkan konteks di atas.
+  `;
+
+  // 4. Panggil Gemini API dan tampilkan hasilnya
+  const aiResponse = await getGeminiResponse(fullPrompt);
+  
+  // Hapus pesan "loading" dan ganti dengan jawaban AI
+  const mentorLog = document.getElementById('mentorLog');
+  mentorLog.removeChild(mentorLog.lastChild); // Hapus "BelajarBot sedang berpikir..."
+  postMentorMessage(aiResponse, 'ai');
+
+  // Aktifkan kembali input
+  mentorInput.disabled = false;
+  sendMentorBtn.disabled = false;
+  mentorInput.focus();
 });
+
 
 /* Start app */
 init();
