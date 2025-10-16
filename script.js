@@ -391,7 +391,7 @@ async function getAIResponseFromGemini(userMessage, topicContext) {
     }
 
     // Cek apakah API Key sudah diisi
-    if (!appState.geminiApiKey || appState.geminiApiKey === 'GANTI_DENGAN_KUNCI_API_GEMINI_ANDA') {
+    if (!appState.geminiApiKey || appState.geminiApiKey === 'AIzaSyCSxZcNxHSG8lNBVzQ9ogNT81nDSZCW740') {
         return "Maaf, Kunci API Gemini belum diatur. Mohon periksa variabel appState.";
     }
 
