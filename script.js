@@ -1,20 +1,19 @@
+
 /* =========================
- Aplikasi BelajarBareng
+ Aplikasi BelajarBareng (dengan Integrasi Gemini)
  ========================= */
 
 // --- KONFIGURASI SUPABASE ---
-const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co'; // <-- URL Supabase Anda
-const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0'; // <-- Kunci Anon Supabase Anda (ini boleh publik)
+const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0';
 
 let supabase = null;
 try {
   if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  } else {
-    console.warn("Supabase client could not be initialized. Check URL, Key, and that the Supabase script is loaded.");
-  }
+  }
 } catch (e) {
-  console.error("Error initializing Supabase client:", e);
+  console.error("Gagal inisialisasi Supabase:", e);
 }
 
 const SUBJECTS_DATA = {
@@ -58,9 +57,14 @@ const appState = {
   completed: {},
   mistakes: {},
   history: [],
-  userName: ''
- // KUNCI RAHASIA OPENAI TELAH DIHAPUS DARI SINI
+  userName: '',
+  // === TEMPEL KUNCI API GEMINI ANDA DI SINI ===
+  geminiApiKey: 'GANTI_DENGAN_KUNCI_API_GEMINI_ANDA' 
+  // ===========================================
 };
+
+// --- Sisanya adalah kode aplikasi yang sudah ada, tidak perlu diubah ---
+// (Kode dari 'loadState' hingga 'appendMentor' tetap sama persis)
 
 function loadState(){
   try{
@@ -79,8 +83,6 @@ function saveState(){
   const toSave = { points: appState.points, completed: appState.completed, mistakes: appState.mistakes, history: appState.history };
   localStorage.setItem('bb_state_v1', JSON.stringify(toSave));
 }
-
-/* UI binding */
 const subjectsWrap = document.getElementById('subjectsWrap');
 const topicsWrap = document.getElementById('topicsWrap');
 const topicTitle = document.getElementById('topicTitle');
@@ -110,16 +112,12 @@ const landingScreen = document.getElementById('landingScreen');
 const mainScreen = document.getElementById('mainScreen');
 const userNameInput = document.getElementById('userNameInput');
 const startAppBtn = document.getElementById('startAppBtn');
-
-/* Initialize */
 loadState();
-
 function showScreen(screenId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const target = document.getElementById(screenId);
   if(target) target.classList.add('active');
 }
-
 function init(){
   if (appState.userName) {
     userNameInput.value = appState.userName;
@@ -127,14 +125,12 @@ function init(){
   } else {
     showScreen('landingScreen');
   }
-
   renderSubjects();
   loadTopic(0);
   updateStats();
   renderHistory();
   renderLeaderboard();
 }
-
 function renderSubjects() {
   subjectsWrap.innerHTML = '';
   Object.keys(appState.subjects).forEach(subjectName => {
@@ -149,7 +145,6 @@ function renderSubjects() {
     subjectsWrap.appendChild(b);
   });
 }
-
 function renderTopics(){
   topicsWrap.innerHTML = '';
   const currentTopics = appState.subjects[appState.currentSubject];
@@ -162,7 +157,6 @@ function renderTopics(){
     topicsWrap.appendChild(b);
   });
 }
-
 function loadTopic(index){
   appState.currentTopicIndex = index;
   const t = currentTopic();
@@ -180,13 +174,11 @@ function loadTopic(index){
   renderTopics();
   updateProgBar();
 }
-
 function formatTime(sec){
   const m = Math.floor(sec/60).toString().padStart(2,'0');
   const s = (sec%60).toString().padStart(2,'0');
   return `${m}:${s}`;
 }
-
 function startSession(){
   if(appState.timerHandle) clearInterval(appState.timerHandle);
   appState.remainingSeconds = appState.sessionSeconds;
@@ -203,7 +195,6 @@ function startSession(){
   quizArea.style.display = 'block';
   updateStats();
 }
-
 function renderQuiz(){
   questionWrap.innerHTML = '';
   if(!appState.quizQueue || appState.quizQueue.length === 0){
@@ -231,13 +222,11 @@ function renderQuiz(){
   nextQBtn.style.display = 'none';
   endSessionBtn.style.display = 'none';
 }
-
 function handleAnswer(question, selectedIndex, elNode){
   const correct = (selectedIndex === question.a);
   elNode.parentElement.querySelectorAll('.option').forEach(node=> node.style.pointerEvents='none');
   const correctAnswerNode = elNode.parentElement.querySelectorAll('.option')[question.a];
   correctAnswerNode.classList.add('correct');
-
   if(correct){
     appState.points += 10;
     appState.history.unshift({ t: new Date().toISOString(), topic: currentTopic().id, q: question.id, result:'correct' });
@@ -247,7 +236,6 @@ function handleAnswer(question, selectedIndex, elNode){
     appState.history.unshift({ t: new Date().toISOString(), topic: currentTopic().id, q: question.id, result:'wrong' });
     if(!appState.mistakes[currentTopic().id]) appState.mistakes[currentTopic().id] = {};
     appState.mistakes[currentTopic().id][question.id] = (appState.mistakes[currentTopic().id][question.id]||0) + 1;
-
     question.attempts = (question.attempts||0) + 1;
     if(question.attempts < 2){
       appState.quizQueue.push(appState.quizQueue.shift());
@@ -269,7 +257,6 @@ function handleAnswer(question, selectedIndex, elNode){
     }
   }, 1800);
 }
-
 function triggerCompletionAnimation() {
   if(window.confetti) {
     completionOverlay.style.display = 'block';
@@ -277,7 +264,6 @@ function triggerCompletionAnimation() {
     setTimeout(() => { completionOverlay.style.display = 'none'; }, 2000);
   }
 }
-
 function endSession(timedOut=false){
   if(appState.timerHandle) clearInterval(appState.timerHandle);
   const t = currentTopic();
@@ -285,7 +271,6 @@ function endSession(timedOut=false){
   const uniqueWrongs = Object.keys(mistakesForTopic).length;
   const totalQs = t.questions.length;
   const successRate = totalQs > 0 ? Math.max(0, totalQs - uniqueWrongs) / totalQs : 1;
-
   if(successRate >= 0.5) {
     appState.points += 20;
     appState.history.unshift({ t: new Date().toISOString(), topic: t.id, q: 'session', result: 'completed' });
@@ -301,7 +286,6 @@ function endSession(timedOut=false){
   updateStats();
   quizArea.style.display = 'none';
 }
-
 function markCompleted(success){
   const t = currentTopic();
   if(success) appState.completed[t.id] = true;
@@ -309,24 +293,20 @@ function markCompleted(success){
   saveState();
   updateStats();
 }
-
 function nextTopic(){
   const currentTopics = appState.subjects[appState.currentSubject];
   const next = (appState.currentTopicIndex + 1) % currentTopics.length;
   loadTopic(next);
 }
-
 function shuffleArray(arr){
   for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr;
 }
 function currentTopic(){ return appState.subjects[appState.currentSubject][appState.currentTopicIndex]; }
-
 function updateProgBar(){
   const t = currentTopic();
   const done = appState.completed[t.id] ? 100 : 0;
   progBar.style.width = done + '%';
 }
-
 function updateStats(){
   pointsEl.textContent = appState.points;
   totalPointsEl.textContent = appState.points;
@@ -337,7 +317,6 @@ function updateStats(){
   renderHistory();
   updateUserScore();
 }
-
 function renderHistory(){
   if(!appState.history || appState.history.length===0){ historyEl.textContent = 'Belum ada riwayat.'; return; }
   const lines = appState.history.slice(0,5).map(h=>{
@@ -352,20 +331,17 @@ function renderHistory(){
   });
   historyEl.innerHTML = lines.join('');
 }
-
 async function updateUserScore() {
     if (!appState.userName || !supabase) return;
     const { error } = await supabase
         .from('leaderboard')
         .upsert({ name: appState.userName, score: appState.points }, { onConflict: 'name' });
-
     if (error) {
         console.error('Gagal update skor:', error);
     } else {
         renderLeaderboard();
     }
 }
-
 async function renderLeaderboard() {
     const boardEl = document.getElementById('leaderboard');
     if (!supabase) {
@@ -373,24 +349,19 @@ async function renderLeaderboard() {
         return;
     }
     boardEl.innerHTML = '<div class="small">Memuat data...</div>';
-
     const { data, error } = await supabase
         .from('leaderboard')
         .select('name, score')
         .order('score', { ascending: false })
         .limit(5);
-
     if (error) {
-        console.error('Gagal mengambil data leaderboard:', error);
         boardEl.innerHTML = '<div class="small">Gagal memuat data.</div>';
         return;
     }
-
     if (data.length === 0) {
         boardEl.innerHTML = '<div class="small">Belum ada data. Jadilah yang pertama!</div>';
         return;
     }
-
     boardEl.innerHTML = '';
     const emojis = ['🥇', '🥈', '🥉', '4.', '5.'];
     data.forEach((entry, idx) => {
@@ -400,7 +371,6 @@ async function renderLeaderboard() {
         boardEl.appendChild(div);
     });
 }
-
 function appendMentor(msg, who='ai'){
   const div = document.createElement('div');
   div.className = 'msg ' + (who==='ai' ? 'ai' : 'user');
@@ -410,48 +380,41 @@ function appendMentor(msg, who='ai'){
 }
 function postMentorMessage(text, who='ai'){ appendMentor(text, who); }
 
-
 // =======================================================
-// --- FUNGSI BARU DAN AMAN UNTUK MENGHUBUNGI AI MENTOR ---
+// --- FUNGSI BARU DAN SEDERHANA UNTUK AI MENTOR GEMINI ---
 // =======================================================
 
-/**
- * Menghubungi backend Supabase Edge Function untuk mendapatkan respons AI.
- * @param {string} userMessage - Pesan dari pengguna.
- * @param {object} topicContext - Konteks topik saat ini.
- * @returns {Promise<string>} - Respons teks dari AI.
- */
-async function getAIResponseFromBackend(userMessage, topicContext) {
-    if (!supabase) {
-        return "Error: Klien Supabase belum siap.";
+async function getAIResponseFromGemini(userMessage, topicContext) {
+    // Cek apakah skrip Gemini sudah dimuat
+    if (!window.GoogleGenerativeAI) {
+        return "Error: Skrip Google AI belum termuat.";
+    }
+
+    // Cek apakah API Key sudah diisi
+    if (!appState.geminiApiKey || appState.geminiApiKey === 'GANTI_DENGAN_KUNCI_API_GEMINI_ANDA') {
+        return "Maaf, Kunci API Gemini belum diatur. Mohon periksa variabel appState.";
     }
 
     try {
-        // Memanggil Edge Function dengan nama 'openai-mentor'
-        const { data, error } = await supabase.functions.invoke('openai-mentor', {
-            // Body berisi data yang dikirim ke backend
-            body: { 
-                message: userMessage,
-                topic: topicContext.title,
-                subject: topicContext.subject
-            },
-        });
+        const genAI = new window.GoogleGenerativeAI(appState.geminiApiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-        if (error) {
-            throw error; // Lemparkan error untuk ditangkap oleh blok catch
-        }
-        
-        // 'data' adalah apa yang dikembalikan oleh Edge Function Anda
-        return data.reply;
+        // Membuat prompt yang jelas untuk AI
+        const prompt = `Kamu adalah 'Mentor BelajarBareng' yang positif dan suportif dalam Bahasa Indonesia. Saat ini, pengguna sedang mempelajari topik "${topicContext.title}" dalam mata pelajaran "${topicContext.subject}". Jawab pertanyaan berikut dengan singkat, jelas, dan fokus pada konsep pelajaran: "${userMessage}"`;
 
-    } catch (e) {
-        console.error("Gagal memanggil Supabase Edge Function:", e);
-        return "Maaf, terjadi kesalahan teknis saat menghubungi mentor AI. Silakan cek konsol.";
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        return text;
+
+    } catch (error) {
+        console.error("Error saat menghubungi Gemini API:", error);
+        return "Maaf, terjadi kesalahan saat menghubungi AI Gemini. Coba periksa kunci API Anda dan lihat konsol browser untuk detailnya.";
     }
 }
 
 
-/* Event Listeners */
+/* Event Listeners (Bagian ini di-update) */
 startAppBtn.addEventListener('click', ()=>{
   const name = userNameInput.value.trim();
   if (name.length > 2) {
@@ -470,19 +433,19 @@ nextQBtn.addEventListener('click', ()=>{ markCompleted(true); nextTopic(); });
 endSessionBtn.addEventListener('click', ()=>{ endSession(false); });
 mentorInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter') sendMentorBtn.click(); });
 
-// Event listener yang sudah di-update untuk menggunakan backend
+// Event listener yang sudah di-update untuk menggunakan Gemini
 sendMentorBtn.addEventListener('click', async () => {
   const v = mentorInput.value.trim();
   if(!v) return;
 
   appendMentor(v, 'user');
   mentorInput.value = '';
-  mentorInput.disabled = true; // Nonaktifkan input saat menunggu
-  sendMentorBtn.disabled = true; // Nonaktifkan tombol saat menunggu
+  mentorInput.disabled = true;
+  sendMentorBtn.disabled = true;
 
   const lower = v.toLowerCase();
   
-  // Logika perintah khusus (lokal)
+  // Logika perintah lokal
   if(lower.includes('ringkas')){
     const t = currentTopic();
     const bullets = t.questions.map(q=> '- '+ q.q);
@@ -500,7 +463,7 @@ sendMentorBtn.addEventListener('click', async () => {
       renderQuiz();
     }
   } else {
-    // --- INTEGRASI AMAN VIA SUPABASE DIMULAI DI SINI ---
+    // --- INTEGRASI LANGSUNG KE GEMINI ---
     postMentorMessage('Menghubungkan ke Mentor AI, mohon tunggu...', 'ai');
 
     const topicContext = {
@@ -508,15 +471,13 @@ sendMentorBtn.addEventListener('click', async () => {
         subject: appState.currentSubject
     };
     
-    // Panggil fungsi backend dan tunggu responsnya
-    const aiResponse = await getAIResponseFromBackend(v, topicContext);
+    const aiResponse = await getAIResponseFromGemini(v, topicContext);
     
-    // Tampilkan respons di chat
     postMentorMessage(aiResponse, 'ai');
   }
 
-  mentorInput.disabled = false; // Aktifkan kembali input
-  sendMentorBtn.disabled = false; // Aktifkan kembali tombol
+  mentorInput.disabled = false;
+  sendMentorBtn.disabled = false;
   mentorInput.focus();
 });
 
