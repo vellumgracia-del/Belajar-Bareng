@@ -59,7 +59,7 @@ const appState = {
   history: [],
   userName: '',
   // === TEMPEL KUNCI API GEMINI ANDA DI SINI ===
-  geminiApiKey: 'GANTI_DENGAN_KUNCI_API_GEMINI_ANDA' 
+  geminiApiKey: 'AIzaSyCSxZcNxHSG8lNBVzQ9ogNT81nDSZCW740' 
   // ===========================================
 };
 
