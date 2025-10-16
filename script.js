@@ -4,7 +4,7 @@
 
 // --- KONFIGURASI SUPABASE ---
 const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co'; // <-- GANTI DENGAN URL SUPABASE ANDA
-const SUPABASE_ANON_KEY = 'https://rgntufyuatlkikwuyrxx.supabase.co'; // <-- GANTI DENGAN KUNCI ANON ANDA
+const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0'; // <-- GANTI DENGAN KUNCI ANON ANDA
 
 let supabase = null;
 try {
