@@ -3,8 +3,8 @@
   ========================= */
 
 // --- KONFIGURASI SUPABASE ---
-const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co'; // <-- GANTI DENGAN URL SUPABASE ANDA
-const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0'; // <-- GANTI DENGAN KUNCI ANON ANDA
+const SUPABASE_URL = 'URL_SUPABASE_ANDA'; // <-- GANTI DENGAN URL SUPABASE ANDA
+const SUPABASE_ANON_KEY = 'KUNCI_ANON_SUPABASE_ANDA'; // <-- GANTI DENGAN KUNCI ANON ANDA
 
 let supabase = null;
 try {
@@ -16,9 +16,10 @@ try {
 }
 
 // --- DATA TOPIK DAN SOAL (TOTAL 50 SOAL) ---
+// CATATAN: Path video telah diubah menjadi URL placeholder. Ganti dengan link video Anda.
 const SUBJECTS_DATA = {
   "Biologi": [
-    { id: "b1", title: "Sistem Pencernaan", video: "Belajar IPA Sistem Pencernaan Manusia #SiapNaikLevel (1).mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
+    { id: "b1", title: "Sistem Pencernaan", video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
       { id: "b1q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
       { id: "b1q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
       { id: "b1q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 },
@@ -30,7 +31,7 @@ const SUBJECTS_DATA = {
       { id: "b1q9", q: "Apa nama katup yang memisahkan lambung dan usus halus?", opts:["Epiglotis", "Sfingter esofagus", "Pilorus"], a:2 },
       { id: "b1q10", q: "Penyakit yang disebabkan oleh peradangan pada usus buntu disebut?", opts:["Maag", "Apendisitis", "Diare"], a:1 }
     ] },
-    { id: "b2", title: "Sirkulasi Darah", video: "videos/topic2.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
+    { id: "b2", title: "Sirkulasi Darah", video: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
       { id: "b2q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
       { id: "b2q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 },
       { id: "b2q3", q: "Sel darah yang berfungsi mengangkut oksigen adalah?", opts:["Leukosit", "Trombosit", "Eritrosit"], a:2 },
@@ -44,7 +45,7 @@ const SUBJECTS_DATA = {
     ] }
   ],
   "Matematika": [
-    { id: "m1", title: "Konsep Pecahan", video: "videos/math1.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
+    { id: "m1", title: "Konsep Pecahan", video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
       { id: "m1q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
       { id: "m1q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 },
       { id: "m1q3", q: "Bentuk sederhana dari pecahan 4/8 adalah?", opts:["1/2", "2/4", "1/4"], a:0 },
@@ -56,7 +57,7 @@ const SUBJECTS_DATA = {
       { id: "m1q9", q: "Ibu memotong kue menjadi 8 bagian. Jika 3 bagian dimakan, sisa kue adalah?", opts:["3/8", "8/3", "5/8"], a:2 },
       { id: "m1q10", q: "1 1/2 jika diubah menjadi pecahan biasa menjadi?", opts:["11/2", "3/2", "2/3"], a:1 }
     ] },
-    { id: "m2", title: "Dasar Aljabar", video: "videos/math2.mp4", description: "Variabel dan konstanta (≤3 menit).", questions: [
+    { id: "m2", title: "Dasar Aljabar", video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", description: "Variabel dan konstanta (≤3 menit).", questions: [
       { id: "m2q1", q: "Jika 2x + 5 = 11, berapakah nilai x?", opts:["2","3","4"], a:1 },
       { id: "m2q2", q: "Pada bentuk aljabar 3a + 7, yang disebut konstanta adalah?", opts:["3a", "a", "7"], a:2 },
       { id: "m2q3", q: "Sederhanakan bentuk 5x + 2y - 3x + y.", opts:["2x + 3y", "8x + 3y", "2x + y"], a:0 },
@@ -70,7 +71,7 @@ const SUBJECTS_DATA = {
     ] }
   ],
   "Ekonomi": [
-    { id: "e1", title: "Permintaan & Penawaran", video: "videos/eco1.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
+    { id: "e1", title: "Permintaan & Penawaran", video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
       { id: "e1q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
       { id: "e1q2", q: "Titik pertemuan kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 },
       { id: "e1q3", q: "Hukum penawaran menyatakan, jika harga naik, maka jumlah yang ditawarkan akan...", opts:["Naik", "Turun", "Tetap"], a:0 },
@@ -423,7 +424,7 @@ async function renderLeaderboard() {
 
     const { data, error } = await supabase
         .from('leaderboard')
-        .select('name, score')
+        .select('name', 'score')
         .order('score', { ascending: false })
         .limit(5);
 
