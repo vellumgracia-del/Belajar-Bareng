@@ -14,7 +14,7 @@ Aplikasi ini memiliki sistem poin, kuis adaptif, dan AI Mentor sederhana untuk p
 - Soal disesuaikan dengan kesalahan pengguna sebelumnya melalui analisis *tags*.
 
 ✅ **Progress Otomatis**
-- Semua data pengguna disimpan di `localStorage` (termasuk poin dan riwayat belajar).
+- Semua data pengguna disimpan di `Database` (termasuk poin dan riwayat belajar).
 
 ✅ **AI Mentor Chat**
 - Bot sederhana untuk interaksi edukatif (bisa diintegrasikan dengan AI API di masa depan).
