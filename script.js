@@ -58,7 +58,7 @@ const appState = {
   mistakes: {},
   history: [],
   userName: '',
-  geminiApiKey: 'AIzaSyAz0rMZ6RdRVtO_2pOkWhWg6rueJHgy-vw' // <-- PENTING: Ganti dengan API key kamu
+  geminiApiKey: 'AIzaSyC02Hmw7_a1-eFNVF6r-qvFb7KsDpKZ_kU' // <-- PENTING: Ganti dengan API key kamu
 };
 
 function loadState(){
