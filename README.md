@@ -1,6 +1,6 @@
-# 🎓 BelajarBareng — Microlearning Interaktif dengan AI Mentor
+# 🎓 BarBar — Microlearning Interaktif dengan AI Mentor
 
-**BelajarBareng** adalah aplikasi web edukasi interaktif berbasis Ai dan Mentor yang dirancang untuk membantu anak dan orang tua belajar bersama dengan pendekatan microlearning.  
+**BarBar atau BelajarBareng** adalah aplikasi web edukasi interaktif berbasis Ai dan Mentor yang dirancang untuk membantu anak dan orang tua belajar bersama dengan pendekatan microlearning.  
 Aplikasi ini memiliki sistem poin, kuis adaptif, dan AI Mentor sederhana untuk pengalaman belajar yang menyenangkan dan personal.
 
 ---
