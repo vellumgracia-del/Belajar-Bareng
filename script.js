@@ -31,7 +31,7 @@ const SUBJECTS_DATA = {
       { id: "b1q9", q: "Apa nama katup yang memisahkan lambung dan usus halus?", opts:["Epiglotis", "Sfingter esofagus", "Pilorus"], a:2 },
       { id: "b1q10", q: "Penyakit yang disebabkan oleh peradangan pada usus buntu disebut?", opts:["Maag", "Apendisitis", "Diare"], a:1 }
     ] },
-    { id: "b2", title: "Sirkulasi Darah", video: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
+    { id: "b2", title: "Sirkulasi Darah", video: "https://drive.google.com/file/d/16t5MEftQJTPgDDa19LL4Wnwmr0Lah7Pn/view?usp=drive_link", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
       { id: "b2q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
       { id: "b2q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 },
       { id: "b2q3", q: "Sel darah yang berfungsi mengangkut oksigen adalah?", opts:["Leukosit", "Trombosit", "Eritrosit"], a:2 },
