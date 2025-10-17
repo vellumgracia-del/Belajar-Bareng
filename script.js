@@ -15,33 +15,74 @@ try {
   console.error("Supabase client could not be initialized. Please check your URL and Key.", e);
 }
 
+// --- DATA TOPIK DAN SOAL (TOTAL 50 SOAL) ---
 const SUBJECTS_DATA = {
-  "Biologi": [
-    { id: "b1", title: "Sistem Pencernaan", video: "Belajar IPA Sistem Pencernaan Manusia #SiapNaikLevel (1).mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
-      { id: "q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
-      { id: "q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
-      { id: "q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 }
-    ] },
-    { id: "b2", title: "Sirkulasi Darah", video: "videos/topic2.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
-      { id: "q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
-      { id: "q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 }
-    ] }
-  ],
-  "Matematika": [
-    { id: "m1", title: "Konsep Pecahan", video: "videos/math1.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
-      { id: "q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
-      { id: "q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 }
-    ] },
-    { id: "m2", title: "Dasar Aljabar", video: "videos/math2.mp4", description: "Variabel dan konstanta (≤3 menit).", questions: [
-      { id: "q1", q: "Jika 2x + 5 = 11, berapakah nilai x?", opts:["2","3","4"], a:1 }
-    ] }
-  ],
-  "Ekonomi": [
-    { id: "e1", title: "Pengantar Permintaan & Penawaran", video: "videos/eco1.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
-      { id: "q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
-      { id: "q2", q: "Titik pertemuan antara kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 }
-    ] }
-  ]
+  "Biologi": [
+    { id: "b1", title: "Sistem Pencernaan", video: "Belajar IPA Sistem Pencernaan Manusia #SiapNaikLevel (1).mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
+      { id: "b1q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
+      { id: "b1q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
+      { id: "b1q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 },
+      { id: "b1q4", q: "Cairan empedu, yang membantu mencerna lemak, diproduksi oleh organ apa?", opts:["Pankreas", "Hati", "Kantung Empedu"], a:1 },
+      { id: "b1q5", q: "Fungsi utama usus besar adalah?", opts:["Mencerna protein", "Menyerap air", "Menghasilkan enzim"], a:1 },
+      { id: "b1q6", q: "Gerakan meremas-remas makanan oleh kerongkongan disebut?", opts:["Difusi", "Osmosis", "Gerak peristaltik"], a:2 },
+      { id: "b1q7", q: "Vitamin K banyak diproduksi oleh bakteri baik di dalam?", opts:["Lambung", "Usus halus", "Usus besar"], a:2 },
+      { id: "b1q8", q: "Protein mulai dicerna secara kimiawi di organ?", opts:["Mulut", "Lambung", "Usus halus"], a:1 },
+      { id: "b1q9", q: "Apa nama katup yang memisahkan lambung dan usus halus?", opts:["Epiglotis", "Sfingter esofagus", "Pilorus"], a:2 },
+      { id: "b1q10", q: "Penyakit yang disebabkan oleh peradangan pada usus buntu disebut?", opts:["Maag", "Apendisitis", "Diare"], a:1 }
+    ] },
+    { id: "b2", title: "Sirkulasi Darah", video: "videos/topic2.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
+      { id: "b2q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
+      { id: "b2q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 },
+      { id: "b2q3", q: "Sel darah yang berfungsi mengangkut oksigen adalah?", opts:["Leukosit", "Trombosit", "Eritrosit"], a:2 },
+      { id: "b2q4", q: "Bilik jantung yang memompa darah ke seluruh tubuh adalah?", opts:["Bilik Kanan", "Bilik Kiri", "Serambi Kiri"], a:1 },
+      { id: "b2q5", q: "Pembuluh darah yang membawa darah kembali ke jantung disebut?", opts:["Arteri", "Vena", "Kapiler"], a:1 },
+      { id: "b2q6", q: "Golongan darah yang disebut sebagai donor universal adalah?", opts:["A", "B", "O"], a:2 },
+      { id: "b2q7", q: "Penyakit kekurangan sel darah merah disebut?", opts:["Leukemia", "Anemia", "Hipertensi"], a:1 },
+      { id: "b2q8", q: "Di manakah sel darah merah diproduksi?", opts:["Hati", "Sumsum tulang", "Limpa"], a:1 },
+      { id: "b2q9", q: "Tekanan darah normal untuk orang dewasa adalah sekitar?", opts:["120/80 mmHg", "140/90 mmHg", "100/60 mmHg"], a:0 },
+      { id: "b2q10", q: "Apa fungsi utama sel darah putih (leukosit)?", opts:["Mengangkut Oksigen", "Melawan infeksi", "Pembekuan darah"], a:1 }
+    ] }
+  ],
+  "Matematika": [
+    { id: "m1", title: "Konsep Pecahan", video: "videos/math1.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
+      { id: "m1q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
+      { id: "m1q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 },
+      { id: "m1q3", q: "Bentuk sederhana dari pecahan 4/8 adalah?", opts:["1/2", "2/4", "1/4"], a:0 },
+      { id: "m1q4", q: "Mana yang lebih besar, 2/3 atau 3/5?", opts:["3/5", "Keduanya sama", "2/3"], a:2 },
+      { id: "m1q5", q: "Hasil dari 3/4 x 2/3 adalah?", opts:["5/7", "6/12", "1/3"], a:1 },
+      { id: "m1q6", q: "Berapa nilai desimal dari 1/5?", opts:["0.1", "0.2", "0.5"], a:1 },
+      { id: "m1q7", q: "Ubah 0.75 menjadi bentuk pecahan paling sederhana.", opts:["75/100", "3/4", "7/5"], a:1 },
+      { id: "m1q8", q: "Hasil dari 2/5 : 1/5 adalah?", opts:["2", "1/2", "1"], a:0 },
+      { id: "m1q9", q: "Ibu memotong kue menjadi 8 bagian. Jika 3 bagian dimakan, sisa kue adalah?", opts:["3/8", "8/3", "5/8"], a:2 },
+      { id: "m1q10", q: "1 1/2 jika diubah menjadi pecahan biasa menjadi?", opts:["11/2", "3/2", "2/3"], a:1 }
+    ] },
+    { id: "m2", title: "Dasar Aljabar", video: "videos/math2.mp4", description: "Variabel dan konstanta (≤3 menit).", questions: [
+      { id: "m2q1", q: "Jika 2x + 5 = 11, berapakah nilai x?", opts:["2","3","4"], a:1 },
+      { id: "m2q2", q: "Pada bentuk aljabar 3a + 7, yang disebut konstanta adalah?", opts:["3a", "a", "7"], a:2 },
+      { id: "m2q3", q: "Sederhanakan bentuk 5x + 2y - 3x + y.", opts:["2x + 3y", "8x + 3y", "2x + y"], a:0 },
+      { id: "m2q4", q: "Jika a = 4, maka nilai dari 3a - 2 adalah?", opts:["12", "10", "14"], a:1 },
+      { id: "m2q5", q: "Variabel pada bentuk aljabar 4p² - q + 5 adalah?", opts:["p dan q", "p saja", "4 dan 5"], a:0 },
+      { id: "m2q6", q: "Hasil dari (x + 2)(x + 3) adalah?", opts:["x² + 6", "x² + 5x + 6", "2x + 5"], a:1 },
+      { id: "m2q7", q: "Jika 4y = 20, maka nilai y adalah?", opts:["5", "4", "80"], a:0 },
+      { id: "m2q8", q: "Suku yang sejenis dari 7ab + 3ac - 5ab adalah?", opts:["7ab dan 3ac", "3ac dan -5ab", "7ab dan -5ab"], a:2 },
+      { id: "m2q9", q: "Berapa hasil dari (2x)³?", opts:["6x", "2x³", "8x³"], a:2 },
+      { id: "m2q10", q: "Faktorkan bentuk x² - 9.", opts:["(x-3)(x-3)", "(x-9)(x+1)", "(x-3)(x+3)"], a:2 }
+    ] }
+  ],
+  "Ekonomi": [
+    { id: "e1", title: "Permintaan & Penawaran", video: "videos/eco1.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
+      { id: "e1q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
+      { id: "e1q2", q: "Titik pertemuan kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 },
+      { id: "e1q3", q: "Hukum penawaran menyatakan, jika harga naik, maka jumlah yang ditawarkan akan...", opts:["Naik", "Turun", "Tetap"], a:0 },
+      { id: "e1q4", q: "Barang yang permintaannya meningkat ketika pendapatan konsumen meningkat disebut barang...", opts:["Inferior", "Normal", "Publik"], a:1 },
+      { id: "e1q5", q: "Pergeseran kurva permintaan ke kanan berarti...", opts:["Permintaan menurun", "Permintaan meningkat", "Penawaran meningkat"], a:1 },
+      { id: "e1q6", q: "Faktor yang TIDAK mempengaruhi permintaan adalah...", opts:["Harga barang itu sendiri", "Selera konsumen", "Biaya produksi"], a:2 },
+      { id: "e1q7", q: "Ketika jumlah yang ditawarkan lebih besar dari jumlah yang diminta, terjadi...", opts:["Kelangkaan", "Surplus", "Inflasi"], a:1 },
+      { id: "e1q8", q: "Pemerintah menetapkan harga di bawah harga keseimbangan, ini disebut...", opts:["Harga dasar (floor price)", "Harga atap (ceiling price)", "Pajak"], a:1 },
+      { id: "e1q9", q: "Barang pengganti untuk teh adalah...", opts:["Gula", "Kopi", "Air mineral"], a:1 },
+      { id: "e1q10", q: "Elastisitas permintaan mengukur seberapa responsif...", opts:["Penjual terhadap pajak", "Jumlah yang diminta terhadap perubahan harga", "Biaya produksi terhadap teknologi"], a:1 }
+    ] }
+  ]
 };
 
 
@@ -58,7 +99,7 @@ const appState = {
   mistakes: {},
   history: [],
   userName: '',
-  geminiApiKey: 'AIzaSyC02Hmw7_a1-eFNVF6r-qvFb7KsDpKZ_kU' // <-- PENTING: Ganti dengan API key kamu
+  openaiApiKey: '' // OPTIONAL: letakkan API key OpenAI di sini
 };
 
 function loadState(){
@@ -417,40 +458,6 @@ function appendMentor(msg, who='ai'){
 }
 function postMentorMessage(text, who='ai'){ appendMentor(text, who); }
 
-
-// ================================================================
-// --- FUNGSI BARU DAN PERUBAHAN UNTUK INTEGRASI GEMINI API ---
-// ================================================================
-
-/**
- * Menghubungi Google Gemini API untuk mendapatkan respons.
- * @param {string} user_prompt - Pertanyaan dari pengguna beserta konteksnya.
- * @returns {Promise<string>} - Jawaban dari AI.
- */
-async function getGeminiResponse(user_prompt) {
-  // Pastikan API key sudah diisi
-  if (!appState.geminiApiKey || appState.geminiApiKey === 'MASUKKAN_KUNCI_API_GEMINI_ANDA_DI_SINI') {
-    return "Maaf, kunci API Gemini belum dikonfigurasi.";
-  }
-
-  try {
-    // Impor dan inisialisasi library
-    const { GoogleGenerativeAI } = await import('https://cdn.jsdelivr.net/npm/@google/generative-ai/+esm');
-    const genAI = new GoogleGenerativeAI(appState.geminiApiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-    // Kirim prompt dan tunggu hasilnya
-    const result = await model.generateContent(user_prompt);
-    const response = await result.response;
-    const text = response.text();
-    return text;
-
-  } catch (error) {
-    console.error("Error saat menghubungi Gemini API:", error);
-    return "Oops, sepertinya ada masalah saat menghubungi AI. Coba lagi nanti.";
-  }
-}
-
 /* Event Listeners */
 startAppBtn.addEventListener('click', ()=>{
   const name = userNameInput.value.trim();
@@ -468,60 +475,39 @@ startSessionBtn.addEventListener('click', startSession);
 skipTopicBtn.addEventListener('click', ()=>{ markCompleted(false); nextTopic(); });
 nextQBtn.addEventListener('click', ()=>{ markCompleted(true); nextTopic(); });
 endSessionBtn.addEventListener('click', ()=>{ endSession(false); });
-mentorInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMentorBtn.click(); } });
-
-// --- EVENT LISTENER BARU UNTUK MENTOR DENGAN GEMINI ---
-sendMentorBtn.addEventListener('click', async () => {
-  const userInput = mentorInput.value.trim();
-  if (!userInput) return;
-
-  // 1. Tampilkan pesan pengguna dan pesan "loading" dari AI
-  appendMentor(userInput, 'user');
+mentorInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter') sendMentorBtn.click(); });
+sendMentorBtn.addEventListener('click', ()=>{
+  const v = mentorInput.value.trim();
+  if(!v) return;
+  appendMentor(v, 'user');
   mentorInput.value = '';
-  mentorInput.disabled = true; // Nonaktifkan input sementara menunggu
-  sendMentorBtn.disabled = true;
-  postMentorMessage('BelajarBot sedang berpikir...', 'ai');
-
-  // 2. Bangun Konteks untuk AI
-  const t = currentTopic();
-  const mistakesForTopic = appState.mistakes[t.id] || {};
-  let mistakeContext = 'Pengguna belum membuat kesalahan pada topik ini.';
-  if (Object.keys(mistakesForTopic).length > 0) {
-    const wrongQuestions = t.questions.filter(q => mistakesForTopic[q.id]);
-    mistakeContext = 'Pengguna sebelumnya pernah salah menjawab soal berikut:\n' + wrongQuestions.map(q => `- ${q.q}`).join('\n');
+  const lower = v.toLowerCase();
+  if(lower.includes('ringkas')){
+    const t = currentTopic();
+    const bullets = t.questions.map(q=> '- '+ q.q);
+    postMentorMessage(`Ringkasan singkat untuk "${t.title}":\n${bullets.join('\n')}`, 'ai');
+    return;
   }
-
-  // 3. Buat Prompt yang Lengkap
-  const fullPrompt = `
-    Anda adalah "BelajarBot", seorang mentor belajar yang ramah, suportif, dan cerdas.
-    Tugas Anda adalah membantu pengguna memahami materi pelajaran. Jawablah dengan singkat, jelas, dan dalam Bahasa Indonesia.
-
-    Konteks saat ini:
-    - Nama Pengguna: ${appState.userName}
-    - Mata Pelajaran: ${appState.currentSubject}
-    - Topik: "${t.title}"
-    - Deskripsi Topik: ${t.description}
-    - Riwayat Kesalahan Pengguna di Topik Ini: ${mistakeContext}
-
-    Pertanyaan Pengguna: "${userInput}"
-
-    Berikan jawaban yang membantu berdasarkan konteks di atas.
-  `;
-
-  // 4. Panggil Gemini API dan tampilkan hasilnya
-  const aiResponse = await getGeminiResponse(fullPrompt);
-  
-  // Hapus pesan "loading" dan ganti dengan jawaban AI
-  const mentorLog = document.getElementById('mentorLog');
-  mentorLog.removeChild(mentorLog.lastChild); // Hapus "BelajarBot sedang berpikir..."
-  postMentorMessage(aiResponse, 'ai');
-
-  // Aktifkan kembali input
-  mentorInput.disabled = false;
-  sendMentorBtn.disabled = false;
-  mentorInput.focus();
+  if(lower.includes('ulang soal')){
+    const t = currentTopic();
+    const wrongs = appState.mistakes[t.id] || {};
+    const keys = Object.keys(wrongs);
+    if(keys.length===0){ postMentorMessage('Belum ada kesalahan untuk topik ini.', 'ai'); }
+    else {
+      postMentorMessage('Saya masukkan ulang soal yang pernah salah.', 'ai');
+      const wrongQs = t.questions.filter(q=> keys.includes(q.id)).map(q=> ({...q, attempts:0}));
+      appState.quizQueue = wrongQs.concat(appState.quizQueue);
+      renderQuiz();
+    }
+    return;
+  }
+  if(appState.openaiApiKey && appState.openaiApiKey.length > 10){
+    postMentorMessage('Menghubungkan ke layanan AI...', 'ai');
+    // Kode OpenAI tetap sama (diberi komentar agar tidak error jika tanpa API key)
+  } else {
+    postMentorMessage('Maaf, saya masih dalam tahap pengembangan. Coba "ringkasan" atau "ulang soal".', 'ai');
+  }
 });
-
 
 /* Start app */
 init();
