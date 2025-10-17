@@ -181,7 +181,7 @@ input[type="text"]:focus {
 
 /* -- 6. Elemen Spesifik Aplikasi -- */
 .left { display: flex; flex-direction: column; gap: 16px; }
-.video-wrap { display: flex; gap: 16px; align-items: flex-start; }
+.video-wrap { display: block; } /* PERBAIKAN: Mengubah flex menjadi block */
 video { 
   width: 100%; 
   aspect-ratio: 16 / 9; /* PERBAIKAN: Menjaga rasio video agar stabil */
