@@ -3,8 +3,8 @@
   ========================= */
 
 // --- KONFIGURASI SUPABASE ---
-const SUPABASE_URL = 'URL_SUPABASE_ANDA'; // <-- GANTI DENGAN URL SUPABASE ANDA
-const SUPABASE_ANON_KEY = 'KUNCI_ANON_SUPABASE_ANDA'; // <-- GANTI DENGAN KUNCI ANON ANDA
+const SUPABASE_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'; // <-- GANTI DENGAN URL SUPABASE ANDA
+const SUPABASE_ANON_KEY = 'https://unpkg.com/@google/generative-ai'; // <-- GANTI DENGAN KUNCI ANON ANDA
 
 let supabase = null;
 try {
