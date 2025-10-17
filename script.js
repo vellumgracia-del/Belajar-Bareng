@@ -19,7 +19,7 @@ try {
 // CATATAN: Path video telah diubah menjadi URL placeholder. Ganti dengan link video Anda.
 const SUBJECTS_DATA = {
   "Biologi": [
-    { id: "b1", title: "Sistem Pencernaan", video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
+    { id: "b1", title: "Sistem Pencernaan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760703550/Belajar_IPA_Sistem_Pencernaan_Manusia_SiapNaikLevel_fnur0d.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
       { id: "b1q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
       { id: "b1q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
       { id: "b1q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 },
