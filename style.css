@@ -157,7 +157,7 @@ input[type="text"]:focus {
   border-radius: 10px;
   cursor: pointer;
   border: 1px solid var(--border-color);
-  transition: all 5s ease;
+  transition: all 0.2s ease;
 }
 .topic-btn:hover {
     background: rgba(255, 255, 255, 0.5);
@@ -207,7 +207,9 @@ video { width: 100%; height: 320px; background: #000; border-radius: 12px; borde
   padding: 28px;
 }
 .screen.active { display: flex; }
-#mainScreen { position: static; height: auto; }
+#mainScreen { position: static; height: auto; display: none; flex-direction: column; }
+#mainScreen.active { display: flex; }
+
 .landing-card {
   max-width: 550px;
   text-align: center;
@@ -222,73 +224,81 @@ video { width: 100%; height: 320px; background: #000; border-radius: 12px; borde
 }
 
 /* -- 8. Responsif (Disempurnakan) -- */
-/* Untuk Tablet (lebar <= 1024px) */
 @media (max-width: 1024px) {
-.container { 
-grid-template-columns: 1fr; /* Ubah layout menjadi 1 kolom */
-gap: 20px;
-}
-.sidebar { 
-order: 2; /* Pindahkan sidebar ke bawah konten utama */
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Buat kartu di sidebar menjadi rapi */
-gap: 20px;
-}
-.mentor {
-height: auto; /* Atur tinggi mentor menjadi otomatis */
-}
+  .container { 
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .sidebar { 
+    order: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .mentor {
+    height: auto;
+  }
+  .left > .card:last-of-type {
+    display: none; /* Sembunyikan riwayat & tips di tablet agar tidak terlalu ramai */
+  }
 }
 
-/* Untuk Ponsel Besar (lebar <= 768px) */
 @media (max-width: 768px) {
-body {
-padding: 16px; /* Kurangi padding di body */
-}
-.header {
-flex-direction: column; /* Tumpuk header secara vertikal */
-align-items: flex-start;
-gap: 8px;
-}
-.video-wrap { 
-flex-direction: column; /* Tumpuk video dan infonya */
-}
-video { 
-height: auto; /* Tinggi video otomatis */
-}
-.video-wrap > div { 
-width: 100%; 
-margin-top: 16px; 
-}
-.card {
-padding: 16px; /* Kurangi padding di semua kartu */
-}
-h1 {
-font-size: 22px; /* Perkecil ukuran judul utama */
-}
-.landing-card {
-  padding: 32px 24px;
-}
-.landing-card h1 {
-  font-size: 28px;
-}
+  body {
+    padding: 16px;
+  }
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .video-wrap { 
+    flex-direction: column;
+  }
+  video { 
+    height: auto;
+  }
+  .video-wrap > div { 
+    width: 100%; 
+    margin-top: 16px; 
+  }
+  .card {
+    padding: 16px;
+  }
+  h1 {
+    font-size: 22px;
+  }
+  .landing-card {
+      padding: 32px 24px;
+  }
+  .landing-card h1 {
+      font-size: 28px;
+  }
+  /* Sembunyikan bagian riwayat & tips di mobile */
+  .left > div[style*="display:flex"] {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .left > div[style*="display:flex"] > .card {
+    width: 100% !important;
+  }
 }
 
-/* Untuk Ponsel Kecil (lebar <= 480px) */
 @media (max-width: 480px) {
-body {
-padding: 12px;
-}
-.controls {
-flex-wrap: wrap; /* Tombol "Mulai Sesi" & "Lewati" bisa turun ke bawah jika tidak muat */
-}
-.btn {
-padding: 8px 12px; /* Perkecil ukuran tombol */
-font-size: 13px;
-}
-.landing-card .mentor-input {
-flex-direction: column; /* Tumpuk input nama dan tombol di landing page */
-}
-footer {
-font-size: 12px;
-}
+  body {
+    padding: 12px;
+  }
+  .controls {
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  .landing-card .mentor-input {
+    flex-direction: column;
+  }
+  footer {
+    font-size: 12px;
+  }
 }
