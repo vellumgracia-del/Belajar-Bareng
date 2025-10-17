@@ -61,7 +61,7 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 4px;
+  /* margin-bottom dihapus karena .card sudah punya jarak */
 }
 footer {
   grid-column: 1 / -1;
@@ -97,6 +97,15 @@ h1 {
   font-size: 24px;
   margin: 0;
   color: var(--text-primary);
+}
+header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(45deg, #4056b9, #2c3a8e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 .small {
   font-size: 14px;
@@ -173,7 +182,14 @@ input[type="text"]:focus {
 /* -- 6. Elemen Spesifik Aplikasi -- */
 .left { display: flex; flex-direction: column; gap: 16px; }
 .video-wrap { display: flex; gap: 16px; align-items: flex-start; }
-video { width: 100%; height: 320px; background: #000; border-radius: 12px; border: 1px solid var(--border-color); }
+video { 
+  width: 100%; 
+  aspect-ratio: 16 / 9; /* PERBAIKAN: Menjaga rasio video agar stabil */
+  object-fit: cover; /* PERBAIKAN: Memastikan video mengisi area tanpa distorsi */
+  background: #000; 
+  border-radius: 12px; 
+  border: 1px solid var(--border-color); 
+}
 .topic-list { display: flex; gap: 10px; flex-wrap: wrap; }
 .controls { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
 .progress-line { height: 10px; background: rgba(0, 0, 0, 0.08); border-radius: 10px; overflow: hidden; }
@@ -247,7 +263,7 @@ video { width: 100%; height: 320px; background: #000; border-radius: 12px; borde
   body {
     padding: 16px;
   }
-  header {
+  header { /* PERBAIKAN: Menggunakan selector elemen yang benar */
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
@@ -267,6 +283,9 @@ video { width: 100%; height: 320px; background: #000; border-radius: 12px; borde
   }
   h1 {
     font-size: 22px;
+  }
+  header h1 {
+    font-size: 26px; /* Menyesuaikan ukuran judul di header untuk mobile */
   }
   .landing-card {
       padding: 32px 24px;
