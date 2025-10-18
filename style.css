@@ -61,7 +61,6 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  /* margin-bottom dihapus karena .card sudah punya jarak */
 }
 footer {
   grid-column: 1 / -1;
@@ -181,17 +180,34 @@ input[type="text"]:focus {
 
 /* -- 6. Elemen Spesifik Aplikasi -- */
 .left { display: flex; flex-direction: column; gap: 16px; }
-.video-wrap { display: block; } /* PERBAIKAN: Mengubah flex menjadi block */
 video { 
   width: 100%; 
-  aspect-ratio: 16 / 9; /* PERBAIKAN: Menjaga rasio video agar stabil */
-  object-fit: cover; /* PERBAIKAN: Memastikan video mengisi area tanpa distorsi */
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
   background: #000; 
   border-radius: 12px; 
   border: 1px solid var(--border-color); 
+  display: block;
+}
+.video-info-wrapper {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+.topic-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+}
+.topic-controls {
+  flex-shrink: 0;
+  width: 260px;
 }
 .topic-list { display: flex; gap: 10px; flex-wrap: wrap; }
-.controls { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.controls { display: flex; gap: 8px; align-items: center; }
 .progress-line { height: 10px; background: rgba(0, 0, 0, 0.08); border-radius: 10px; overflow: hidden; }
 .progress-line > i { display: block; height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
 .options { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
@@ -239,6 +255,39 @@ video {
     margin-top: 16px;
 }
 
+/* PERUBAHAN: Gaya untuk Splash Screen dan Logo Header */
+.splash-content {
+  text-align: center;
+  color: white;
+  animation: fadeIn 1.5s ease-out;
+}
+.splash-logo {
+  margin-bottom: 16px;
+  animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.splash-content h1 {
+  font-size: 48px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 2px;
+}
+.splash-content .small {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4px;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.header-title-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.header-logo {
+    flex-shrink: 0;
+}
+
 /* -- 8. Responsif (Disempurnakan) -- */
 @media (max-width: 1024px) {
   .container { 
@@ -255,7 +304,7 @@ video {
     height: auto;
   }
   .left > .card:last-of-type {
-    display: none; /* Sembunyikan riwayat & tips di tablet agar tidak terlalu ramai */
+    display: none;
   }
 }
 
@@ -263,20 +312,17 @@ video {
   body {
     padding: 16px;
   }
-  header { /* PERBAIKAN: Menggunakan selector elemen yang benar */
+  header {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
-  .video-wrap { 
-    flex-direction: column;
+  .video-info-wrapper {
+      flex-direction: column;
+      align-items: stretch;
   }
-  video { 
-    height: auto;
-  }
-  .video-wrap > div { 
-    width: 100%; 
-    margin-top: 16px; 
+  .topic-controls {
+      width: 100%;
   }
   .card {
     padding: 16px;
@@ -285,7 +331,7 @@ video {
     font-size: 22px;
   }
   header h1 {
-    font-size: 26px; /* Menyesuaikan ukuran judul di header untuk mobile */
+    font-size: 26px;
   }
   .landing-card {
       padding: 32px 24px;
@@ -293,7 +339,6 @@ video {
   .landing-card h1 {
       font-size: 28px;
   }
-  /* Sembunyikan bagian riwayat & tips di mobile */
   .left > div[style*="display:flex"] {
     flex-direction: column;
     gap: 16px;
