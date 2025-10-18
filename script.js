@@ -16,13 +16,12 @@ try {
 }
 
 // --- DATA TOPIK DAN SOAL (TOTAL 50 SOAL) ---
-// CATATAN: Path video telah diubah menjadi URL placeholder. Ganti dengan link video Anda.
 const SUBJECTS_DATA = {
-  "Biologi": [
-    { id: "b1", title: "Sistem Pencernaan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760703550/Belajar_IPA_Sistem_Pencernaan_Manusia_SiapNaikLevel_fnur0d.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
-      { id: "b1q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
-      { id: "b1q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
-      { id: "b1q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 },
+  "Biologi": [
+    { id: "b1", title: "Sistem Pencernaan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760703550/Belajar_IPA_Sistem_Pencernaan_Manusia_SiapNaikLevel_fnur0d.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
+      { id: "b1q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
+      { id: "b1q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
+      { id: "b1q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 },
       { id: "b1q4", q: "Cairan empedu, yang membantu mencerna lemak, diproduksi oleh organ apa?", opts:["Pankreas", "Hati", "Kantung Empedu"], a:1 },
       { id: "b1q5", q: "Fungsi utama usus besar adalah?", opts:["Mencerna protein", "Menyerap air", "Menghasilkan enzim"], a:1 },
       { id: "b1q6", q: "Gerakan meremas-remas makanan oleh kerongkongan disebut?", opts:["Difusi", "Osmosis", "Gerak peristaltik"], a:2 },
@@ -30,10 +29,10 @@ const SUBJECTS_DATA = {
       { id: "b1q8", q: "Protein mulai dicerna secara kimiawi di organ?", opts:["Mulut", "Lambung", "Usus halus"], a:1 },
       { id: "b1q9", q: "Apa nama katup yang memisahkan lambung dan usus halus?", opts:["Epiglotis", "Sfingter esofagus", "Pilorus"], a:2 },
       { id: "b1q10", q: "Penyakit yang disebabkan oleh peradangan pada usus buntu disebut?", opts:["Maag", "Apendisitis", "Diare"], a:1 }
-    ] },
-    { id: "b2", title: "Sirkulasi Darah", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760709823/barbar/Apa_yang_terjadi_di_dalam_tubuh_saat_darah_mengalir__-_Belajar_IPA_cj8b2r.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
-      { id: "b2q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
-      { id: "b2q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 },
+    ] },
+    { id: "b2", title: "Sirkulasi Darah", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760709823/barbar/Apa_yang_terjadi_di_dalam_tubuh_saat_darah_mengalir__-_Belajar_IPA_cj8b2r.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
+      { id: "b2q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
+      { id: "b2q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 },
       { id: "b2q3", q: "Sel darah yang berfungsi mengangkut oksigen adalah?", opts:["Leukosit", "Trombosit", "Eritrosit"], a:2 },
       { id: "b2q4", q: "Bilik jantung yang memompa darah ke seluruh tubuh adalah?", opts:["Bilik Kanan", "Bilik Kiri", "Serambi Kiri"], a:1 },
       { id: "b2q5", q: "Pembuluh darah yang membawa darah kembali ke jantung disebut?", opts:["Arteri", "Vena", "Kapiler"], a:1 },
@@ -42,12 +41,12 @@ const SUBJECTS_DATA = {
       { id: "b2q8", q: "Di manakah sel darah merah diproduksi?", opts:["Hati", "Sumsum tulang", "Limpa"], a:1 },
       { id: "b2q9", q: "Tekanan darah normal untuk orang dewasa adalah sekitar?", opts:["120/80 mmHg", "140/90 mmHg", "100/60 mmHg"], a:0 },
       { id: "b2q10", q: "Apa fungsi utama sel darah putih (leukosit)?", opts:["Mengangkut Oksigen", "Melawan infeksi", "Pembekuan darah"], a:1 }
-    ] }
-  ],
-  "Matematika": [
-    { id: "m1", title: "Konsep Pecahan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760751491/barbar/Pecahan_-_Animasi_Matematika_SD_n2roxi.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
-      { id: "m1q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
-      { id: "m1q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 },
+    ] }
+  ],
+  "Matematika": [
+    { id: "m1", title: "Konsep Pecahan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760751491/barbar/Pecahan_-_Animasi_Matematika_SD_n2roxi.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
+      { id: "m1q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
+      { id: "m1q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 },
       { id: "m1q3", q: "Bentuk sederhana dari pecahan 4/8 adalah?", opts:["1/2", "2/4", "1/4"], a:0 },
       { id: "m1q4", q: "Mana yang lebih besar, 2/3 atau 3/5?", opts:["3/5", "Keduanya sama", "2/3"], a:2 },
       { id: "m1q5", q: "Hasil dari 3/4 x 2/3 adalah?", opts:["5/7", "6/12", "1/3"], a:1 },
@@ -56,9 +55,9 @@ const SUBJECTS_DATA = {
       { id: "m1q8", q: "Hasil dari 2/5 : 1/5 adalah?", opts:["2", "1/2", "1"], a:0 },
       { id: "m1q9", q: "Ibu memotong kue menjadi 8 bagian. Jika 3 bagian dimakan, sisa kue adalah?", opts:["3/8", "8/3", "5/8"], a:2 },
       { id: "m1q10", q: "1 1/2 jika diubah menjadi pecahan biasa menjadi?", opts:["11/2", "3/2", "2/3"], a:1 }
-    ] },
-    { id: "m2", title: "Dasar Aljabar", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760751491/barbar/Mengenal_Unsur-Unsur_Aljabar___Matematika_Kelas_7_simenh.mp4", description: "Variabel dan konstanta (≤3 menit).", questions: [
-      { id: "m2q1", q: "Jika 2x + 5 = 11, berapakah nilai x?", opts:["2","3","4"], a:1 },
+    ] },
+    { id: "m2", title: "Dasar Aljabar", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760751491/barbar/Mengenal_Unsur-Unsur_Aljabar___Matematika_Kelas_7_simenh.mp4", description: "Variabel dan konstanta (≤3 menit).", questions: [
+      { id: "m2q1", q: "Jika 2x + 5 = 11, berapakah nilai x?", opts:["2","3","4"], a:1 },
       { id: "m2q2", q: "Pada bentuk aljabar 3a + 7, yang disebut konstanta adalah?", opts:["3a", "a", "7"], a:2 },
       { id: "m2q3", q: "Sederhanakan bentuk 5x + 2y - 3x + y.", opts:["2x + 3y", "8x + 3y", "2x + y"], a:0 },
       { id: "m2q4", q: "Jika a = 4, maka nilai dari 3a - 2 adalah?", opts:["12", "10", "14"], a:1 },
@@ -68,12 +67,12 @@ const SUBJECTS_DATA = {
       { id: "m2q8", q: "Suku yang sejenis dari 7ab + 3ac - 5ab adalah?", opts:["7ab dan 3ac", "3ac dan -5ab", "7ab dan -5ab"], a:2 },
       { id: "m2q9", q: "Berapa hasil dari (2x)³?", opts:["6x", "2x³", "8x³"], a:2 },
       { id: "m2q10", q: "Faktorkan bentuk x² - 9.", opts:["(x-3)(x-3)", "(x-9)(x+1)", "(x-3)(x+3)"], a:2 }
-    ] }
-  ],
-  "Ekonomi": [
-    { id: "e1", title: "Permintaan & Penawaran", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760750374/introduction-to-supply-and-demand_PwrjcZaP_x6tsu1.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
-      { id: "e1q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
-      { id: "e1q2", q: "Titik pertemuan kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 },
+    ] }
+  ],
+  "Ekonomi": [
+    { id: "e1", title: "Permintaan & Penawaran", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760750374/introduction-to-supply-and-demand_PwrjcZaP_x6tsu1.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
+      { id: "e1q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
+      { id: "e1q2", q: "Titik pertemuan kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 },
       { id: "e1q3", q: "Hukum penawaran menyatakan, jika harga naik, maka jumlah yang ditawarkan akan...", opts:["Naik", "Turun", "Tetap"], a:0 },
       { id: "e1q4", q: "Barang yang permintaannya meningkat ketika pendapatan konsumen meningkat disebut barang...", opts:["Inferior", "Normal", "Publik"], a:1 },
       { id: "e1q5", q: "Pergeseran kurva permintaan ke kanan berarti...", opts:["Permintaan menurun", "Permintaan meningkat", "Penawaran meningkat"], a:1 },
@@ -82,8 +81,8 @@ const SUBJECTS_DATA = {
       { id: "e1q8", q: "Pemerintah menetapkan harga di bawah harga keseimbangan, ini disebut...", opts:["Harga dasar (floor price)", "Harga atap (ceiling price)", "Pajak"], a:1 },
       { id: "e1q9", q: "Barang pengganti untuk teh adalah...", opts:["Gula", "Kopi", "Air mineral"], a:1 },
       { id: "e1q10", q: "Elastisitas permintaan mengukur seberapa responsif...", opts:["Penjual terhadap pajak", "Jumlah yang diminta terhadap perubahan harga", "Biaya produksi terhadap teknologi"], a:1 }
-    ] }
-  ]
+    ] }
+  ]
 };
 
 
@@ -126,7 +125,6 @@ const subjectsWrap = document.getElementById('subjectsWrap');
 const topicsWrap = document.getElementById('topicsWrap');
 const topicTitle = document.getElementById('topicTitle');
 const topicVideo = document.getElementById('topicVideo');
-const videoDurationEl = document.getElementById('videoDuration');
 const sessTimer = document.getElementById('sessTimer');
 const startSessionBtn = document.getElementById('startSession');
 const skipTopicBtn = document.getElementById('skipTopic');
@@ -148,7 +146,8 @@ const mentorInput = document.getElementById('mentorInput');
 const sendMentorBtn = document.getElementById('sendMentor');
 const completionOverlay = document.getElementById('completionOverlay');
 
-/* New UI bindings for Landing Screen */
+/* New UI bindings for Screens */
+const splashScreen = document.getElementById('splashScreen');
 const landingScreen = document.getElementById('landingScreen');
 const mainScreen = document.getElementById('mainScreen');
 const userNameInput = document.getElementById('userNameInput');
@@ -166,18 +165,24 @@ function showScreen(screenId) {
 }
 
 function init(){
-  if (appState.userName) {
-    userNameInput.value = appState.userName;
-    showScreen('mainScreen'); // Langsung ke main screen jika nama sudah ada
-  } else {
-    showScreen('landingScreen'); // Tampilkan landing screen
-  }
-
+  // Muat semua data dan render elemen yang tersembunyi terlebih dahulu
   renderSubjects();
   loadTopic(0);
   updateStats();
   renderHistory();
   renderLeaderboard();
+
+  // Atur transisi dari splash screen ke layar berikutnya
+  setTimeout(() => {
+    splashScreen.classList.remove('active');
+
+    if (appState.userName) {
+      userNameInput.value = appState.userName;
+      showScreen('mainScreen');
+    } else {
+      showScreen('landingScreen');
+    }
+  }, 2500); // Tampilkan splash screen selama 2.5 detik
 }
 
 function renderSubjects() {
@@ -216,8 +221,7 @@ function loadTopic(index){
   topicVideo.querySelector('source').src = t.video;
   topicVideo.load();
   topicVideo.onloadedmetadata = ()=>{
-    const sec = Math.round(topicVideo.duration||0);
-    videoDurationEl.textContent = sec? formatTime(sec) + 's':'-';
+    // Logika untuk menampilkan durasi video sudah dihapus
     tipsEl.textContent = t.description;
   };
   appState.quizQueue = shuffleArray(t.questions.map(q=> ({...q, attempts:0}) ));
@@ -295,12 +299,11 @@ function handleAnswer(question, selectedIndex, elNode){
     appState.mistakes[currentTopic().id][question.id] = (appState.mistakes[currentTopic().id][question.id]||0) + 1;
 
     question.attempts = (question.attempts||0) + 1;
-    // Put the question back if it's the first wrong answer
     if(question.attempts < 2){
-      appState.quizQueue.push(appState.quizQueue.shift()); // Move to back
+      appState.quizQueue.push(appState.quizQueue.shift());
     } else {
       postMentorMessage(`Sepertinya kamu belum paham soal: "${question.q}". Coba tinjau video lagi.`, 'ai');
-      appState.quizQueue.shift(); // Remove after 2nd mistake
+      appState.quizQueue.shift();
     }
   }
   saveState();
@@ -400,7 +403,6 @@ function renderHistory(){
   historyEl.innerHTML = lines.join('');
 }
 
-// --- FUNGSI BARU UNTUK LEADERBOARD ---
 async function updateUserScore() {
     if (!appState.userName || !supabase) return;
     const { error } = await supabase
