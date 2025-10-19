@@ -48,9 +48,11 @@ body {
 }
 
 /* -- 2. Layout Utama -- */
+/* PERUBAHAN: Lebar .container diperbesar untuk PC/Laptop */
 .container {
-  width: 1100px;
-  max-width: 100%;
+  width: 100%; /* Memenuhi lebar yang tersedia */
+  max-width: 1440px; /* Batas lebar maksimal baru */
+  margin: 0 auto; /* Menjaga container tetap di tengah */
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 24px;
@@ -127,6 +129,8 @@ header h1 {
   transition: all 0.2s ease;
   font-family: inherit;
   font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
 }
 .btn:hover {
   background: rgba(255, 255, 255, 0.5);
@@ -239,8 +243,8 @@ video {
   padding: 28px;
 }
 .screen.active { display: flex; }
-#mainScreen { position: static; height: auto; display: none; flex-direction: column; }
-#mainScreen.active { display: flex; }
+#mainScreen { display: none; }
+#mainScreen.active { display: block; position: static; height: auto; }
 
 .landing-card {
   max-width: 550px;
@@ -255,7 +259,7 @@ video {
     margin-top: 16px;
 }
 
-/* PERUBAHAN: Gaya untuk Splash Screen dan Logo Header */
+/* Gaya untuk Splash, Header, dan Forum */
 .splash-content {
   text-align: center;
   color: white;
@@ -287,10 +291,43 @@ video {
 .header-logo {
     flex-shrink: 0;
 }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.stats-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.forum-cta-wrapper {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 8px;
+}
+.forum-btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.user-rank {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+  font-weight: 600;
+  text-align: center;
+}
+
 
 /* -- 8. Responsif (Disempurnakan) -- */
 @media (max-width: 1024px) {
+  /* PERUBAHAN: Lebar .container direset kembali ke default untuk tablet */
   .container { 
+    max-width: 100%; /* Memastikan tidak ada batas lebar pada tablet */
     grid-template-columns: 1fr;
     gap: 20px;
   }
@@ -315,7 +352,11 @@ video {
   header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 12px;
+  }
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
   }
   .video-info-wrapper {
       flex-direction: column;
