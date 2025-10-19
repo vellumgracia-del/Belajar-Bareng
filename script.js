@@ -3,8 +3,8 @@
   ========================= */
 
 // --- KONFIGURASI SUPABASE ---
-const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co'; // <-- GANTI DENGAN URL SUPABASE ANDA
-const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0'; // <-- GANTI DENGAN KUNCI ANON ANDA
+const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co'; // Ganti dengan URL Supabase Anda
+const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0'; // Ganti dengan Kunci Anon Anda
 
 let supabase = null;
 try {
@@ -15,7 +15,7 @@ try {
   console.error("Supabase client could not be initialized. Please check your URL and Key.", e);
 }
 
-// --- DATA TOPIK DAN SOAL (TOTAL 50 SOAL) ---
+// --- DATA TOPIK DAN SOAL ---
 const SUBJECTS_DATA = {
   "Biologi": [
     { id: "b1", title: "Sistem Pencernaan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760703550/Belajar_IPA_Sistem_Pencernaan_Manusia_SiapNaikLevel_fnur0d.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
@@ -85,7 +85,7 @@ const SUBJECTS_DATA = {
   ]
 };
 
-
+// --- STATE APLIKASI ---
 const appState = {
   subjects: SUBJECTS_DATA,
   currentSubject: "Biologi",
@@ -99,7 +99,7 @@ const appState = {
   mistakes: {},
   history: [],
   userName: '',
-  openaiApiKey: '' // OPTIONAL: letakkan API key OpenAI di sini
+  openaiApiKey: ''
 };
 
 function loadState(){
@@ -146,7 +146,6 @@ const mentorInput = document.getElementById('mentorInput');
 const sendMentorBtn = document.getElementById('sendMentor');
 const completionOverlay = document.getElementById('completionOverlay');
 
-/* New UI bindings for Screens */
 const splashScreen = document.getElementById('splashScreen');
 const landingScreen = document.getElementById('landingScreen');
 const mainScreen = document.getElementById('mainScreen');
@@ -165,16 +164,14 @@ function showScreen(screenId) {
 }
 
 function init(){
-  // Muat semua data dan render elemen yang tersembunyi terlebih dahulu
-  renderSubjects();
-  loadTopic(0);
-  updateStats();
-  renderHistory();
-  renderLeaderboard();
+  showScreen('splashScreen');
 
-  // Atur transisi dari splash screen ke layar berikutnya
   setTimeout(() => {
-    splashScreen.classList.remove('active');
+    renderSubjects();
+    loadTopic(0);
+    updateStats();
+    renderHistory();
+    renderLeaderboard();
 
     if (appState.userName) {
       userNameInput.value = appState.userName;
@@ -182,7 +179,7 @@ function init(){
     } else {
       showScreen('landingScreen');
     }
-  }, 2500); // Tampilkan splash screen selama 2.5 detik
+  }, 2500);
 }
 
 function renderSubjects() {
@@ -221,7 +218,6 @@ function loadTopic(index){
   topicVideo.querySelector('source').src = t.video;
   topicVideo.load();
   topicVideo.onloadedmetadata = ()=>{
-    // Logika untuk menampilkan durasi video sudah dihapus
     tipsEl.textContent = t.description;
   };
   appState.quizQueue = shuffleArray(t.questions.map(q=> ({...q, attempts:0}) ));
@@ -403,6 +399,63 @@ function renderHistory(){
   historyEl.innerHTML = lines.join('');
 }
 
+async function renderLeaderboard() {
+    const boardEl = document.getElementById('leaderboard');
+    if (!supabase) {
+        boardEl.innerHTML = '<div class="small">Supabase belum dikonfigurasi.</div>';
+        return;
+    }
+    boardEl.innerHTML = '<div class="small">Memuat data...</div>';
+
+    const { data: top25, error: top25Error } = await supabase
+        .from('leaderboard')
+        .select('name, score')
+        .order('score', { ascending: false })
+        .limit(25);
+
+    if (top25Error) {
+        console.error('Gagal mengambil data leaderboard:', top25Error);
+        boardEl.innerHTML = '<div class="small">Gagal memuat data. Periksa konsol.</div>';
+        return;
+    }
+
+    if (top25.length === 0) {
+        boardEl.innerHTML = '<div class="small">Belum ada data. Jadilah yang pertama!</div>';
+    } else {
+        boardEl.innerHTML = '';
+        const emojis = ['🥇', '🥈', '🥉'];
+        top25.forEach((entry, idx) => {
+            const div = document.createElement('div');
+            div.className = 'small';
+            const rank = emojis[idx] || `${idx + 1}.`;
+            div.innerHTML = `${rank} <strong>${entry.name}</strong> - ${entry.score} poin`;
+            boardEl.appendChild(div);
+        });
+    }
+
+    const userInTop25 = top25.some(entry => entry.name === appState.userName);
+
+    if (!userInTop25 && appState.userName) {
+        const { count, error: countError } = await supabase
+            .from('leaderboard')
+            .select('*', { count: 'exact', head: true })
+            .gt('score', appState.points);
+        
+        if (countError) {
+            console.error('Gagal menghitung peringkat pengguna:', countError);
+            return;
+        }
+
+        const userRank = (count ?? 0) + 1;
+        
+        const rankDiv = document.createElement('div');
+        rankDiv.className = 'user-rank';
+        rankDiv.innerHTML = `Peringkat Anda: <strong>#${userRank}</strong> dengan ${appState.points} poin`;
+        boardEl.appendChild(rankDiv);
+    }
+}
+
+
 async function updateUserScore() {
     if (!appState.userName || !supabase) return;
     const { error } = await supabase
@@ -415,42 +468,6 @@ async function updateUserScore() {
         renderLeaderboard();
     }
 }
-
-async function renderLeaderboard() {
-    const boardEl = document.getElementById('leaderboard');
-    if (!supabase) {
-        boardEl.innerHTML = '<div class="small">Supabase belum dikonfigurasi.</div>';
-        return;
-    }
-    boardEl.innerHTML = '<div class="small">Memuat data...</div>';
-
-    const { data, error } = await supabase
-        .from('leaderboard')
-        .select('name', 'score')
-        .order('score', { ascending: false })
-        .limit(5);
-
-    if (error) {
-        console.error('Gagal mengambil data leaderboard:', error);
-        boardEl.innerHTML = '<div class="small">Gagal memuat data.</div>';
-        return;
-    }
-
-    if (data.length === 0) {
-        boardEl.innerHTML = '<div class="small">Belum ada data. Jadilah yang pertama!</div>';
-        return;
-    }
-
-    boardEl.innerHTML = '';
-    const emojis = ['🥇', '🥈', '🥉', '4.', '5.'];
-    data.forEach((entry, idx) => {
-        const div = document.createElement('div');
-        div.className = 'small';
-        div.innerHTML = `${emojis[idx] || (idx+1)+'.'} <strong>${entry.name}</strong> - ${entry.score} poin`;
-        boardEl.appendChild(div);
-    });
-}
-
 
 function appendMentor(msg, who='ai'){
   const div = document.createElement('div');
@@ -482,6 +499,18 @@ mentorInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter') sendMentor
 sendMentorBtn.addEventListener('click', ()=>{
   const v = mentorInput.value.trim();
   if(!v) return;
+
+  // --- PERUBAHAN DIMULAI DI SINI ---
+  // Kurangi 20 poin setiap kali AI Mentor digunakan.
+  appState.points = Math.max(0, appState.points - 20); // Pastikan skor tidak menjadi negatif
+  saveState(); // Simpan skor baru
+  updateStats(); // Perbarui tampilan UI
+  // Beri notifikasi kepada pengguna tentang pengurangan poin
+  setTimeout(() => {
+    postMentorMessage('Bantuan AI Mentor digunakan (-20 poin).', 'ai');
+  }, 500);
+  // --- PERUBAHAN SELESAI ---
+
   appendMentor(v, 'user');
   mentorInput.value = '';
   const lower = v.toLowerCase();
@@ -506,7 +535,7 @@ sendMentorBtn.addEventListener('click', ()=>{
   }
   if(appState.openaiApiKey && appState.openaiApiKey.length > 10){
     postMentorMessage('Menghubungkan ke layanan AI...', 'ai');
-    // Kode OpenAI tetap sama (diberi komentar agar tidak error jika tanpa API key)
+    // Kode OpenAI tetap sama
   } else {
     postMentorMessage('Maaf, saya masih dalam tahap pengembangan. Coba "ringkasan" atau "ulang soal".', 'ai');
   }
