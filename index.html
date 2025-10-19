@@ -12,10 +12,9 @@
 <body>
   <div class="overlay" id="completionOverlay"></div>
 
-  <!-- PERUBAHAN: Layar pembuka (splash screen) dengan logo ditambahkan -->
   <div id="splashScreen" class="screen active">
     <div class="splash-content">
-      <svg class="splash-logo" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="splash-logo" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="https://res.cloudinary.com/dgzufaone/image/upload/v1760881887/1000050042-removebg-preview_t6kzbn.svg">
           <path d="M20 80V20L60 20C76.5685 20 90 33.4315 90 50C90 66.5685 76.5685 80 60 80H20Z" fill="white" fill-opacity="0.3"/>
           <path d="M20 70V30H55C66.0457 30 75 38.9543 75 50C75 61.0457 66.0457 70 55 70H20Z" fill="white"/>
       </svg>
@@ -40,7 +39,6 @@
   <div id="mainScreen" class="screen">
     <div class="container">
       <header class="card">
-        <!-- PERUBAHAN: Wrapper baru untuk logo dan judul -->
         <div class="header-title-group">
           <svg class="header-logo" width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M20 80V20L60 20C76.5685 20 90 33.4315 90 50C90 66.5685 76.5685 80 60 80H20Z" fill="var(--accent-darker)"/>
@@ -51,9 +49,11 @@
             <div class="small">Microlearning — 5 menit per topik · Video ≤ 3 menit · Quiz adaptif · AI Mentor</div>
           </div>
         </div>
-        <div style="display:flex; gap:16px; align-items:center">
-          <div class="small">Poin: <strong id="points" style="font-size:16px;">0</strong></div>
-          <div class="small">Progress: <strong id="completedCount">0</strong>/<span id="topicCount">0</span></div>
+        <div class="header-actions">
+          <div class="stats-group">
+            <div class="small">Poin: <strong id="points" style="font-size:16px;">0</strong></div>
+            <div class="small">Progress: <strong id="completedCount">0</strong>/<span id="topicCount">0</span></div>
+          </div>
         </div>
       </header>
 
@@ -68,7 +68,6 @@
             <div class="topic-details">
               <div class="small">Topik</div>
               <div id="topicTitle" style="font-weight:700; font-size:18px">-</div>
-              <!-- PERUBAHAN: Keterangan durasi video dihapus dari sini -->
               <div class="small">Timer sesi: <span class="timer" id="sessTimer">05:00</span></div>
             </div>
             <div class="topic-controls">
@@ -125,7 +124,7 @@
         <div class="card">
           <div style="font-weight:700">🏆 Papan Peringkat</div>
           <div id="leaderboard" style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-            <div class="small">Memuat data...</div>
+            <!-- Konten Papan Peringkat akan di-render oleh JavaScript -->
           </div>
         </div>
 
@@ -143,9 +142,15 @@
           </div>
         </div>
       </aside>
+      
+      <div class="forum-cta-wrapper">
+        <a href="https://udinndinn49-debug.github.io/contoh/ " target="_blank" class="btn accent-btn forum-btn">
+          💬 Buka Forum Diskusi Komunitas
+        </a>
+      </div>
 
       <footer>
-        Made with Mind  <code>/videos</code>. Oleh Zulfa Fahmiy and Prabu Revolusi.
+        Made with Artificial Intelligence  <code>/videos</code>. By Zulfa Fahmiy and Prabu Revolusi.
       </footer>
     </div>
   </div>
