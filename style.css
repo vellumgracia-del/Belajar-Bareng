@@ -80,11 +80,10 @@ footer {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
-  display: flex; /* Tambahkan ini agar layout di dalam card lebih fleksibel */
-  flex-direction: column; /* Arahkan konten secara vertikal */
+  display: flex; 
+  flex-direction: column; 
 }
 
-/* PERUBAHAN: Membuat .card-header dan .scrollable-content */
 .card-header {
   padding-bottom: 12px;
   margin-bottom: 12px;
@@ -92,9 +91,9 @@ footer {
 }
 .scrollable-content {
   overflow-y: auto;
-  flex-grow: 1; /* Biarkan konten ini memanjang mengisi sisa space */
-  padding-right: 8px; /* Space untuk scrollbar */
-  margin-right: -8px; /* Trik agar padding tidak menambah lebar */
+  flex-grow: 1; 
+  padding-right: 8px; 
+  margin-right: -8px; 
 }
 
 .mentor {
@@ -106,6 +105,7 @@ h1 {
   font-size: 24px;
   margin: 0;
   color: var(--text-primary);
+  line-height: 1.2;
 }
 header h1 {
   font-size: 28px;
@@ -134,7 +134,6 @@ header h1 {
   cursor: pointer;
   color: var(--text-primary);
   font-weight: 500;
-  /* PERUBAHAN: Transisi dipercepat */
   transition: all 0.15s ease;
   font-family: inherit;
   font-size: 14px;
@@ -155,8 +154,8 @@ header h1 {
 .accent-btn:hover {
   background: var(--accent-darker);
 }
-input[type="text"] {
-  flex: 1;
+input[type="text"], textarea {
+  width: 100%;
   padding: 10px 14px;
   border-radius: 10px;
   border: 1px solid var(--border-color);
@@ -165,10 +164,10 @@ input[type="text"] {
   font-size: 14px;
   font-family: inherit;
 }
-input[type="text"]::placeholder {
+input[type="text"]::placeholder, textarea::placeholder {
   color: var(--text-secondary);
 }
-input[type="text"]:focus {
+input[type="text"]:focus, textarea:focus {
     outline: 2px solid var(--accent);
     border-color: transparent;
 }
@@ -233,9 +232,8 @@ video {
 .mentor .user { background: var(--accent); color: white; margin-left: auto; }
 .mentor-input { display: flex; gap: 8px; margin-top: auto; padding-top: 12px; }
 
-/* PERUBAHAN: Gaya untuk Papan Peringkat */
 #leaderboard {
-  max-height: 230px; /* Batasi tinggi papan peringkat */
+  max-height: 230px; 
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -246,7 +244,7 @@ video {
   transition: background-color 0.2s;
 }
 .current-user {
-  background-color: rgba(106, 130, 251, 0.25); /* Latar belakang sorotan */
+  background-color: rgba(106, 130, 251, 0.25); 
   font-weight: 600;
   border: 1px solid rgba(106, 130, 251, 0.4);
 }
@@ -321,6 +319,17 @@ video {
     align-items: center;
     gap: 16px;
 }
+/* PERUBAHAN: Penyesuaian judul aplikasi */
+.app-title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap; /* Izinkan subtitle turun jika tidak muat */
+}
+.app-subtitle {
+  padding-bottom: 4px; /* Menjaga kesejajaran dengan judul */
+}
+
 .header-logo {
     flex-shrink: 0;
 }
@@ -346,6 +355,39 @@ video {
   padding: 12px 20px;
   font-size: 16px;
   font-weight: 600;
+}
+
+/* PERUBAHAN: Gaya untuk bagian Feedback */
+.feedback-wrapper {
+  grid-column: 1 / -1; /* Ambil lebar penuh */
+  margin-top: 8px;
+  text-align: center;
+  gap: 12px;
+}
+.feedback-wrapper h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.star-rating {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  font-size: 28px;
+  cursor: pointer;
+}
+.star-rating .star {
+  color: rgba(0,0,0,0.2);
+  transition: all 0.15s ease;
+}
+.star-rating .star:hover,
+.star-rating .star.hover,
+.star-rating .star.selected {
+  color: #facc15; /* Warna kuning bintang */
+  transform: scale(1.15);
+}
+.feedback-wrapper textarea {
+  height: 80px;
+  resize: vertical;
 }
 
 /* -- 8. Responsif (Disempurnakan) -- */
@@ -378,6 +420,16 @@ video {
     align-items: flex-start;
     gap: 12px;
   }
+  /* PERUBAHAN: Judul dan subtitle ditata ulang di mobile */
+  .app-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .app-subtitle {
+    padding-bottom: 0;
+  }
+
   .header-actions {
     width: 100%;
     justify-content: space-between;
