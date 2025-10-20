@@ -44,9 +44,9 @@
               <path d="M20 80V20L60 20C76.5685 20 90 33.4315 90 50C90 66.5685 76.5685 80 60 80H20Z" fill="var(--accent-darker)"/>
               <path d="M20 70V30H55C66.0457 30 75 38.9543 75 50C75 61.0457 66.0457 70 55 70H20Z" fill="white"/>
           </svg>
-          <div>
+          <div class="app-title">
             <h1>BARBAR</h1>
-            <div class="small">Microlearning — 5 menit per topik · Video ≤ 3 menit · Quiz adaptif · AI Mentor</div>
+            <div class="small app-subtitle">Platform Microlearning 5 Menit</div>
           </div>
         </div>
         <div class="header-actions">
@@ -135,7 +135,7 @@
             <div style="font-weight:700">AI Mentor</div>
           </div>
           <div id="mentorLog" class="scrollable-content">
-            <div class="msg ai">Halo! Saya Mentor AI kamu. Ketik pertanyaan, atau minta ringkasan singkat setelah menonton. (-20 Poin per penggunaan)</div>
+            <div class="msg ai">Halo! Saya Mentor AI kamu. Ketik pertanyaan, atau minta ringkasan. Penggunaan AI aktif akan mengurangi 20 poin.</div>
           </div>
           <div class="mentor-input">
             <input id="mentorInput" type="text" placeholder="Tanya Mentor..." />
@@ -144,8 +144,23 @@
         </div>
       </aside>
       
+      <div class="feedback-wrapper card">
+        <h3>Beri Penilaian Anda</h3>
+        <p class="small">Bagaimana pengalaman belajar Anda hari ini?</p>
+        <div class="star-rating" id="starRating">
+            <span class="star" data-value="1">☆</span>
+            <span class="star" data-value="2">☆</span>
+            <span class="star" data-value="3">☆</span>
+            <span class="star" data-value="4">☆</span>
+            <span class="star" data-value="5">☆</span>
+        </div>
+        <textarea id="feedbackText" placeholder="Ketik saran atau masukan Anda di sini..."></textarea>
+        <button id="submitFeedback" class="btn accent-btn">Kirim Feedback</button>
+        <p id="feedbackThanks" class="small" style="display:none; text-align:center; margin-top:16px;">Terima kasih atas masukan Anda!</p>
+      </div>
+      
       <div class="forum-cta-wrapper">
-        <a href="https://udinndinn49-debug.github.io/contoh/ " target="_blank" class="btn accent-btn forum-btn">
+        <a href="https://udinndinn49-debug.github.io/contoh/" target="_blank" class="btn accent-btn forum-btn">
           💬 Buka Forum Diskusi Komunitas
         </a>
       </div>
