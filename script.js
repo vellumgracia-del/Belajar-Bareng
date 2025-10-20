@@ -426,7 +426,10 @@ async function renderLeaderboard() {
         const emojis = ['🥇', '🥈', '🥉'];
         top25.forEach((entry, idx) => {
             const div = document.createElement('div');
-            div.className = 'small';
+            div.className = 'leaderboard-entry small'; // PERUBAHAN: Tambah class
+            if (entry.name === appState.userName) {
+              div.classList.add('current-user'); // PERUBAHAN: Tambah class untuk pengguna saat ini
+            }
             const rank = emojis[idx] || `${idx + 1}.`;
             div.innerHTML = `${rank} <strong>${entry.name}</strong> - ${entry.score} poin`;
             boardEl.appendChild(div);
@@ -449,12 +452,11 @@ async function renderLeaderboard() {
         const userRank = (count ?? 0) + 1;
         
         const rankDiv = document.createElement('div');
-        rankDiv.className = 'user-rank';
+        rankDiv.className = 'user-rank current-user'; // PERUBAHAN: Tambah class
         rankDiv.innerHTML = `Peringkat Anda: <strong>#${userRank}</strong> dengan ${appState.points} poin`;
         boardEl.appendChild(rankDiv);
     }
 }
-
 
 async function updateUserScore() {
     if (!appState.userName || !supabase) return;
@@ -500,19 +502,17 @@ sendMentorBtn.addEventListener('click', ()=>{
   const v = mentorInput.value.trim();
   if(!v) return;
 
-  // --- PERUBAHAN DIMULAI DI SINI ---
-  // Kurangi 20 poin setiap kali AI Mentor digunakan.
-  appState.points = Math.max(0, appState.points - 20); // Pastikan skor tidak menjadi negatif
-  saveState(); // Simpan skor baru
-  updateStats(); // Perbarui tampilan UI
-  // Beri notifikasi kepada pengguna tentang pengurangan poin
-  setTimeout(() => {
-    postMentorMessage('Bantuan AI Mentor digunakan (-20 poin).', 'ai');
-  }, 500);
-  // --- PERUBAHAN SELESAI ---
-
+  appState.points = Math.max(0, appState.points - 20);
+  saveState();
+  updateStats();
+  
   appendMentor(v, 'user');
   mentorInput.value = '';
+
+  setTimeout(() => {
+    postMentorMessage('Bantuan AI Mentor digunakan (-20 poin).', 'ai');
+  }, 300);
+
   const lower = v.toLowerCase();
   if(lower.includes('ringkas')){
     const t = currentTopic();
