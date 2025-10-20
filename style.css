@@ -189,6 +189,15 @@ input[type="text"]:focus, textarea:focus {
   border-color: transparent;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+/* PERUBAHAN: Style untuk tombol yang nonaktif saat kuis */
+.topic-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+  transform: none;
+}
+
 
 /* -- 6. Elemen Spesifik Aplikasi -- */
 .left { display: flex; flex-direction: column; gap: 16px; }
@@ -319,15 +328,14 @@ video {
     align-items: center;
     gap: 16px;
 }
-/* PERUBAHAN: Penyesuaian judul aplikasi */
 .app-title {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  flex-wrap: wrap; /* Izinkan subtitle turun jika tidak muat */
+  flex-wrap: wrap; 
 }
 .app-subtitle {
-  padding-bottom: 4px; /* Menjaga kesejajaran dengan judul */
+  padding-bottom: 4px; 
 }
 
 .header-logo {
@@ -357,9 +365,8 @@ video {
   font-weight: 600;
 }
 
-/* PERUBAHAN: Gaya untuk bagian Feedback */
 .feedback-wrapper {
-  grid-column: 1 / -1; /* Ambil lebar penuh */
+  grid-column: 1 / -1; 
   margin-top: 8px;
   text-align: center;
   gap: 12px;
@@ -382,7 +389,7 @@ video {
 .star-rating .star:hover,
 .star-rating .star.hover,
 .star-rating .star.selected {
-  color: #facc15; /* Warna kuning bintang */
+  color: #facc15; 
   transform: scale(1.15);
 }
 .feedback-wrapper textarea {
@@ -420,7 +427,6 @@ video {
     align-items: flex-start;
     gap: 12px;
   }
-  /* PERUBAHAN: Judul dan subtitle ditata ulang di mobile */
   .app-title {
     flex-direction: column;
     align-items: flex-start;
@@ -462,6 +468,19 @@ video {
   }
   .left > div[style*="display:flex"] > .card {
     width: 100% !important;
+  }
+  /* PERUBAHAN: Mengatur urutan elemen di mobile */
+  .sidebar {
+    order: 2;
+  }
+  .feedback-wrapper {
+    order: 3;
+  }
+  .forum-cta-wrapper {
+    order: 4;
+  }
+  footer {
+    order: 5;
   }
 }
 
