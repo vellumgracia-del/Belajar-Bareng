@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>BARBAR — Platform Belajar Microlearning</title>
+  <title>BARBAR — Platform Belajar Microlearning 5 menit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,169 +12,162 @@
 <body>
   <div class="overlay" id="completionOverlay"></div>
 
-  <!-- Header Utama Aplikasi -->
-  <header class="app-header">
-    <div class="header-content">
-      <div class="header-left">
-        <button id="hamburgerBtn" class="hamburger-btn">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+  <div id="splashScreen" class="screen active">
+    <div class="splash-content">
+      <svg class="splash-logo" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 80V20L60 20C76.5685 20 90 33.4315 90 50C90 66.5685 76.5685 80 60 80H20Z" fill="white" fill-opacity="0.3"/>
+          <path d="M20 70V30H55C66.0457 30 75 38.9543 75 50C75 61.0457 66.0457 70 55 70H20Z" fill="white"/>
+      </svg>
+      <h1>BARBAR</h1>
+      <div class="small">Platform Belajar Microlearning</div>
+    </div>
+  </div>
+
+  <div id="landingScreen" class="screen">
+    <div class="card landing-card">
+      <h1>Selamat Datang di BARBAR! 🚀</h1>
+      <div style="margin-top:10px; color:var(--text-secondary)">Platform microlearning 5 menit. Video pendek, kuis adaptif, dan AI mentor untuk percepat pemahaman Anda.</div>
+      <div style="margin-top:24px; font-weight:600">Sebelum Mulai, masukkan nama Anda:</div>
+      <div class="mentor-input">
+        <input id="userNameInput" type="text" placeholder="Nama Anda (untuk Papan Peringkat)" />
+        <button class="btn accent-btn" id="startAppBtn">Mulai Belajar!</button>
+      </div>
+      <div class="small" style="margin-top:12px; opacity:0.8;">Nama akan disimpan di browser Anda dan dikirim ke Papan Peringkat.</div>
+    </div>
+  </div>
+
+  <div id="mainScreen" class="screen">
+    <div class="container">
+      <header class="card">
         <div class="header-title-group">
           <svg class="header-logo" width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 80V20L60 20C76.5685 20 90 33.4315 90 50C90 66.5685 76.5685 80 60 80H20Z" fill="#a3bcfb"/>
-            <path d="M20 70V30H55C66.0457 30 75 38.9543 75 50C75 61.0457 66.0457 70 55 70H20Z" fill="var(--accent)"/>
+              <path d="M20 80V20L60 20C76.5685 20 90 33.4315 90 50C90 66.5685 76.5685 80 60 80H20Z" fill="var(--accent-darker)"/>
+              <path d="M20 70V30H55C66.0457 30 75 38.9543 75 50C75 61.0457 66.0457 70 55 70H20Z" fill="white"/>
           </svg>
           <div class="app-title">
             <h1>BARBAR</h1>
+            <div class="small app-subtitle">Platform Microlearning 5 Menit</div>
           </div>
         </div>
-      </div>
-      <div id="welcomeUser" class="welcome-user" style="display: none;">
-        Selamat datang, <strong id="userNameDisplay"></strong>!
-      </div>
-    </div>
-  </header>
+        <div class="header-actions">
+          <div class="stats-group">
+            <div class="small">Poin: <strong id="points" style="font-size:16px;">0</strong></div>
+            <div class="small">Progress: <strong id="completedCount">0</strong>/<span id="topicCount">0</span></div>
+          </div>
+        </div>
+      </header>
 
-  <!-- Sidebar Navigasi -->
-  <nav id="sidebar" class="sidebar-nav">
-    <a href="#home" class="nav-link active" data-page="homePage">🏠 Beranda</a>
-    <a href="#belajar" class="nav-link" data-page="appPage">📚 Mulai Belajar</a>
-    <a href="#feedback" class="nav-link" data-page="feedbackPage">⭐ Beri Penilaian</a>
-  </nav>
+      <main class="left">
+        <div class="card">
+          <video id="topicVideo" controls preload="metadata">
+            <source src="" type="video/mp4">
+            Browser Anda tidak mendukung elemen video.
+          </video>
+          
+          <div class="video-info-wrapper">
+            <div class="topic-details">
+              <div class="small">Topik</div>
+              <div id="topicTitle" style="font-weight:700; font-size:18px">-</div>
+              <div class="small">Timer sesi: <span class="timer" id="sessTimer">05:00</span></div>
+            </div>
+            <div class="topic-controls">
+                <div class="controls">
+                  <button class="btn" id="startSession">Mulai Sesi 5m</button>
+                  <button class="btn" id="skipTopic">Lewati</button>
+                </div>
+                <div class="small" style="margin-top:8px">Progress topik</div>
+                <div class="progress-line"><i id="progBar"></i></div>
+            </div>
+          </div>
+          
+          <div style="margin-top:24px">
+            <div class="small">Pilih Mata Pelajaran</div>
+            <div class="topic-list" id="subjectsWrap" style="margin-top:8px; margin-bottom:12px;"></div>
+            <div class="small">Pilih topik</div>
+            <div class="topic-list" id="topicsWrap" style="margin-top:8px;"></div>
+          </div>
+        </div>
 
-  <!-- Kontainer untuk semua halaman -->
-  <div class="page-container">
-    <!-- Halaman Beranda -->
-    <div id="homePage" class="page active">
-      <div class="hero-section">
-        <h2>Percepat Pemahaman, Kuasai Materi dalam 5 Menit.</h2>
-        <p>BARBAR adalah platform microlearning yang dirancang untuk membantumu belajar lebih efisien melalui video singkat, kuis adaptif, dan papan peringkat yang kompetitif.</p>
-        <button id="startFromHomeBtn" class="btn accent-btn large-btn">Mulai Petualangan Belajar</button>
+        <div class="card quiz" id="quizArea" style="display:none">
+          <div id="quizHeader" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+            <div style="font-weight:700; font-size:18px;">Kuis Singkat</div>
+            <div class="small">Soal tersisa: <span id="remainingQ">0</span></div>
+          </div>
+          <div id="questionWrap"></div>
+          <div style="margin-top:16px; display:flex; gap:8px">
+            <button class="btn" id="nextQ" style="display:none">Lanjut</button>
+            <button class="btn" id="endSession" style="display:none">Akhiri Sesi</button>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:24px;">
+          <div class="card" style="flex:1">
+            <div style="font-weight:700">Riwayat Cepat</div>
+            <div class="small" id="history" style="margin-top:8px; line-height:1.6;">Belum ada riwayat.</div>
+          </div>
+          <div class="card" style="width:260px; flex-shrink:0;">
+            <div style="font-weight:700">Tips singkat</div>
+            <div class="small" id="tips" style="margin-top:8px; line-height:1.6;">Mulai sesi dan tonton video sampai habis. Jawab kuis untuk dapat poin.</div>
+          </div>
+        </div>
+      </main>
+
+      <aside class="sidebar">
+        <div class="card">
+          <div style="font-weight:700">Statistik</div>
+          <div style="margin-top:12px; display:flex; flex-direction:column; gap:6px;">
+            <div class="small">Topik selesai: <strong id="doneTopics">0</strong></div>
+            <div class="small">Total poin: <strong id="totalPoints">0</strong></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div style="font-weight:700">🏆 Papan Peringkat</div>
+          </div>
+          <div id="leaderboard" class="scrollable-content">
+            <!-- Konten Papan Peringkat akan di-render oleh JavaScript -->
+          </div>
+        </div>
+
+        <div class="card mentor">
+          <div class="card-header">
+            <div style="font-weight:700">AI Mentor</div>
+          </div>
+          <div id="mentorLog" class="scrollable-content">
+            <div class="msg ai">Halo! Saya Mentor AI kamu. Ketik pertanyaan, atau minta ringkasan. Penggunaan AI aktif akan mengurangi 20 poin.</div>
+          </div>
+          <div class="mentor-input">
+            <input id="mentorInput" type="text" placeholder="Tanya Mentor..." />
+            <button class="btn" id="sendMentor">Kirim</button>
+          </div>
+        </div>
+      </aside>
+      
+      <div class="feedback-wrapper card">
+        <h3>Beri Penilaian Anda</h3>
+        <p class="small">Bagaimana pengalaman belajar Anda hari ini?</p>
+        <div class="star-rating" id="starRating">
+            <span class="star" data-value="1">☆</span>
+            <span class="star" data-value="2">☆</span>
+            <span class="star" data-value="3">☆</span>
+            <span class="star" data-value="4">☆</span>
+            <span class="star" data-value="5">☆</span>
+        </div>
+        <textarea id="feedbackText" placeholder="Ketik saran atau masukan Anda di sini..."></textarea>
+        <button id="submitFeedback" class="btn accent-btn">Kirim Feedback</button>
+        <p id="feedbackThanks" class="small" style="display:none; text-align:center; margin-top:16px;">Terima kasih atas masukan Anda!</p>
       </div>
-      <div class="features-section">
-        <div class="feature-card">
-          <h4>🎬 Video Singkat</h4>
-          <p>Materi kompleks dirangkum dalam video di bawah 3 menit.</p>
-        </div>
-        <div class="feature-card">
-          <h4>🧠 Kuis Adaptif</h4>
-          <p>Soal menyesuaikan dengan pemahamanmu untuk hasil maksimal.</p>
-        </div>
-        <div class="feature-card">
-          <h4>🏆 Papan Peringkat</h4>
-          <p>Bersaing dengan teman dan raih posisi teratas.</p>
-        </div>
+      
+      <div class="forum-cta-wrapper">
+        <a href="https://udinndinn49-debug.github.io/contoh/" target="_blank" class="btn accent-btn forum-btn">
+          💬 Buka Forum Diskusi Komunitas
+        </a>
       </div>
-    </div>
 
-    <!-- Halaman Input Nama -->
-    <div id="landingPage" class="page">
-        <div class="card landing-card">
-            <h2>Satu Langkah Lagi...</h2>
-            <p>Masukkan namamu untuk memulai sesi belajar dan bergabung di papan peringkat.</p>
-            <div class="mentor-input">
-                <input id="userNameInput" type="text" placeholder="Ketik nama Anda di sini..." />
-                <button class="btn accent-btn" id="startAppBtn">Lanjutkan</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Halaman Aplikasi Utama (Belajar) -->
-    <div id="appPage" class="page">
-      <div class="container-app">
-        <main class="left">
-          <div class="card">
-            <video id="topicVideo" controls preload="metadata">
-              <source src="" type="video/mp4">
-            </video>
-            <div class="video-info-wrapper">
-              <div class="topic-details">
-                <div class="small">Topik</div>
-                <div id="topicTitle">-</div>
-                <div class="small">Timer sesi: <span class="timer" id="sessTimer">05:00</span></div>
-              </div>
-              <div class="topic-controls">
-                  <div class="controls">
-                    <button class="btn" id="startSession">Mulai Sesi 5m</button>
-                    <button class="btn" id="skipTopic">Lewati</button>
-                  </div>
-                  <div class="small">Progress topik</div>
-                  <div class="progress-line"><i id="progBar"></i></div>
-              </div>
-            </div>
-            <div style="margin-top:24px">
-              <div class="small">Pilih Mata Pelajaran</div>
-              <div class="topic-list" id="subjectsWrap"></div>
-              <div class="small" style="margin-top:12px;">Pilih topik</div>
-              <div class="topic-list" id="topicsWrap"></div>
-            </div>
-          </div>
-
-          <div class="card quiz" id="quizArea" style="display:none">
-            <div id="quizHeader">
-              <div>Kuis Singkat</div>
-              <div class="small">Soal tersisa: <span id="remainingQ">0</span></div>
-            </div>
-            <div id="questionWrap"></div>
-            <div style="margin-top:16px; display:flex; gap:8px">
-              <button class="btn" id="nextQ" style="display:none">Lanjut</button>
-              <button class="btn" id="endSession" style="display:none">Akhiri Sesi</button>
-            </div>
-          </div>
-        </main>
-        <aside class="sidebar">
-          <div class="card">
-            <div class="card-header">Statistik</div>
-            <div class="stats-grid">
-              <div class="small">Topik Selesai <strong id="doneTopics">0</strong></div>
-              <div class="small">Total Poin <strong id="totalPoints">0</strong></div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header">🏆 Papan Peringkat</div>
-            <div id="leaderboard" class="scrollable-content"></div>
-          </div>
-          <div class="card mentor">
-            <div class="card-header">AI Mentor</div>
-            <div id="mentorLog" class="scrollable-content">
-              <div class="msg ai">Halo! Saya Mentor AI. Penggunaan AI aktif akan mengurangi 20 poin.</div>
-            </div>
-            <div class="mentor-input">
-              <input id="mentorInput" type="text" placeholder="Tanya Mentor..." />
-              <button class="btn" id="sendMentor">Kirim</button>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </div>
-
-    <!-- Halaman Feedback -->
-    <div id="feedbackPage" class="page">
-      <div class="feedback-container">
-        <div class="card feedback-wrapper">
-          <h3>Beri Penilaian Anda</h3>
-          <p class="small">Bagaimana pengalaman belajar Anda hari ini?</p>
-          <div class="star-rating" id="starRating">
-              <span class="star" data-value="1">☆</span>
-              <span class="star" data-value="2">☆</span>
-              <span class="star" data-value="3">☆</span>
-              <span class="star" data-value="4">☆</span>
-              <span class="star" data-value="5">☆</span>
-          </div>
-          <textarea id="feedbackText" placeholder="Ketik saran atau masukan Anda di sini..."></textarea>
-          <button id="submitFeedback" class="btn accent-btn">Kirim Feedback</button>
-          <p id="feedbackThanks" class="small" style="display:none;">Terima kasih atas masukan Anda!</p>
-        </div>
-        <div class="card forum-card">
-            <h3>Gabung Komunitas</h3>
-            <p class="small">Diskusikan materi, tanya jawab, dan berkolaborasi dengan pengguna lain di forum komunitas kami.</p>
-            <a href="https://udinndinn49-debug.github.io/contoh/" target="_blank" class="btn accent-btn forum-btn">
-              💬 Buka Forum Diskusi
-            </a>
-        </div>
-      </div>
+      <footer>
+        Made with Mind  <code>/videos</code>. Oleh Zulfa Fahmiy and Prabu Revolusi.
+      </footer>
     </div>
   </div>
 
