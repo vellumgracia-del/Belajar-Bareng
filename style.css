@@ -48,11 +48,10 @@ body {
 }
 
 /* -- 2. Layout Utama -- */
-/* PERUBAHAN: Lebar .container diperbesar untuk PC/Laptop */
 .container {
-  width: 100%; /* Memenuhi lebar yang tersedia */
-  max-width: 1440px; /* Batas lebar maksimal baru */
-  margin: 0 auto; /* Menjaga container tetap di tengah */
+  width: 100%; 
+  max-width: 1440px; 
+  margin: 0 auto; 
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 24px;
@@ -81,16 +80,25 @@ footer {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
+  display: flex; /* Tambahkan ini agar layout di dalam card lebih fleksibel */
+  flex-direction: column; /* Arahkan konten secara vertikal */
 }
+
+/* PERUBAHAN: Membuat .card-header dan .scrollable-content */
+.card-header {
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+.scrollable-content {
+  overflow-y: auto;
+  flex-grow: 1; /* Biarkan konten ini memanjang mengisi sisa space */
+  padding-right: 8px; /* Space untuk scrollbar */
+  margin-right: -8px; /* Trik agar padding tidak menambah lebar */
+}
+
 .mentor {
     height: 420px;
-    overflow-y: auto;
-}
-hr {
-  border: none;
-  height: 1px;
-  background: var(--border-color);
-  margin: 16px 0;
 }
 
 /* -- 4. Tipografi -- */
@@ -126,7 +134,8 @@ header h1 {
   cursor: pointer;
   color: var(--text-primary);
   font-weight: 500;
-  transition: all 0.2s ease;
+  /* PERUBAHAN: Transisi dipercepat */
+  transition: all 0.15s ease;
   font-family: inherit;
   font-size: 14px;
   text-decoration: none;
@@ -169,7 +178,7 @@ input[type="text"]:focus {
   border-radius: 10px;
   cursor: pointer;
   border: 1px solid var(--border-color);
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 .topic-btn:hover {
     background: rgba(255, 255, 255, 0.5);
@@ -215,7 +224,7 @@ video {
 .progress-line { height: 10px; background: rgba(0, 0, 0, 0.08); border-radius: 10px; overflow: hidden; }
 .progress-line > i { display: block; height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
 .options { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
-.option { padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.3); cursor: pointer; border: 1px solid var(--border-color); transition: all 0.2s ease; }
+.option { padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.3); cursor: pointer; border: 1px solid var(--border-color); transition: all 0.15s ease; }
 .option:hover { background: rgba(255, 255, 255, 0.5); border-color: var(--accent); }
 .option.correct { border-color: #22c55e; background: rgba(34, 197, 94, 0.15); font-weight: 600; }
 .option.wrong { border-color: #ef4444; background: rgba(239, 68, 68, 0.15); }
@@ -223,6 +232,30 @@ video {
 .mentor .ai { background: rgba(255, 255, 255, 0.2); border: 1px solid var(--border-color); }
 .mentor .user { background: var(--accent); color: white; margin-left: auto; }
 .mentor-input { display: flex; gap: 8px; margin-top: auto; padding-top: 12px; }
+
+/* PERUBAHAN: Gaya untuk Papan Peringkat */
+#leaderboard {
+  max-height: 230px; /* Batasi tinggi papan peringkat */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.leaderboard-entry {
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+.current-user {
+  background-color: rgba(106, 130, 251, 0.25); /* Latar belakang sorotan */
+  font-weight: 600;
+  border: 1px solid rgba(106, 130, 251, 0.4);
+}
+.user-rank {
+  margin-top: 12px;
+  padding: 8px;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
 
 /* -- 7. Overlay & Layar -- */
 .overlay {
@@ -314,20 +347,11 @@ video {
   font-size: 16px;
   font-weight: 600;
 }
-.user-rank {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border-color);
-  font-weight: 600;
-  text-align: center;
-}
-
 
 /* -- 8. Responsif (Disempurnakan) -- */
 @media (max-width: 1024px) {
-  /* PERUBAHAN: Lebar .container direset kembali ke default untuk tablet */
   .container { 
-    max-width: 100%; /* Memastikan tidak ada batas lebar pada tablet */
+    max-width: 100%; 
     grid-template-columns: 1fr;
     gap: 20px;
   }
