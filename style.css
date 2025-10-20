@@ -1,25 +1,27 @@
 /* =========================================
- * DESAIN BARU - BELAJARBARENG
- * Oleh:  Zulfa Fahmiy
- * Efek: Glassmorphism Modern
+ * DESAIN BARU - Oleh Zulfa Fahmiy
  * ========================================= */
 
 /* -- 1. Variabel & Pengaturan Dasar -- */
 :root {
-  --accent: #6a82fb;
-  --accent-darker: #5468d6;
-  --card-bg: rgba(255, 255, 255, 0.55);
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --border-color: rgba(255, 255, 255, 0.4);
-  --shadow-color: rgba(31, 38, 135, 0.17);
+  --accent: #00A2B9; /* Biru-hijau */
+  --accent-darker: #007A8D;
+  --primary-bg: #F0F4F7; /* Latar belakang utama yang cerah */
+  --secondary-bg: #FFFFFF; /* Warna kartu */
+  --text-primary: #333333;
+  --text-secondary: #667085;
+  --border-color: #E4E7EB;
+  --shadow-color: rgba(108, 114, 124, 0.1);
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #facc15;
+  --header-height: 64px;
 
   font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
 }
 
 * {
@@ -28,352 +30,210 @@
   padding: 0;
 }
 
-@keyframes animatedGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
 body {
-  min-height: 100vh;
-  background: linear-gradient(-45deg, #667eea, #764ba2, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: animatedGradient 15s ease infinite;
+  background-color: var(--primary-bg);
   color: var(--text-primary);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 28px;
-  position: relative;
+  padding-top: var(--header-height); /* Sisakan ruang untuk header fixed */
 }
 
-/* -- 2. Layout Utama -- */
-.container {
-  width: 100%; 
-  max-width: 1440px; 
-  margin: 0 auto; 
+/* -- 2. Layout & Halaman -- */
+.page-container {
+  width: 100%;
+}
+.page {
+  display: none;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.page.active {
+  display: block;
+}
+
+.container-app {
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 1fr 340px;
   gap: 24px;
 }
-header {
-  grid-column: 1 / -1;
+.left { display: flex; flex-direction: column; gap: 24px; }
+.sidebar { display: flex; flex-direction: column; gap: 24px; }
+
+/* -- 3. Header & Navigasi -- */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  background-color: var(--secondary-bg);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  z-index: 100;
+  padding: 0 24px;
   display: flex;
   align-items: center;
+}
+.header-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+.header-left {
+  display: flex;
+  align-items: center;
   gap: 16px;
 }
-footer {
-  grid-column: 1 / -1;
-  margin-top: 16px;
-  color: rgba(255,255,255,0.8);
-  font-size: 13px;
-  text-align: center;
+.hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hamburger-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--text-primary);
+  transition: all 0.3s;
+}
+.sidebar-nav {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  width: 250px;
+  height: calc(100vh - var(--header-height));
+  background-color: var(--secondary-bg);
+  box-shadow: 4px 0 10px var(--shadow-color);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 90;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sidebar-nav.open {
+  transform: translateX(0);
+}
+.nav-link {
+  padding: 12px 16px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  border-radius: 8px;
+  transition: background-color 0.2s, color 0.2s;
+}
+.nav-link:hover {
+  background-color: var(--primary-bg);
+  color: var(--text-primary);
+}
+.nav-link.active {
+  background-color: var(--accent);
+  color: white;
+}
+.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.app-title h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.welcome-user {
+  font-size: 14px;
+  color: var(--text-secondary);
 }
 
-/* -- 3. Komponen Utama (Glassmorphism) -- */
+/* -- 4. Komponen & Kartu -- */
 .card {
-  background: var(--card-bg);
-  border-radius: 16px;
+  background-color: var(--secondary-bg);
+  border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 8px 32px 0 var(--shadow-color);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
-  display: flex; 
-  flex-direction: column; 
+  box-shadow: 0 4px 12px var(--shadow-color);
 }
-
 .card-header {
+  font-weight: 600;
+  font-size: 16px;
   padding-bottom: 12px;
   margin-bottom: 12px;
   border-bottom: 1px solid var(--border-color);
 }
 .scrollable-content {
   overflow-y: auto;
-  flex-grow: 1; 
-  padding-right: 8px; 
-  margin-right: -8px; 
+  max-height: 200px;
 }
+.mentor { display: flex; flex-direction: column; height: 400px; }
+.mentor .scrollable-content { flex-grow: 1; }
 
-.mentor {
-    height: 420px;
+/* -- 5. Halaman Spesifik -- */
+/* Beranda */
+.hero-section {
+  text-align: center;
+  padding: 48px 0;
 }
-
-/* -- 4. Tipografi -- */
-h1 {
-  font-size: 24px;
-  margin: 0;
-  color: var(--text-primary);
-  line-height: 1.2;
-}
-header h1 {
-  font-size: 28px;
+.hero-section h2 {
+  font-size: 36px;
   font-weight: 700;
-  background: linear-gradient(45deg, #4056b9, #2c3a8e);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+  max-width: 600px;
+  margin: 0 auto 16px;
 }
-.small {
-  font-size: 14px;
+.hero-section p {
+  font-size: 16px;
   color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto 24px;
 }
-.timer {
-  font-weight: 700;
-  font-size: 18px;
+.large-btn {
+  padding: 14px 28px;
+  font-size: 16px;
 }
-
-/* -- 5. Elemen Interaktif (Tombol, Input, dll) -- */
-.btn {
-  background: rgba(255, 255, 255, 0.3);
-  border: 1px solid var(--border-color);
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: var(--text-primary);
-  font-weight: 500;
-  transition: all 0.15s ease;
-  font-family: inherit;
-  font-size: 14px;
-  text-decoration: none;
-  display: inline-block;
-}
-.btn:hover {
-  background: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-.accent-btn {
-  background: var(--accent);
-  color: #ffffff;
-  font-weight: 600;
-  border-color: transparent;
-}
-.accent-btn:hover {
-  background: var(--accent-darker);
-}
-input[type="text"], textarea {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  background: rgba(255, 255, 255, 0.3);
-  color: var(--text-primary);
-  font-size: 14px;
-  font-family: inherit;
-}
-input[type="text"]::placeholder, textarea::placeholder {
-  color: var(--text-secondary);
-}
-input[type="text"]:focus, textarea:focus {
-    outline: 2px solid var(--accent);
-    border-color: transparent;
-}
-.topic-btn {
-  background: rgba(255, 255, 255, 0.3);
-  padding: 8px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-  border: 1px solid var(--border-color);
-  transition: all 0.15s ease;
-}
-.topic-btn:hover {
-    background: rgba(255, 255, 255, 0.5);
-}
-.topic-btn.active {
-  background: var(--accent);
-  color: #ffffff;
-  font-weight: 600;
-  border-color: transparent;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-/* PERUBAHAN: Style untuk tombol yang nonaktif saat kuis */
-.topic-btn.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-  box-shadow: none;
-  transform: none;
-}
-
-
-/* -- 6. Elemen Spesifik Aplikasi -- */
-.left { display: flex; flex-direction: column; gap: 16px; }
-video { 
-  width: 100%; 
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  background: #000; 
-  border-radius: 12px; 
-  border: 1px solid var(--border-color); 
-  display: block;
-}
-.video-info-wrapper {
-  margin-top: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.features-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 24px;
+  margin-top: 32px;
 }
-.topic-details {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex-grow: 1;
-}
-.topic-controls {
-  flex-shrink: 0;
-  width: 260px;
-}
-.topic-list { display: flex; gap: 10px; flex-wrap: wrap; }
-.controls { display: flex; gap: 8px; align-items: center; }
-.progress-line { height: 10px; background: rgba(0, 0, 0, 0.08); border-radius: 10px; overflow: hidden; }
-.progress-line > i { display: block; height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
-.options { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
-.option { padding: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.3); cursor: pointer; border: 1px solid var(--border-color); transition: all 0.15s ease; }
-.option:hover { background: rgba(255, 255, 255, 0.5); border-color: var(--accent); }
-.option.correct { border-color: #22c55e; background: rgba(34, 197, 94, 0.15); font-weight: 600; }
-.option.wrong { border-color: #ef4444; background: rgba(239, 68, 68, 0.15); }
-.mentor .msg { margin-bottom: 10px; padding: 10px 14px; border-radius: 12px; max-width: 90%; line-height: 1.5; }
-.mentor .ai { background: rgba(255, 255, 255, 0.2); border: 1px solid var(--border-color); }
-.mentor .user { background: var(--accent); color: white; margin-left: auto; }
-.mentor-input { display: flex; gap: 8px; margin-top: auto; padding-top: 12px; }
-
-#leaderboard {
-  max-height: 230px; 
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.leaderboard-entry {
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: background-color 0.2s;
-}
-.current-user {
-  background-color: rgba(106, 130, 251, 0.25); 
-  font-weight: 600;
-  border: 1px solid rgba(106, 130, 251, 0.4);
-}
-.user-rank {
-  margin-top: 12px;
-  padding: 8px;
-  border-top: 1px solid var(--border-color);
+.feature-card {
+  background-color: var(--secondary-bg);
+  padding: 24px;
+  border-radius: 12px;
   text-align: center;
 }
-
-/* -- 7. Overlay & Layar -- */
-.overlay {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  display: none;
-  z-index: 99;
-  backdrop-filter: blur(8px);
+.feature-card h4 {
+  font-size: 18px;
+  margin-bottom: 8px;
 }
-.screen {
-  display: none;
-  width: 100%;
-  min-height: 100vh;
-  position: absolute; top: 0; left: 0;
-  justify-content: center;
-  align-items: center;
-  padding: 28px;
-}
-.screen.active { display: flex; }
-#mainScreen { display: none; }
-#mainScreen.active { display: block; position: static; height: auto; }
-
+/* Landing/Input Nama */
 .landing-card {
-  max-width: 550px;
+  max-width: 500px;
+  margin: 48px auto;
   text-align: center;
-  padding: 48px 40px;
 }
-.landing-card h1 {
-  font-size: 32px;
-  font-weight: 700;
+.landing-card h2 {
+    margin-bottom: 8px;
 }
 .landing-card .mentor-input {
     margin-top: 16px;
 }
-
-/* Gaya untuk Splash, Header, dan Forum */
-.splash-content {
-  text-align: center;
-  color: white;
-  animation: fadeIn 1.5s ease-out;
-}
-.splash-logo {
-  margin-bottom: 16px;
-  animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-.splash-content h1 {
-  font-size: 48px;
-  font-weight: 700;
-  color: white;
-  letter-spacing: 2px;
-}
-.splash-content .small {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 4px;
-}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-.header-title-group {
+/* Feedback */
+.feedback-container {
+    max-width: 600px;
+    margin: 32px auto;
     display: flex;
-    align-items: center;
-    gap: 16px;
+    flex-direction: column;
+    gap: 24px;
 }
-.app-title {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap; 
-}
-.app-subtitle {
-  padding-bottom: 4px; 
-}
-
-.header-logo {
-    flex-shrink: 0;
-}
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.stats-group {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
-.forum-cta-wrapper {
-  grid-column: 1 / -1;
-  text-align: center;
-  margin-top: 8px;
-}
-.forum-btn {
-  width: 100%;
-  max-width: 400px;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.feedback-wrapper {
-  grid-column: 1 / -1; 
-  margin-top: 8px;
+.feedback-wrapper, .forum-card {
   text-align: center;
   gap: 12px;
-}
-.feedback-wrapper h3 {
-  font-size: 18px;
-  font-weight: 600;
 }
 .star-rating {
   display: flex;
@@ -383,122 +243,122 @@ video {
   cursor: pointer;
 }
 .star-rating .star {
-  color: rgba(0,0,0,0.2);
+  color: #ccc;
   transition: all 0.15s ease;
 }
-.star-rating .star:hover,
-.star-rating .star.hover,
-.star-rating .star.selected {
-  color: #facc15; 
+.star-rating .star:hover, .star-rating .star.hover, .star-rating .star.selected {
+  color: var(--yellow);
   transform: scale(1.15);
 }
-.feedback-wrapper textarea {
+textarea {
   height: 80px;
   resize: vertical;
+  width: 100%;
+}
+.forum-card .btn {
+    margin-top: 16px;
 }
 
-/* -- 8. Responsif (Disempurnakan) -- */
-@media (max-width: 1024px) {
-  .container { 
-    max-width: 100%; 
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  .sidebar { 
-    order: 2;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-  }
-  .mentor {
-    height: auto;
-  }
-  .left > .card:last-of-type {
-    display: none;
-  }
+/* -- 6. Elemen Aplikasi Belajar -- */
+video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #000;
+  border-radius: 8px;
+  display: block;
 }
+.video-info-wrapper {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+.topic-details #topicTitle {
+  font-weight: 600;
+  font-size: 18px;
+}
+.topic-controls {
+  flex-shrink: 0;
+  width: 240px;
+  text-align: right;
+}
+.controls { display: flex; gap: 8px; justify-content: flex-end; }
+.progress-line { height: 8px; background-color: var(--border-color); border-radius: 8px; overflow: hidden; margin-top: 4px;}
+.progress-line > i { background-color: var(--accent); }
 
-@media (max-width: 768px) {
-  body {
-    padding: 16px;
-  }
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .app-title {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-  .app-subtitle {
-    padding-bottom: 0;
-  }
-
-  .header-actions {
-    width: 100%;
+.topic-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;}
+.topic-btn {
+  background-color: var(--primary-bg);
+  border: 1px solid var(--border-color);
+  font-weight: 500;
+}
+.topic-btn.active {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+.topic-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+#quizHeader {
+    display: flex;
     justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+.option {
+  background-color: var(--primary-bg);
+  border: 1px solid var(--border-color);
+}
+.option:hover { background-color: #e4e7eb; }
+.option.correct { border-color: var(--green); background-color: #f0fdf4; }
+.option.wrong { border-color: var(--red); background-color: #fef2f2; }
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    text-align: center;
+}
+.stats-grid strong {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+}
+#leaderboard, .mentor .scrollable-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.leaderboard-entry.current-user {
+  background-color: #e7f6f8;
+  border-color: var(--accent);
+}
+.mentor .ai { background-color: var(--primary-bg); }
+.mentor .user { background-color: var(--accent); color: white; margin-left: auto; }
+.mentor-input { display: flex; gap: 8px; margin-top: auto; padding-top: 12px; }
+
+/* -- 7. Responsif -- */
+@media (max-width: 900px) {
+  .container-app {
+    grid-template-columns: 1fr;
   }
-  .video-info-wrapper {
-      flex-direction: column;
-      align-items: stretch;
-  }
-  .topic-controls {
-      width: 100%;
-  }
-  .card {
-    padding: 16px;
-  }
-  h1 {
-    font-size: 22px;
-  }
-  header h1 {
-    font-size: 26px;
-  }
-  .landing-card {
-      padding: 32px 24px;
-  }
-  .landing-card h1 {
-      font-size: 28px;
-  }
-  .left > div[style*="display:flex"] {
-    flex-direction: column;
-    gap: 16px;
-  }
-  .left > div[style*="display:flex"] > .card {
-    width: 100% !important;
-  }
-  /* PERUBAHAN: Mengatur urutan elemen di mobile */
   .sidebar {
-    order: 2;
-  }
-  .feedback-wrapper {
-    order: 3;
-  }
-  .forum-cta-wrapper {
-    order: 4;
-  }
-  footer {
-    order: 5;
+    order: -1; /* Pindahkan sidebar ke atas di mobile */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
   }
 }
-
-@media (max-width: 480px) {
-  body {
-    padding: 12px;
-  }
-  .controls {
-    flex-wrap: wrap;
-  }
-  .btn {
-    padding: 8px 12px;
-    font-size: 13px;
-  }
-  .landing-card .mentor-input {
-    flex-direction: column;
-  }
-  footer {
-    font-size: 12px;
-  }
+@media (max-width: 768px) {
+  .page { padding: 16px; }
+  .app-header { padding: 0 16px; }
+  .hero-section h2 { font-size: 28px; }
+  .video-info-wrapper { flex-direction: column; align-items: stretch; }
+  .topic-controls { width: 100%; text-align: left; }
+  .controls { justify-content: flex-start; }
 }
