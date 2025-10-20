@@ -152,6 +152,12 @@ const mainScreen = document.getElementById('mainScreen');
 const userNameInput = document.getElementById('userNameInput');
 const startAppBtn = document.getElementById('startAppBtn');
 
+// PERUBAHAN: Binding untuk elemen feedback
+const starRatingContainer = document.getElementById('starRating');
+const feedbackText = document.getElementById('feedbackText');
+const submitFeedbackBtn = document.getElementById('submitFeedback');
+const feedbackThanks = document.getElementById('feedbackThanks');
+
 /* Initialize */
 loadState();
 
@@ -172,6 +178,7 @@ function init(){
     updateStats();
     renderHistory();
     renderLeaderboard();
+    initFeedbackSystem(); // PERUBAHAN: Inisialisasi sistem feedback
 
     if (appState.userName) {
       userNameInput.value = appState.userName;
@@ -304,6 +311,7 @@ function handleAnswer(question, selectedIndex, elNode){
   }
   saveState();
   updateStats();
+  // PERUBAHAN: Durasi timeout dipercepat untuk refresh rate lebih tinggi
   setTimeout(()=>{
     if(appState.quizQueue.length > 0){
       renderQuiz();
@@ -313,7 +321,7 @@ function handleAnswer(question, selectedIndex, elNode){
       nextQBtn.style.display = 'inline-block';
       endSessionBtn.style.display = 'inline-block';
     }
-  }, 1800);
+  }, 1200);
 }
 
 function triggerCompletionAnimation() {
@@ -426,9 +434,9 @@ async function renderLeaderboard() {
         const emojis = ['🥇', '🥈', '🥉'];
         top25.forEach((entry, idx) => {
             const div = document.createElement('div');
-            div.className = 'leaderboard-entry small'; // PERUBAHAN: Tambah class
+            div.className = 'leaderboard-entry small'; 
             if (entry.name === appState.userName) {
-              div.classList.add('current-user'); // PERUBAHAN: Tambah class untuk pengguna saat ini
+              div.classList.add('current-user'); 
             }
             const rank = emojis[idx] || `${idx + 1}.`;
             div.innerHTML = `${rank} <strong>${entry.name}</strong> - ${entry.score} poin`;
@@ -452,11 +460,12 @@ async function renderLeaderboard() {
         const userRank = (count ?? 0) + 1;
         
         const rankDiv = document.createElement('div');
-        rankDiv.className = 'user-rank current-user'; // PERUBAHAN: Tambah class
+        rankDiv.className = 'user-rank current-user'; 
         rankDiv.innerHTML = `Peringkat Anda: <strong>#${userRank}</strong> dengan ${appState.points} poin`;
         boardEl.appendChild(rankDiv);
     }
 }
+
 
 async function updateUserScore() {
     if (!appState.userName || !supabase) return;
@@ -480,6 +489,63 @@ function appendMentor(msg, who='ai'){
 }
 function postMentorMessage(text, who='ai'){ appendMentor(text, who); }
 
+// PERUBAHAN: Fungsi baru untuk sistem feedback
+function initFeedbackSystem() {
+    const stars = starRatingContainer.querySelectorAll('.star');
+    let currentRating = 0;
+
+    function setRating(value) {
+        stars.forEach(star => {
+            if (star.dataset.value <= value) {
+                star.innerHTML = '★';
+                star.classList.add('selected');
+            } else {
+                star.innerHTML = '☆';
+                star.classList.remove('selected');
+            }
+        });
+    }
+
+    starRatingContainer.addEventListener('mouseover', (e) => {
+        if (e.target.classList.contains('star')) {
+            const value = e.target.dataset.value;
+            stars.forEach(star => {
+                star.classList.toggle('hover', star.dataset.value <= value);
+                star.innerHTML = star.dataset.value <= value ? '★' : '☆';
+            });
+        }
+    });
+
+    starRatingContainer.addEventListener('mouseout', () => {
+        stars.forEach(star => star.classList.remove('hover'));
+        setRating(currentRating);
+    });
+
+    starRatingContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('star')) {
+            currentRating = e.target.dataset.value;
+            setRating(currentRating);
+        }
+    });
+
+    submitFeedbackBtn.addEventListener('click', () => {
+        const feedback = feedbackText.value.trim();
+        if (currentRating === 0) {
+            alert('Mohon pilih rating bintang terlebih dahulu.');
+            return;
+        }
+        
+        console.log(`Feedback Diterima: Rating ${currentRating}/5, Pesan: "${feedback}"`);
+        
+        // Sembunyikan form dan tampilkan pesan terima kasih
+        starRatingContainer.style.display = 'none';
+        feedbackText.style.display = 'none';
+        submitFeedbackBtn.style.display = 'none';
+        feedbackThanks.style.display = 'block';
+    });
+}
+
+
 /* Event Listeners */
 startAppBtn.addEventListener('click', ()=>{
   const name = userNameInput.value.trim();
@@ -502,42 +568,46 @@ sendMentorBtn.addEventListener('click', ()=>{
   const v = mentorInput.value.trim();
   if(!v) return;
 
-  appState.points = Math.max(0, appState.points - 20);
-  saveState();
-  updateStats();
-  
   appendMentor(v, 'user');
   mentorInput.value = '';
 
-  setTimeout(() => {
-    postMentorMessage('Bantuan AI Mentor digunakan (-20 poin).', 'ai');
-  }, 300);
-
   const lower = v.toLowerCase();
-  if(lower.includes('ringkas')){
-    const t = currentTopic();
-    const bullets = t.questions.map(q=> '- '+ q.q);
-    postMentorMessage(`Ringkasan singkat untuk "${t.title}":\n${bullets.join('\n')}`, 'ai');
-    return;
-  }
-  if(lower.includes('ulang soal')){
-    const t = currentTopic();
-    const wrongs = appState.mistakes[t.id] || {};
-    const keys = Object.keys(wrongs);
-    if(keys.length===0){ postMentorMessage('Belum ada kesalahan untuk topik ini.', 'ai'); }
-    else {
-      postMentorMessage('Saya masukkan ulang soal yang pernah salah.', 'ai');
-      const wrongQs = t.questions.filter(q=> keys.includes(q.id)).map(q=> ({...q, attempts:0}));
-      appState.quizQueue = wrongQs.concat(appState.quizQueue);
-      renderQuiz();
-    }
-    return;
-  }
+  
+  // PERUBAHAN: Logika pengurangan poin dipindahkan ke sini
   if(appState.openaiApiKey && appState.openaiApiKey.length > 10){
+    // HANYA jika API Key ada, kurangi poin dan panggil AI
+    appState.points = Math.max(0, appState.points - 20);
+    saveState();
+    updateStats();
+    
+    setTimeout(() => {
+      postMentorMessage('Bantuan AI Mentor digunakan (-20 poin).', 'ai');
+    }, 300);
+    
     postMentorMessage('Menghubungkan ke layanan AI...', 'ai');
-    // Kode OpenAI tetap sama
+    // Di sini Anda akan menambahkan kode untuk memanggil API OpenAI
   } else {
-    postMentorMessage('Maaf, saya masih dalam tahap pengembangan. Coba "ringkasan" atau "ulang soal".', 'ai');
+    // Jika tidak ada API Key, berikan respons standar TANPA mengurangi poin
+    if(lower.includes('ringkas')){
+      const t = currentTopic();
+      const bullets = t.questions.map(q=> '- '+ q.q);
+      postMentorMessage(`Ringkasan singkat untuk "${t.title}":\n${bullets.join('\n')}`, 'ai');
+      return;
+    }
+    if(lower.includes('ulang soal')){
+      const t = currentTopic();
+      const wrongs = appState.mistakes[t.id] || {};
+      const keys = Object.keys(wrongs);
+      if(keys.length===0){ postMentorMessage('Belum ada kesalahan untuk topik ini.', 'ai'); }
+      else {
+        postMentorMessage('Saya masukkan ulang soal yang pernah salah.', 'ai');
+        const wrongQs = t.questions.filter(q=> keys.includes(q.id)).map(q=> ({...q, attempts:0}));
+        appState.quizQueue = wrongQs.concat(appState.quizQueue);
+        renderQuiz();
+      }
+      return;
+    }
+    postMentorMessage('Maaf, AI sedang dalam pengembangan. Coba "ringkasan" atau "ulang soal".', 'ai');
   }
 });
 
