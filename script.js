@@ -3,8 +3,8 @@
   ========================= */
 
 // --- KONFIGURASI SUPABASE ---
-const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co'; // Ganti dengan URL Supabase Anda
-const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0'; // Ganti dengan Kunci Anon Anda
+const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0';
 
 let supabase = null;
 try {
@@ -120,76 +120,72 @@ function saveState(){
   localStorage.setItem('bb_state_v1', JSON.stringify(toSave));
 }
 
-/* UI binding */
-const subjectsWrap = document.getElementById('subjectsWrap');
-const topicsWrap = document.getElementById('topicsWrap');
-const topicTitle = document.getElementById('topicTitle');
-const topicVideo = document.getElementById('topicVideo');
-const sessTimer = document.getElementById('sessTimer');
-const startSessionBtn = document.getElementById('startSession');
-const skipTopicBtn = document.getElementById('skipTopic');
-const progBar = document.getElementById('progBar');
-const quizArea = document.getElementById('quizArea');
-const questionWrap = document.getElementById('questionWrap');
-const remainingQ = document.getElementById('remainingQ');
-const nextQBtn = document.getElementById('nextQ');
-const endSessionBtn = document.getElementById('endSession');
-const pointsEl = document.getElementById('points');
-const totalPointsEl = document.getElementById('totalPoints');
-const completedCountEl = document.getElementById('completedCount');
-const topicCountEl = document.getElementById('topicCount');
-const doneTopicsEl = document.getElementById('doneTopics');
-const historyEl = document.getElementById('history');
-const tipsEl = document.getElementById('tips');
-const mentorLog = document.getElementById('mentorLog');
-const mentorInput = document.getElementById('mentorInput');
-const sendMentorBtn = document.getElementById('sendMentor');
-const completionOverlay = document.getElementById('completionOverlay');
+// --- KUMPULAN SEMUA ELEMEN UI ---
+const ui = {
+    subjectsWrap: document.getElementById('subjectsWrap'),
+    topicsWrap: document.getElementById('topicsWrap'),
+    topicTitle: document.getElementById('topicTitle'),
+    topicVideo: document.getElementById('topicVideo'),
+    sessTimer: document.getElementById('sessTimer'),
+    startSessionBtn: document.getElementById('startSession'),
+    skipTopicBtn: document.getElementById('skipTopic'),
+    progBar: document.getElementById('progBar'),
+    quizArea: document.getElementById('quizArea'),
+    questionWrap: document.getElementById('questionWrap'),
+    remainingQ: document.getElementById('remainingQ'),
+    nextQBtn: document.getElementById('nextQ'),
+    endSessionBtn: document.getElementById('endSession'),
+    doneTopicsEl: document.getElementById('doneTopics'),
+    totalPointsEl: document.getElementById('totalPoints'),
+    mentorLog: document.getElementById('mentorLog'),
+    mentorInput: document.getElementById('mentorInput'),
+    sendMentorBtn: document.getElementById('sendMentor'),
+    completionOverlay: document.getElementById('completionOverlay'),
+    hamburgerBtn: document.getElementById('hamburgerBtn'),
+    sidebar: document.getElementById('sidebar'),
+    navLinks: document.querySelectorAll('.nav-link'),
+    pages: document.querySelectorAll('.page'),
+    startFromHomeBtn: document.getElementById('startFromHomeBtn'),
+    userNameInput: document.getElementById('userNameInput'),
+    startAppBtn: document.getElementById('startAppBtn'),
+    welcomeUser: document.getElementById('welcomeUser'),
+    userNameDisplay: document.getElementById('userNameDisplay'),
+    starRatingContainer: document.getElementById('starRating'),
+    feedbackText: document.getElementById('feedbackText'),
+    submitFeedbackBtn: document.getElementById('submitFeedback'),
+    feedbackThanks: document.getElementById('feedbackThanks')
+};
 
-const splashScreen = document.getElementById('splashScreen');
-const landingScreen = document.getElementById('landingScreen');
-const mainScreen = document.getElementById('mainScreen');
-const userNameInput = document.getElementById('userNameInput');
-const startAppBtn = document.getElementById('startAppBtn');
 
-const starRatingContainer = document.getElementById('starRating');
-const feedbackText = document.getElementById('feedbackText');
-const submitFeedbackBtn = document.getElementById('submitFeedback');
-const feedbackThanks = document.getElementById('feedbackThanks');
+function showPage(pageId) {
+    ui.pages.forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId)?.classList.add('active');
 
-/* Initialize */
-loadState();
-
-function showScreen(screenId) {
-  document.querySelectorAll('.screen').forEach(s => {
-    s.classList.remove('active');
-  });
-  const target = document.getElementById(screenId);
-  if(target) target.classList.add('active');
+    ui.navLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.page === pageId);
+    });
+    ui.sidebar.classList.remove('open');
 }
 
 function init(){
-  showScreen('splashScreen');
+    loadState();
+    
+    if (appState.userName) {
+        ui.userNameDisplay.textContent = appState.userName;
+        ui.welcomeUser.style.display = 'block';
+    }
 
-  setTimeout(() => {
     renderSubjects();
     loadTopic(0);
-    updateStats();
-    renderHistory();
     renderLeaderboard();
     initFeedbackSystem();
+    setupEventListeners();
 
-    if (appState.userName) {
-      userNameInput.value = appState.userName;
-      showScreen('mainScreen');
-    } else {
-      showScreen('landingScreen');
-    }
-  }, 2500);
+    showPage('homePage');
 }
 
 function renderSubjects() {
-  subjectsWrap.innerHTML = '';
+  ui.subjectsWrap.innerHTML = '';
   Object.keys(appState.subjects).forEach(subjectName => {
     const b = document.createElement('button');
     b.className = 'topic-btn' + (subjectName === appState.currentSubject ? ' active' : '');
@@ -199,20 +195,19 @@ function renderSubjects() {
       renderSubjects();
       loadTopic(0);
     };
-    subjectsWrap.appendChild(b);
+    ui.subjectsWrap.appendChild(b);
   });
 }
 
 function renderTopics(){
-  topicsWrap.innerHTML = '';
+  ui.topicsWrap.innerHTML = '';
   const currentTopics = appState.subjects[appState.currentSubject];
-  topicCountEl.textContent = currentTopics.length;
   currentTopics.forEach((t, idx)=>{
     const b = document.createElement('button');
     b.className = 'topic-btn' + (idx === appState.currentTopicIndex ? ' active':'');
     b.textContent = t.title;
     b.onclick = ()=>{ loadTopic(idx); };
-    topicsWrap.appendChild(b);
+    ui.topicsWrap.appendChild(b);
   });
 }
 
@@ -220,12 +215,9 @@ function loadTopic(index){
   appState.currentTopicIndex = index;
   const t = currentTopic();
   document.querySelectorAll('#topicsWrap .topic-btn').forEach((n,i)=> n.classList.toggle('active', i===index));
-  topicTitle.textContent = t.title;
-  topicVideo.querySelector('source').src = t.video;
-  topicVideo.load();
-  topicVideo.onloadedmetadata = ()=>{
-    tipsEl.textContent = t.description;
-  };
+  ui.topicTitle.textContent = t.title;
+  ui.topicVideo.querySelector('source').src = t.video;
+  ui.topicVideo.load();
   appState.quizQueue = shuffleArray(t.questions.map(q=> ({...q, attempts:0}) ));
   renderQuiz();
   renderTopics();
@@ -238,7 +230,6 @@ function formatTime(sec){
   return `${m}:${s}`;
 }
 
-// PERUBAHAN: Fungsi baru untuk mengaktifkan/menonaktifkan tombol topik
 function toggleTopicButtons(disabled) {
     document.querySelectorAll('#subjectsWrap .topic-btn, #topicsWrap .topic-btn').forEach(btn => {
         btn.classList.toggle('disabled', disabled);
@@ -248,54 +239,52 @@ function toggleTopicButtons(disabled) {
 function startSession(){
   if(appState.timerHandle) clearInterval(appState.timerHandle);
   
-  toggleTopicButtons(true); // Nonaktifkan tombol saat sesi dimulai
+  toggleTopicButtons(true);
 
   appState.remainingSeconds = appState.sessionSeconds;
-  sessTimer.textContent = formatTime(appState.remainingSeconds);
+  ui.sessTimer.textContent = formatTime(appState.remainingSeconds);
   appState.timerHandle = setInterval(()=>{
     appState.remainingSeconds--;
-    sessTimer.textContent = formatTime(appState.remainingSeconds);
+    ui.sessTimer.textContent = formatTime(appState.remainingSeconds);
     if(appState.remainingSeconds <= 0){
       clearInterval(appState.timerHandle);
       endSession(true);
     }
   }, 1000);
-  topicVideo.play().catch(()=>{});
-  quizArea.style.display = 'block';
-  updateStats();
+  ui.topicVideo.play().catch(()=>{});
+  ui.quizArea.style.display = 'block';
 }
 
 function renderQuiz(){
-  questionWrap.innerHTML = '';
+  ui.questionWrap.innerHTML = '';
   if(!appState.quizQueue || appState.quizQueue.length === 0){
-    questionWrap.innerHTML = '<div class="small">Tidak ada soal. Klik lanjut untuk topik berikutnya.</div>';
-    nextQBtn.style.display = 'inline-block';
-    remainingQ.textContent = 0;
+    ui.questionWrap.innerHTML = '<div class="small">Tidak ada soal. Klik lanjut untuk topik berikutnya.</div>';
+    ui.nextQBtn.style.display = 'inline-block';
+    ui.remainingQ.textContent = 0;
     return;
   }
   const q = appState.quizQueue[0];
   const container = document.createElement('div');
-  container.className = 'question';
-  container.innerHTML = `<div style="font-weight:600; font-size:16px;">${q.q}</div>`;
+  container.innerHTML = `<div class="question-text">${q.q}</div>`;
   const optsWrap = document.createElement('div');
   optsWrap.className = 'options';
   q.opts.forEach((o, i)=>{
-    const op = document.createElement('div');
+    const op = document.createElement('button');
     op.className = 'option';
     op.textContent = o;
     op.onclick = ()=> handleAnswer(q, i, op);
     optsWrap.appendChild(op);
   });
   container.appendChild(optsWrap);
-  questionWrap.appendChild(container);
-  remainingQ.textContent = appState.quizQueue.length;
-  nextQBtn.style.display = 'none';
-  endSessionBtn.style.display = 'none';
+  ui.questionWrap.appendChild(container);
+  ui.remainingQ.textContent = appState.quizQueue.length;
+  ui.nextQBtn.style.display = 'none';
+  ui.endSessionBtn.style.display = 'none';
 }
 
 function handleAnswer(question, selectedIndex, elNode){
   const correct = (selectedIndex === question.a);
-  elNode.parentElement.querySelectorAll('.option').forEach(node=> node.style.pointerEvents='none');
+  elNode.parentElement.querySelectorAll('.option').forEach(node=> node.disabled = true);
 
   const correctAnswerNode = elNode.parentElement.querySelectorAll('.option')[question.a];
   correctAnswerNode.classList.add('correct');
@@ -303,10 +292,7 @@ function handleAnswer(question, selectedIndex, elNode){
   const isAlreadyCompleted = appState.completed[currentTopic().id];
 
   if(correct){
-    // PERUBAHAN: Hanya tambah poin jika topik belum selesai
-    if (!isAlreadyCompleted) {
-      appState.points += 10;
-    }
+    if (!isAlreadyCompleted) appState.points += 10;
     appState.history.unshift({ t: new Date().toISOString(), topic: currentTopic().id, q: question.id, result:'correct' });
     appState.quizQueue.shift();
   } else {
@@ -323,33 +309,32 @@ function handleAnswer(question, selectedIndex, elNode){
       appState.quizQueue.shift();
     }
   }
-  saveState();
-  updateStats();
   
   setTimeout(()=>{
     if(appState.quizQueue.length > 0){
       renderQuiz();
     } else {
-      questionWrap.innerHTML = '<div class="small" style="text-align:center; padding: 20px 0;">🎉<br/><b>Selamat!</b><br/>Semua soal selesai untuk topik ini.</div>';
-      remainingQ.textContent = 0;
-      nextQBtn.style.display = 'inline-block';
-      endSessionBtn.style.display = 'inline-block';
+      ui.questionWrap.innerHTML = '<div class="small" style="text-align:center; padding: 20px 0;">🎉<br/><b>Selamat!</b><br/>Semua soal selesai untuk topik ini.</div>';
+      ui.remainingQ.textContent = 0;
+      ui.nextQBtn.style.display = 'inline-block';
+      ui.endSessionBtn.style.display = 'inline-block';
     }
+    updateStats();
   }, 1200);
 }
 
 function triggerCompletionAnimation() {
     if(window.confetti) {
-        completionOverlay.style.display = 'block';
+        ui.completionOverlay.style.display = 'block';
         window.confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
-        setTimeout(() => { completionOverlay.style.display = 'none'; }, 2000);
+        setTimeout(() => { ui.completionOverlay.style.display = 'none'; }, 2000);
     }
 }
 
 function endSession(timedOut=false){
   if(appState.timerHandle) clearInterval(appState.timerHandle);
   
-  toggleTopicButtons(false); // Aktifkan kembali tombol
+  toggleTopicButtons(false);
   
   const t = currentTopic();
   const isAlreadyCompleted = appState.completed[t.id];
@@ -359,10 +344,8 @@ function endSession(timedOut=false){
   const successRate = totalQs > 0 ? Math.max(0, totalQs - uniqueWrongs) / totalQs : 1;
 
   if(successRate >= 0.5) {
-    // PERUBAHAN: Hanya beri bonus poin dan tandai selesai jika belum pernah
     if (!isAlreadyCompleted) {
       appState.points += 20;
-      appState.history.unshift({ t: new Date().toISOString(), topic: t.id, q: 'session', result: 'completed' });
       markCompleted(true);
       postMentorMessage(`Bagus! Kamu dapat bonus 20 poin untuk topik "${t.title}".`, 'ai');
       triggerCompletionAnimation();
@@ -370,22 +353,18 @@ function endSession(timedOut=false){
       postMentorMessage(`Kamu menyelesaikan topik "${t.title}" lagi! Kerja bagus!`, 'ai');
     }
   } else {
-    appState.history.unshift({ t: new Date().toISOString(), topic: t.id, q: 'session', result: 'partial' });
-    if (!isAlreadyCompleted) {
-        markCompleted(false);
-    }
+    if (!isAlreadyCompleted) markCompleted(false);
     postMentorMessage(`Sesi selesai. Perlu latihan lagi untuk topik "${t.title}".`, 'ai');
   }
-  saveState();
+  
   updateStats();
-  quizArea.style.display = 'none';
+  ui.quizArea.style.display = 'none';
 }
 
 function markCompleted(success){
   const t = currentTopic();
   if(success) appState.completed[t.id] = true;
   else appState.completed[t.id] = appState.completed[t.id] || false;
-  saveState();
   updateStats();
 }
 
@@ -404,239 +383,173 @@ function currentTopic(){ return appState.subjects[appState.currentSubject][appSt
 function updateProgBar(){
   const t = currentTopic();
   const done = appState.completed[t.id] ? 100 : 0;
-  progBar.style.width = done + '%';
+  ui.progBar.style.width = done + '%';
 }
 
 function updateStats(){
-  pointsEl.textContent = appState.points;
-  totalPointsEl.textContent = appState.points;
-  const doneCount = Object.values(appState.completed).filter(v=>v).length;
-  doneTopicsEl.textContent = doneCount;
-  completedCountEl.textContent = doneCount;
+  saveState();
+  ui.doneTopicsEl.textContent = Object.values(appState.completed).filter(v=>v).length;
+  ui.totalPointsEl.textContent = appState.points;
   updateProgBar();
-  renderHistory();
   updateUserScore();
-}
-
-function renderHistory(){
-  if(!appState.history || appState.history.length===0){ historyEl.textContent = 'Belum ada riwayat.'; return; }
-  const lines = appState.history.slice(0,5).map(h=>{
-    let topicTitle = h.topic;
-    for(const subject in appState.subjects) {
-      const found = appState.subjects[subject].find(x=>x.id===h.topic);
-      if(found) { topicTitle = found.title; break; }
-    }
-    const when = new Date(h.t).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-    const icon = h.result === 'correct' ? '✅' : h.result === 'completed' ? '🏆' : '❌';
-    return `<div>${icon} [${when}] ${topicTitle}</div>`;
-  });
-  historyEl.innerHTML = lines.join('');
 }
 
 async function renderLeaderboard() {
     const boardEl = document.getElementById('leaderboard');
-    if (!supabase) {
-        boardEl.innerHTML = '<div class="small">Supabase belum dikonfigurasi.</div>';
-        return;
-    }
+    if (!supabase) return;
     boardEl.innerHTML = '<div class="small">Memuat data...</div>';
 
-    const { data: top25, error: top25Error } = await supabase
-        .from('leaderboard')
-        .select('name, score')
-        .order('score', { ascending: false })
-        .limit(25);
+    const { data: top25, error } = await supabase
+        .from('leaderboard').select('name, score').order('score', { ascending: false }).limit(25);
 
-    if (top25Error) {
-        console.error('Gagal mengambil data leaderboard:', top25Error);
-        boardEl.innerHTML = '<div class="small">Gagal memuat data. Periksa konsol.</div>';
+    if (error) {
+        boardEl.innerHTML = '<div class="small">Gagal memuat data.</div>';
         return;
     }
-
-    if (top25.length === 0) {
-        boardEl.innerHTML = '<div class="small">Belum ada data. Jadilah yang pertama!</div>';
-    } else {
-        boardEl.innerHTML = '';
+    
+    boardEl.innerHTML = '';
+    if (top25.length > 0) {
         const emojis = ['🥇', '🥈', '🥉'];
         top25.forEach((entry, idx) => {
             const div = document.createElement('div');
-            div.className = 'leaderboard-entry small'; 
-            if (entry.name === appState.userName) {
-              div.classList.add('current-user'); 
-            }
-            const rank = emojis[idx] || `${idx + 1}.`;
-            div.innerHTML = `${rank} <strong>${entry.name}</strong> - ${entry.score} poin`;
+            div.className = `leaderboard-entry small ${entry.name === appState.userName ? 'current-user' : ''}`;
+            div.innerHTML = `${emojis[idx] || `${idx + 1}.`} <strong>${entry.name}</strong> - ${entry.score} poin`;
             boardEl.appendChild(div);
         });
     }
 
-    const userInTop25 = top25.some(entry => entry.name === appState.userName);
-
-    if (!userInTop25 && appState.userName) {
-        const { count, error: countError } = await supabase
-            .from('leaderboard')
-            .select('*', { count: 'exact', head: true })
-            .gt('score', appState.points);
-        
-        if (countError) {
-            console.error('Gagal menghitung peringkat pengguna:', countError);
-            return;
-        }
-
-        const userRank = (count ?? 0) + 1;
-        
+    if (!top25.some(e => e.name === appState.userName) && appState.userName) {
+        const { count } = await supabase.from('leaderboard').select('*', { count: 'exact', head: true }).gt('score', appState.points);
         const rankDiv = document.createElement('div');
-        rankDiv.className = 'user-rank current-user'; 
-        rankDiv.innerHTML = `Peringkat Anda: <strong>#${userRank}</strong> dengan ${appState.points} poin`;
+        rankDiv.className = 'user-rank current-user';
+        rankDiv.innerHTML = `Peringkat Anda: <strong>#${(count ?? 0) + 1}</strong>`;
         boardEl.appendChild(rankDiv);
     }
 }
 
-
 async function updateUserScore() {
     if (!appState.userName || !supabase) return;
-    const { error } = await supabase
-        .from('leaderboard')
-        .upsert({ name: appState.userName, score: appState.points }, { onConflict: 'name' });
-
-    if (error) {
-        console.error('Gagal update skor:', error);
-    } else {
-        renderLeaderboard();
-    }
+    await supabase.from('leaderboard').upsert({ name: appState.userName, score: appState.points }, { onConflict: 'name' });
+    renderLeaderboard();
 }
 
 function appendMentor(msg, who='ai'){
   const div = document.createElement('div');
   div.className = 'msg ' + (who==='ai' ? 'ai' : 'user');
   div.textContent = msg;
-  mentorLog.appendChild(div);
-  mentorLog.scrollTop = mentorLog.scrollHeight;
+  ui.mentorLog.appendChild(div);
+  ui.mentorLog.scrollTop = ui.mentorLog.scrollHeight;
 }
 function postMentorMessage(text, who='ai'){ appendMentor(text, who); }
 
 function initFeedbackSystem() {
-    const stars = starRatingContainer.querySelectorAll('.star');
+    const stars = ui.starRatingContainer.querySelectorAll('.star');
     let currentRating = 0;
 
     function setRating(value) {
         stars.forEach(star => {
-            if (star.dataset.value <= value) {
-                star.innerHTML = '★';
-                star.classList.add('selected');
-            } else {
-                star.innerHTML = '☆';
-                star.classList.remove('selected');
-            }
+            star.innerHTML = star.dataset.value <= value ? '★' : '☆';
+            star.classList.toggle('selected', star.dataset.value <= value);
         });
     }
-
-    starRatingContainer.addEventListener('mouseover', (e) => {
-        if (e.target.classList.contains('star')) {
-            const value = e.target.dataset.value;
-            stars.forEach(star => {
-                star.classList.toggle('hover', star.dataset.value <= value);
-                star.innerHTML = star.dataset.value <= value ? '★' : '☆';
-            });
-        }
+    
+    ui.starRatingContainer.addEventListener('mouseover', e => {
+        if (!e.target.classList.contains('star')) return;
+        const value = e.target.dataset.value;
+        stars.forEach(star => star.innerHTML = star.dataset.value <= value ? '★' : '☆');
     });
 
-    starRatingContainer.addEventListener('mouseout', () => {
-        stars.forEach(star => star.classList.remove('hover'));
-        setRating(currentRating);
+    ui.starRatingContainer.addEventListener('mouseout', () => setRating(currentRating));
+    ui.starRatingContainer.addEventListener('click', e => {
+        if (e.target.classList.contains('star')) currentRating = e.target.dataset.value;
     });
 
-    starRatingContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('star')) {
-            currentRating = e.target.dataset.value;
-            setRating(currentRating);
-        }
-    });
-
-    submitFeedbackBtn.addEventListener('click', () => {
-        const feedback = feedbackText.value.trim();
-        if (currentRating === 0) {
-            alert('Mohon pilih rating bintang terlebih dahulu.');
-            return;
-        }
+    ui.submitFeedbackBtn.addEventListener('click', () => {
+        if (currentRating === 0) { alert('Mohon pilih rating bintang.'); return; }
         
-        console.log(`Feedback Diterima: Rating ${currentRating}/5, Pesan: "${feedback}"`);
-        
-        starRatingContainer.style.display = 'none';
-        feedbackText.style.display = 'none';
-        submitFeedbackBtn.style.display = 'none';
-        feedbackThanks.style.display = 'block';
+        ui.starRatingContainer.style.display = 'none';
+        ui.feedbackText.style.display = 'none';
+        ui.submitFeedbackBtn.style.display = 'none';
+        ui.feedbackThanks.style.display = 'block';
     });
 }
 
-
-/* Event Listeners */
-startAppBtn.addEventListener('click', ()=>{
-  const name = userNameInput.value.trim();
-  if (name.length > 2) {
-    appState.userName = name;
-    localStorage.setItem('bb_username_v1', name);
-    showScreen('mainScreen');
-    updateStats();
-  } else {
-    alert("Nama harus diisi minimal 3 karakter.");
-  }
-});
-
-startSessionBtn.addEventListener('click', startSession);
-skipTopicBtn.addEventListener('click', ()=>{ 
-    if(quizArea.style.display === 'block') endSession(false);
-    nextTopic();
-});
-nextQBtn.addEventListener('click', ()=>{ 
-    if(quizArea.style.display === 'block') endSession(false);
-    nextTopic(); 
-});
-endSessionBtn.addEventListener('click', ()=>{ endSession(false); });
-mentorInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter') sendMentorBtn.click(); });
-sendMentorBtn.addEventListener('click', ()=>{
-  const v = mentorInput.value.trim();
-  if(!v) return;
-
-  appendMentor(v, 'user');
-  mentorInput.value = '';
-
-  const lower = v.toLowerCase();
-  
-  if(appState.openaiApiKey && appState.openaiApiKey.length > 10){
-    appState.points = Math.max(0, appState.points - 20);
-    saveState();
-    updateStats();
+function setupEventListeners() {
+    ui.hamburgerBtn.addEventListener('click', () => ui.sidebar.classList.toggle('open'));
     
-    setTimeout(() => {
-      postMentorMessage('Bantuan AI Mentor digunakan (-20 poin).', 'ai');
-    }, 300);
-    
-    postMentorMessage('Menghubungkan ke layanan AI...', 'ai');
-    // Di sini Anda akan menambahkan kode untuk memanggil API OpenAI
-  } else {
-    if(lower.includes('ringkas')){
-      const t = currentTopic();
-      const bullets = t.questions.map(q=> '- '+ q.q);
-      postMentorMessage(`Ringkasan singkat untuk "${t.title}":\n${bullets.join('\n')}`, 'ai');
-      return;
-    }
-    if(lower.includes('ulang soal')){
-      const t = currentTopic();
-      const wrongs = appState.mistakes[t.id] || {};
-      const keys = Object.keys(wrongs);
-      if(keys.length===0){ postMentorMessage('Belum ada kesalahan untuk topik ini.', 'ai'); }
-      else {
-        postMentorMessage('Saya masukkan ulang soal yang pernah salah.', 'ai');
-        const wrongQs = t.questions.filter(q=> keys.includes(q.id)).map(q=> ({...q, attempts:0}));
-        appState.quizQueue = wrongQs.concat(appState.quizQueue);
-        renderQuiz();
+    ui.navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage(link.dataset.page);
+        });
+    });
+
+    ui.startFromHomeBtn.addEventListener('click', () => {
+        if (appState.userName) {
+            showPage('appPage');
+        } else {
+            showPage('landingPage');
+        }
+    });
+
+    ui.startAppBtn.addEventListener('click', () => {
+      const name = ui.userNameInput.value.trim();
+      if (name.length > 2) {
+        appState.userName = name;
+        localStorage.setItem('bb_username_v1', name);
+        ui.userNameDisplay.textContent = name;
+        ui.welcomeUser.style.display = 'block';
+        showPage('appPage');
+        updateStats();
+      } else {
+        alert("Nama harus diisi minimal 3 karakter.");
       }
-      return;
-    }
-    postMentorMessage('Maaf, AI sedang dalam pengembangan. Coba "ringkasan" atau "ulang soal".', 'ai');
-  }
-});
+    });
+
+    ui.startSessionBtn.addEventListener('click', startSession);
+    ui.skipTopicBtn.addEventListener('click', () => { 
+        if(ui.quizArea.style.display === 'block') endSession(false);
+        nextTopic();
+    });
+    ui.nextQBtn.addEventListener('click', () => { 
+        if(ui.quizArea.style.display === 'block') endSession(false);
+        nextTopic(); 
+    });
+    ui.endSessionBtn.addEventListener('click', () => endSession(false));
+    ui.mentorInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') ui.sendMentorBtn.click(); });
+    ui.sendMentorBtn.addEventListener('click', ()=>{
+      const v = ui.mentorInput.value.trim();
+      if(!v) return;
+
+      appendMentor(v, 'user');
+      ui.mentorInput.value = '';
+      const lower = v.toLowerCase();
+      
+      if(appState.openaiApiKey && appState.openaiApiKey.length > 10){
+        appState.points = Math.max(0, appState.points - 20);
+        postMentorMessage('Bantuan AI Mentor digunakan (-20 poin).', 'ai');
+        updateStats();
+        // Panggil API OpenAI di sini
+      } else {
+        if(lower.includes('ringkas')){
+          postMentorMessage(`Ringkasan untuk "${currentTopic().title}":\n${currentTopic().questions.map(q=> '- '+ q.q).join('\n')}`, 'ai');
+        } else if(lower.includes('ulang soal')){
+          const wrongs = appState.mistakes[currentTopic().id] || {};
+          const keys = Object.keys(wrongs);
+          if(keys.length===0){ 
+            postMentorMessage('Belum ada kesalahan untuk topik ini.', 'ai'); 
+          } else {
+            postMentorMessage('Saya masukkan ulang soal yang pernah salah.', 'ai');
+            const wrongQs = currentTopic().questions.filter(q=> keys.includes(q.id)).map(q=> ({...q, attempts:0}));
+            appState.quizQueue = wrongQs.concat(appState.quizQueue);
+            renderQuiz();
+          }
+        } else {
+          postMentorMessage('Maaf, AI sedang dalam pengembangan. Coba "ringkasan" atau "ulang soal".', 'ai');
+        }
+      }
+    });
+}
 
 /* Start app */
 init();
