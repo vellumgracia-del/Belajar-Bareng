@@ -152,7 +152,6 @@ const mainScreen = document.getElementById('mainScreen');
 const userNameInput = document.getElementById('userNameInput');
 const startAppBtn = document.getElementById('startAppBtn');
 
-// PERUBAHAN: Binding untuk elemen feedback
 const starRatingContainer = document.getElementById('starRating');
 const feedbackText = document.getElementById('feedbackText');
 const submitFeedbackBtn = document.getElementById('submitFeedback');
@@ -178,7 +177,7 @@ function init(){
     updateStats();
     renderHistory();
     renderLeaderboard();
-    initFeedbackSystem(); // PERUBAHAN: Inisialisasi sistem feedback
+    initFeedbackSystem();
 
     if (appState.userName) {
       userNameInput.value = appState.userName;
@@ -239,8 +238,18 @@ function formatTime(sec){
   return `${m}:${s}`;
 }
 
+// PERUBAHAN: Fungsi baru untuk mengaktifkan/menonaktifkan tombol topik
+function toggleTopicButtons(disabled) {
+    document.querySelectorAll('#subjectsWrap .topic-btn, #topicsWrap .topic-btn').forEach(btn => {
+        btn.classList.toggle('disabled', disabled);
+    });
+}
+
 function startSession(){
   if(appState.timerHandle) clearInterval(appState.timerHandle);
+  
+  toggleTopicButtons(true); // Nonaktifkan tombol saat sesi dimulai
+
   appState.remainingSeconds = appState.sessionSeconds;
   sessTimer.textContent = formatTime(appState.remainingSeconds);
   appState.timerHandle = setInterval(()=>{
@@ -290,9 +299,14 @@ function handleAnswer(question, selectedIndex, elNode){
 
   const correctAnswerNode = elNode.parentElement.querySelectorAll('.option')[question.a];
   correctAnswerNode.classList.add('correct');
+  
+  const isAlreadyCompleted = appState.completed[currentTopic().id];
 
   if(correct){
-    appState.points += 10;
+    // PERUBAHAN: Hanya tambah poin jika topik belum selesai
+    if (!isAlreadyCompleted) {
+      appState.points += 10;
+    }
     appState.history.unshift({ t: new Date().toISOString(), topic: currentTopic().id, q: question.id, result:'correct' });
     appState.quizQueue.shift();
   } else {
@@ -311,7 +325,7 @@ function handleAnswer(question, selectedIndex, elNode){
   }
   saveState();
   updateStats();
-  // PERUBAHAN: Durasi timeout dipercepat untuk refresh rate lebih tinggi
+  
   setTimeout(()=>{
     if(appState.quizQueue.length > 0){
       renderQuiz();
@@ -334,21 +348,32 @@ function triggerCompletionAnimation() {
 
 function endSession(timedOut=false){
   if(appState.timerHandle) clearInterval(appState.timerHandle);
+  
+  toggleTopicButtons(false); // Aktifkan kembali tombol
+  
   const t = currentTopic();
+  const isAlreadyCompleted = appState.completed[t.id];
   const mistakesForTopic = appState.mistakes[t.id] || {};
   const uniqueWrongs = Object.keys(mistakesForTopic).length;
   const totalQs = t.questions.length;
   const successRate = totalQs > 0 ? Math.max(0, totalQs - uniqueWrongs) / totalQs : 1;
 
   if(successRate >= 0.5) {
-    appState.points += 20;
-    appState.history.unshift({ t: new Date().toISOString(), topic: t.id, q: 'session', result: 'completed' });
-    markCompleted(true);
-    postMentorMessage(`Bagus! Kamu dapat bonus 20 poin untuk topik "${t.title}".`, 'ai');
-    triggerCompletionAnimation();
+    // PERUBAHAN: Hanya beri bonus poin dan tandai selesai jika belum pernah
+    if (!isAlreadyCompleted) {
+      appState.points += 20;
+      appState.history.unshift({ t: new Date().toISOString(), topic: t.id, q: 'session', result: 'completed' });
+      markCompleted(true);
+      postMentorMessage(`Bagus! Kamu dapat bonus 20 poin untuk topik "${t.title}".`, 'ai');
+      triggerCompletionAnimation();
+    } else {
+      postMentorMessage(`Kamu menyelesaikan topik "${t.title}" lagi! Kerja bagus!`, 'ai');
+    }
   } else {
     appState.history.unshift({ t: new Date().toISOString(), topic: t.id, q: 'session', result: 'partial' });
-    markCompleted(false);
+    if (!isAlreadyCompleted) {
+        markCompleted(false);
+    }
     postMentorMessage(`Sesi selesai. Perlu latihan lagi untuk topik "${t.title}".`, 'ai');
   }
   saveState();
@@ -365,6 +390,7 @@ function markCompleted(success){
 }
 
 function nextTopic(){
+  toggleTopicButtons(false);
   const currentTopics = appState.subjects[appState.currentSubject];
   const next = (appState.currentTopicIndex + 1) % currentTopics.length;
   loadTopic(next);
@@ -489,7 +515,6 @@ function appendMentor(msg, who='ai'){
 }
 function postMentorMessage(text, who='ai'){ appendMentor(text, who); }
 
-// PERUBAHAN: Fungsi baru untuk sistem feedback
 function initFeedbackSystem() {
     const stars = starRatingContainer.querySelectorAll('.star');
     let currentRating = 0;
@@ -537,7 +562,6 @@ function initFeedbackSystem() {
         
         console.log(`Feedback Diterima: Rating ${currentRating}/5, Pesan: "${feedback}"`);
         
-        // Sembunyikan form dan tampilkan pesan terima kasih
         starRatingContainer.style.display = 'none';
         feedbackText.style.display = 'none';
         submitFeedbackBtn.style.display = 'none';
@@ -560,8 +584,14 @@ startAppBtn.addEventListener('click', ()=>{
 });
 
 startSessionBtn.addEventListener('click', startSession);
-skipTopicBtn.addEventListener('click', ()=>{ markCompleted(false); nextTopic(); });
-nextQBtn.addEventListener('click', ()=>{ markCompleted(true); nextTopic(); });
+skipTopicBtn.addEventListener('click', ()=>{ 
+    if(quizArea.style.display === 'block') endSession(false);
+    nextTopic();
+});
+nextQBtn.addEventListener('click', ()=>{ 
+    if(quizArea.style.display === 'block') endSession(false);
+    nextTopic(); 
+});
 endSessionBtn.addEventListener('click', ()=>{ endSession(false); });
 mentorInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter') sendMentorBtn.click(); });
 sendMentorBtn.addEventListener('click', ()=>{
@@ -573,9 +603,7 @@ sendMentorBtn.addEventListener('click', ()=>{
 
   const lower = v.toLowerCase();
   
-  // PERUBAHAN: Logika pengurangan poin dipindahkan ke sini
   if(appState.openaiApiKey && appState.openaiApiKey.length > 10){
-    // HANYA jika API Key ada, kurangi poin dan panggil AI
     appState.points = Math.max(0, appState.points - 20);
     saveState();
     updateStats();
@@ -587,7 +615,6 @@ sendMentorBtn.addEventListener('click', ()=>{
     postMentorMessage('Menghubungkan ke layanan AI...', 'ai');
     // Di sini Anda akan menambahkan kode untuk memanggil API OpenAI
   } else {
-    // Jika tidak ada API Key, berikan respons standar TANPA mengurangi poin
     if(lower.includes('ringkas')){
       const t = currentTopic();
       const bullets = t.questions.map(q=> '- '+ q.q);
