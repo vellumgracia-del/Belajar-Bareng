@@ -67,7 +67,7 @@ body {
 .splash-logo {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 8px;
     animation: splash-fade-in 1s ease-out;
 }
 .splash-logo h1 { font-size: 48px; }
