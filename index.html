@@ -10,6 +10,7 @@
   
   <!-- Bagian CSS dimulai di sini -->
   <style>
+    /* (CSS tetap sama seperti sebelumnya) */
     /* =========================================
     * DESAIN BARU V2 - BARBAR
     * TEMA: EKSOTIS & MODERN (DARK MODE)
@@ -361,14 +362,22 @@
     .msg.user { background: var(--accent); color: white; align-self: flex-end; }
     .mentor-input-full { display: flex; gap: 8px; }
     
-    /* Halaman Feedback */
+    /* Halaman Feedback (Beri Penilaian) - DIPERBARUI */
     .feedback-container { max-width: 600px; margin: 32px auto; display: flex; flex-direction: column; gap: 24px; }
     .feedback-wrapper { text-align: center; gap: 16px; }
     .star-rating {
         display: flex; justify-content: center; gap: 8px; font-size: 32px; cursor: pointer;
     }
-    .star-rating .star { color: var(--text-secondary); transition: all 0.2s; }
-    .star-rating .star:hover, .star-rating .star.selected { color: var(--yellow); transform: scale(1.15); }
+    .star-rating .star { 
+        color: var(--text-secondary); 
+        transition: all 0.2s; 
+        line-height: 1; /* Penting untuk simbol bintang */
+    }
+    /* PENTING: Mengubah simbol dari '☆' ke '★' dan memberikan warna */
+    .star-rating .star:hover, .star-rating .star.selected { 
+        color: var(--yellow); 
+        transform: scale(1.15); 
+    }
 
     /* -- 6. Tombol & Input -- */
     .btn {
@@ -591,11 +600,12 @@
           <h3>Beri Penilaian Anda</h3>
           <p class="small">Bagaimana pengalaman belajar Anda hari ini?</p>
           <div class="star-rating" id="starRating">
+              <!-- Bintang kini menggunakan simbol Unicode yang akan diubah oleh JS -->
               <span class="star" data-value="1">☆</span><span class="star" data-value="2">☆</span><span class="star" data-value="3">☆</span><span class="star" data-value="4">☆</span><span class="star" data-value="5">☆</span>
           </div>
           <textarea id="feedbackText" placeholder="Ketik saran atau masukan Anda di sini..."></textarea>
           <button id="submitFeedback" class="btn accent-btn animated-btn"><span>Kirim Feedback</span></button>
-          <p id="feedbackThanks" class="small" style="display:none;">Terima kasih atas masukan Anda!</p>
+          <p id="feedbackThanks" class="small" style="display:none; color: var(--green); font-weight: 600; margin-top: 16px;">Terima kasih atas masukan Anda!</p>
         </div>
       </div>
     </div>
@@ -608,17 +618,17 @@
   <!-- Bagian JavaScript dimulai di sini -->
   <script>
     /* =========================
-      Aplikasi BelajarBareng V5
-      [UPDATE] Papan Peringkat, Notifikasi, AI Mentor, dan Data Kuis 
+      Aplikasi BelajarBareng V6
+      [FIXED] Fungsionalitas Star Rating & Supabase Feedback
     ========================= */
 
     // --- KONFIGURASI SUPABASE ---
     const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0';
-
     let supabase = null;
     try {
-      if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+      // Pastikan window.supabase tersedia sebelum memanggil createClient
+      if (SUPABASE_URL && SUPABASE_ANON_KEY && typeof window.supabase !== 'undefined') {
           supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       }
     } catch (e) {
@@ -628,7 +638,7 @@
     // Status AI Mentor (Poin 3)
     const IS_AI_MAINTENANCE = true; // Set ke true untuk menonaktifkan pengurangan poin
 
-    // --- DATA TOPIK DAN SOAL (DIPERLUAS MENJADI 10 SOAL PER TOPIK - Poin 4) ---
+    // --- DATA TOPIK DAN SOAL ---
     const SUBJECTS_DATA = {
       "Biologi": [
         { id: "b1", title: "Sistem Pencernaan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760703550/Belajar_IPA_Sistem_Pencernaan_Manusia_SiapNaikLevel_fnur0d.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
@@ -710,6 +720,7 @@
       points: 0,
       completed: {},
       userName: '',
+      currentRating: 0, // NEW: State untuk menyimpan rating saat ini
     };
 
     function loadState(){
@@ -720,7 +731,8 @@
           if(s.points) appState.points = s.points;
           if(s.completed) appState.completed = s.completed;
         }
-        appState.userName = localStorage.getItem('bb_username_v3') || '';
+        // Pastikan nama pengguna memiliki nilai default, bahkan jika kosong
+        appState.userName = localStorage.getItem('bb_username_v3') || 'Pemain Anonim'; 
       } catch(e) { console.warn("Gagal memuat state:", e); }
     }
 
@@ -766,7 +778,7 @@
         fiturTambahanBtn: document.getElementById('fiturTambahanBtn'),
         backToSubjectsBtn: document.getElementById('backToSubjectsBtn'),
         topicSelectionTitle: document.getElementById('topicSelectionTitle'),
-        sidebarOverlay: document.getElementById('sidebarOverlay'), // Elemen overlay baru (Poin 2)
+        sidebarOverlay: document.getElementById('sidebarOverlay'),
     };
 
     // --- MANAJEMEN HALAMAN & NAVIGASI ---
@@ -785,7 +797,7 @@
         ui.sidebar.classList.remove('open');
     }
 
-    // Fungsi notifikasi diperbaiki (Poin 2)
+    // Fungsi notifikasi diperbaiki (2000ms = 2 detik)
     function showNotification(message) {
         ui.notification.textContent = message;
         ui.notification.classList.add('show');
@@ -803,17 +815,18 @@
             ui.splashScreen.classList.add('hidden');
             loadState();
             
-            if (appState.userName) {
+            if (appState.userName && appState.userName !== 'Pemain Anonim') {
                 ui.userNameDisplay.textContent = appState.userName;
                 ui.welcomeUser.style.display = 'block';
                 showPage('homePage');
             } else {
                 showPage('landingPage');
             }
+            renderLeaderboard(); // Panggil di sini agar papan peringkat terisi segera
         }, 1500);
 
-        renderLeaderboard();
         setupEventListeners();
+        setupStarRating(); // NEW: Inisialisasi logika bintang
     }
 
     // --- RENDER KONTEN DINAMIS ---
@@ -997,7 +1010,7 @@
       ui.doneTopicsEl.textContent = Object.values(appState.completed).filter(v=>v).length;
       ui.totalPointsEl.textContent = appState.points;
       updateProgBar();
-      updateUserScore(); // Memanggil update score ke DB (Poin 1)
+      updateUserScore(); // Memanggil update score ke DB
     }
 
     // --- PAPAN PERINGKAT & AI MENTOR ---
@@ -1014,32 +1027,43 @@
                 .from('leaderboard').select('name, score').order('score', { ascending: false }).limit(25);
 
             if (error) { 
-                boardEl.innerHTML = `<p class="small">Gagal memuat data: ${error.message}</p>`; 
-                console.error('Supabase Leaderboard Error:', error);
+                // Jika error, tampilkan pesan spesifik
+                boardEl.innerHTML = `<p class="small">Gagal memuat: Periksa RLS/Schema Tabel di Supabase. (${error.message})</p>`; 
+                console.error('Supabase Leaderboard Error (Check RLS/Schema):', error);
                 return; 
             }
             
             boardEl.innerHTML = '';
-            const emojis = ['🥇', '🥈', '🥉'];
-            data.forEach((entry, idx) => {
-                const div = document.createElement('div');
-                div.className = `leaderboard-entry small ${entry.name === appState.userName ? 'current-user' : ''}`;
-                const rank = emojis[idx] || `${idx + 1}.`;
-                div.innerHTML = `${rank} <span><strong>${entry.name}</strong></span> <span>${entry.score} poin</span>`;
-                boardEl.appendChild(div);
-            });
+            if (data && data.length > 0) {
+                const emojis = ['🥇', '🥈', '🥉'];
+                data.forEach((entry, idx) => {
+                    const div = document.createElement('div');
+                    // Tambahkan pengecekan jika entry.name null/undefined
+                    const entryName = entry.name || 'Nama Kosong'; 
+                    div.className = `leaderboard-entry small ${entryName === appState.userName ? 'current-user' : ''}`;
+                    const rank = emojis[idx] || `${idx + 1}.`;
+                    div.innerHTML = `${rank} <span><strong>${entryName}</strong></span> <span>${entry.score} poin</span>`;
+                    boardEl.appendChild(div);
+                });
+            } else {
+                boardEl.innerHTML = '<p class="small">Belum ada data di papan peringkat. Mulai kuis untuk masuk!</p>';
+            }
         } catch (e) {
-             boardEl.innerHTML = '<p class="small">Gagal memuat data karena error koneksi.</p>';
+             boardEl.innerHTML = '<p class="small">Gagal memuat data karena error koneksi/eksekusi.</p>';
+             console.error("Leaderboard Fetch Error:", e);
         }
     }
 
     async function updateUserScore() {
-        if (!appState.userName || !supabase) return;
+        // Hanya update jika nama pengguna valid dan supabase terhubung
+        if (appState.userName === 'Pemain Anonim' || !supabase) return; 
         try {
-            await supabase.from('leaderboard').upsert({ name: appState.userName, score: appState.points }, { onConflict: 'name' });
+            // Gunakan upsert dengan kolom name dan score
+            const { error } = await supabase.from('leaderboard').upsert({ name: appState.userName, score: appState.points }, { onConflict: 'name' });
+            if (error) throw error;
             renderLeaderboard();
         } catch(e) {
-            console.warn("Gagal update score ke Supabase:", e);
+            console.warn("Gagal update score ke Supabase:", e.message);
         }
     }
 
@@ -1079,12 +1103,108 @@
             }
         }
     }
+    
+    // --- LOGIKA FEEDBACK (NEW) ---
+    
+    function setupStarRating() {
+      // 1. Tambahkan event listener untuk setiap bintang
+      ui.starRatingContainer.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', () => {
+          const rating = parseInt(star.dataset.value, 10);
+          appState.currentRating = rating;
+          updateStarVisuals(rating);
+        });
+        // Efek hover
+        star.addEventListener('mouseover', () => {
+          updateStarVisuals(parseInt(star.dataset.value, 10), true);
+        });
+        star.addEventListener('mouseout', () => {
+          updateStarVisuals(appState.currentRating);
+        });
+      });
+      
+      ui.submitFeedbackBtn.addEventListener('click', submitFeedback);
+    }
+
+    function updateStarVisuals(rating, hover = false) {
+      ui.starRatingContainer.querySelectorAll('.star').forEach(star => {
+        const starValue = parseInt(star.dataset.value, 10);
+        
+        // Aturan visual: tampilkan bintang penuh (★) jika nilainya <= rating
+        if (starValue <= rating) {
+          star.textContent = '★'; // Bintang penuh
+          star.classList.add('selected');
+        } else {
+          star.textContent = '☆'; // Bintang kosong
+          star.classList.remove('selected');
+        }
+      });
+    }
+
+    async function submitFeedback() {
+        if (!supabase) {
+            showNotification('Gagal: Koneksi database tidak tersedia.');
+            return;
+        }
+
+        const rating = appState.currentRating;
+        const feedback = ui.feedbackText.value.trim();
+
+        if (appState.userName === 'Pemain Anonim') {
+            showNotification("Mohon masukkan nama Anda di Halaman Depan sebelum memberi penilaian.");
+            return;
+        }
+
+        if (rating === 0) {
+            showNotification('Anda harus memberikan minimal 1 bintang.');
+            return;
+        }
+
+        ui.submitFeedbackBtn.disabled = true;
+        ui.submitFeedbackBtn.innerHTML = '<span>Mengirim...</span>';
+
+        try {
+            // Gunakan tabel 'feedback' yang akan kita buat di Supabase
+            const { error } = await supabase
+                .from('feedback') 
+                .insert([
+                    {
+                        user_name: appState.userName,
+                        rating: rating,
+                        feedback_text: feedback,
+                    }
+                ]);
+
+            if (error) throw error;
+
+            ui.feedbackThanks.style.display = 'block';
+            showNotification('Terima kasih! Penilaian Anda berhasil dikirim.');
+
+            // Reset UI setelah sukses
+            appState.currentRating = 0;
+            ui.feedbackText.value = '';
+            updateStarVisuals(0);
+            
+            setTimeout(() => {
+                ui.feedbackThanks.style.display = 'none';
+                ui.submitFeedbackBtn.disabled = false;
+                ui.submitFeedbackBtn.innerHTML = '<span>Kirim Feedback</span>';
+            }, 3000);
+
+        } catch (e) {
+            console.error('Gagal mengirim feedback:', e);
+            showNotification('Gagal mengirim feedback: ' + (e.message || 'Periksa RLS/Tabel Feedback di Supabase.'));
+            ui.submitFeedbackBtn.disabled = false;
+            ui.submitFeedbackBtn.innerHTML = '<span>Kirim Feedback</span>';
+        }
+    }
+
 
     // --- EVENT LISTENERS ---
     function setupEventListeners() {
-        // Toggle Sidebar (Poin 2)
+        // Toggle Sidebar
         ui.hamburgerBtn.addEventListener('click', () => ui.sidebar.classList.toggle('open'));
-        ui.sidebarOverlay.addEventListener('click', closeSidebar); // Tutup sidebar saat overlay diklik (Poin 2)
+        ui.sidebarOverlay.addEventListener('click', closeSidebar); // Tutup sidebar saat overlay diklik
         
         ui.navLinks.forEach(link => {
             if (link.id === 'fiturTambahanBtn') return; 
@@ -1093,7 +1213,7 @@
                 e.preventDefault();
                 const pageId = link.dataset.page;
 
-                if (!appState.userName && pageId !== 'landingPage' && pageId !== 'homePage') {
+                if (appState.userName === 'Pemain Anonim' && pageId !== 'landingPage' && pageId !== 'homePage') {
                     showPage('landingPage');
                     showNotification("Masukkan nama Anda untuk melanjutkan!");
                     return;
@@ -1117,7 +1237,8 @@
           ui.userNameDisplay.textContent = name;
           ui.welcomeUser.style.display = 'block';
           showPage('homePage');
-          updateStats();
+          updateStats(); // Memulai update score (INSERT nama pertama kali)
+          renderLeaderboard(); // Segarkan leaderboard setelah nama dimasukkan
         });
 
         ui.fiturTambahanBtn.addEventListener('click', (e) => {
