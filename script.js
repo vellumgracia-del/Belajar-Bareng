@@ -17,7 +17,8 @@ try {
 }
 
 // Status AI Mentor (Poin 3)
-const IS_AI_MAINTENANCE = true; // Set ke true untuk menonaktifkan pengurangan poin
+// const IS_AI_MAINTENANCE = true; // [DIHAPUS] Logika ini tidak lagi digunakan.
+// AI Mentor sekarang akan langsung memanggil API Gemini.
 
 // --- DATA TOPIK DAN SOAL ---
 const SUBJECTS_DATA = {
@@ -448,41 +449,137 @@ async function updateUserScore() {
     }
 }
 
+// --- FUNGSI BARU UNTUK INTEGRASI GEMINI API ---
+
+/**
+ * Helper fetch dengan exponential backoff untuk menangani rate limiting (429)
+ * atau kesalahan server (5xx).
+ */
+async function fetchWithBackoff(url, options, maxRetries = 3) {
+    let delay = 1000; // 1 detik
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url, options);
+
+            if (response.ok) {
+                return response.json(); // Sukses
+            } else if (response.status === 429 || response.status >= 500) {
+                // Throttling atau server error, coba lagi
+                console.warn(`Attempt ${i + 1} failed with status ${response.status}. Retrying in ${delay}ms...`);
+            } else {
+                // Kesalahan klien (cth: 400 Bad Request), jangan coba lagi
+                const errorBody = await response.text();
+                throw new Error(`Client error: ${response.status} ${response.statusText}. Body: ${errorBody}`);
+            }
+        } catch (error) {
+            // Kesalahan jaringan atau error yang dilempar dari blok else
+            console.warn(`Attempt ${i + 1} failed. Retrying in ${delay}ms...`, error.message);
+            if (i + 1 >= maxRetries) {
+                 // Jika ini adalah percobaan terakhir, lempar error
+                 throw new Error(`Failed to fetch after ${maxRetries} attempts. Last error: ${error.message}`);
+            }
+        }
+        // Tunggu sebelum mencoba lagi
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2; // Double delay
+    }
+    // Jika loop selesai tanpa return, berarti semua percobaan gagal
+    throw new Error(`Failed to fetch after ${maxRetries} attempts.`);
+}
+
+/**
+ * Memanggil Gemini API dengan prompt pengguna.
+ */
+async function callGeminiAPI(userQuery) {
+    // Sistem prompt untuk memandu AI
+    const systemPrompt = "Anda adalah 'Mentor AI' untuk platform belajar BARBAR. Berikan jawaban yang singkat (maksimal 2-3 kalimat), jelas, dan mendidik. Selalu bersikap ramah dan suportif. Gunakan Bahasa Indonesia.";
+    
+    const apiKey = "AIzaSyDqyBAFgMhWses3Fo5e4U1e5DTsJNWOv50"; // API Key akan diisi oleh environment
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+    const payload = {
+        contents: [{ parts: [{ text: userQuery }] }],
+        systemInstruction: {
+            parts: [{ text: systemPrompt }]
+        },
+        // Konfigurasi keamanan untuk jawaban yang lebih aman
+        safetySettings: [
+            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" }
+        ]
+    };
+
+    const options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    };
+
+    try {
+        // Gunakan fetchWithBackoff
+        const result = await fetchWithBackoff(apiUrl, options);
+        
+        const candidate = result.candidates?.[0];
+        
+        // Cek jika jawaban diblokir karena safety
+        if (candidate?.finishReason === 'SAFETY') {
+            return "Maaf, saya tidak bisa menjawab pertanyaan tersebut. Topik ini di luar batas keamanan saya.";
+        }
+
+        if (candidate && candidate.content?.parts?.[0]?.text) {
+            return candidate.content.parts[0].text;
+        } else {
+            console.error("Struktur respons API tidak valid:", result);
+            return "Maaf, saya menerima respons yang tidak terduga dari server. Coba lagi nanti.";
+        }
+    } catch (error) {
+        console.error("Error memanggil Gemini API:", error);
+        // Memberikan pesan error yang lebih ramah ke pengguna
+        return `Maaf, terjadi kesalahan saat menyambungkan ke Mentor AI. (${error.message})`;
+    }
+}
+
+
 function postMentorMessage(text, who='ai'){ 
     const div = document.createElement('div');
     div.className = 'msg ' + (who==='ai' ? 'ai' : 'user');
     div.textContent = text;
     ui.mentorLog.appendChild(div);
     ui.mentorLog.scrollTop = ui.mentorLog.scrollHeight;
+    return div; // NEW: Kembalikan elemen div agar bisa dimanipulasi
 }
 
 // Logika pengiriman pesan mentor (Poin 3)
-function sendMentorMessage() {
+// Diubah menjadi async untuk menangani API call
+async function sendMentorMessage() {
     const v = ui.mentorInput.value.trim();
     if(!v) return;
     postMentorMessage(v, 'user');
     ui.mentorInput.value = '';
     
-    if(IS_AI_MAINTENANCE) {
-        // Mode maintenance aktif: Poin tidak dikurangi
-        postMentorMessage('Maaf, Mentor AI sedang dalam mode pemeliharaan (maintenance). Pertanyaan Anda telah diterima dan akan dijawab segera setelah sistem kembali normal. Poin Anda TIDAK dikurangi.', 'ai');
-    } else {
-        // Logika normal: Poin dikurangi
-        if(appState.points >= 20) {
-            appState.points -= 20;
-            showNotification('Bantuan AI digunakan (-20 poin).');
-            updateStats();
-            // *LOGIKA PANGGIL API AI DI SINI*
-            postMentorMessage('Maaf, koneksi ke AI sedang dalam pengembangan. Poin Anda telah dikembalikan untuk sementara.', 'ai');
-            // Logika untuk mengembalikan poin jika API belum siap (jika tidak terintegrasi sungguhan)
-            setTimeout(() => {
-                appState.points += 20;
-                updateStats();
-            }, 1000);
-        } else {
-            postMentorMessage('Maaf, poin Anda tidak cukup (minimal 20 poin) untuk menggunakan AI Mentor.', 'ai');
-        }
+    // --- Logika Baru dengan Gemini API ---
+    
+    // 1. Tampilkan pesan loading yang bisa di-update
+    // Kita ambil elemen div yang baru dibuat oleh postMentorMessage
+    const loadingMsgEl = postMentorMessage('Mentor AI sedang mengetik...', 'ai');
+    
+    try {
+        // 2. Panggil API dan tunggu respons
+        const aiResponse = await callGeminiAPI(v);
+        
+        // 3. Update teks pesan loading tadi dengan respons AI
+        loadingMsgEl.textContent = aiResponse;
+        
+    } catch (error) {
+        // 4. Jika gagal, update pesan loading dengan pesan error
+        loadingMsgEl.textContent = `Maaf, terjadi kesalahan: ${error.message}`;
+        console.error("Gagal total mendapatkan respons AI:", error);
     }
+    
+    // Scroll lagi untuk memastikan pesan terakhir (jawaban AI) terlihat
+    ui.mentorLog.scrollTop = ui.mentorLog.scrollHeight;
 }
 
 // --- LOGIKA FEEDBACK (NEW) ---
