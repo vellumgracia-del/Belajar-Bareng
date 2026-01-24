@@ -4,8 +4,8 @@
 ========================= */
 
 // --- KONFIGURASI SUPABASE ---
-const SUPABASE_URL = 'https://rgntufyuatlkikwuyrxx.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_Qb5hBsxj26EbriOtqipRBQ_a9HNxjx0';
+const SUPABASE_URL = '';
+const SUPABASE_ANON_KEY = '';
 let supabase = null;
 try {
   // Pastikan window.supabase tersedia sebelum memanggil createClient
