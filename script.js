@@ -494,7 +494,7 @@ async function callGeminiAPI(userQuery) {
     // Sistem prompt untuk memandu AI
     const systemPrompt = "Anda adalah 'Mentor AI' untuk platform belajar BARBAR. Berikan jawaban yang singkat (maksimal 2-3 kalimat), jelas, dan mendidik. Selalu bersikap ramah dan suportif. Gunakan Bahasa Indonesia.";
     
-    const apiKey = "AIzaSyDqyBAFgMhWses3Fo5e4U1e5DTsJNWOv50"; // API Key akan diisi oleh environment
+    const apiKey = ""; // API Key akan diisi oleh environment
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
     const payload = {
