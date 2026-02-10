@@ -4,20 +4,202 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>BARBAR — Platform Belajar Masa Depan</title>
+  
+  <!-- Preconnect untuk Performa Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- File CSS Eksternal -->
-  <link rel="stylesheet" href="style.css">
-  
+  <style>
+    /* =========================================
+       CSS (DESAIN ORIGINAL - TIDAK BERUBAH)
+       ========================================= */
+    :root {
+      --primary-bg: #0F0F1A;
+      --secondary-bg: #1B1B2B;
+      --accent: #7F5AF0;
+      --accent-secondary: #2CB67D;
+      --text-primary: #FFFFFE;
+      --text-secondary: #94A1B2;
+      --border-color: rgba(127, 90, 240, 0.2);
+      --shadow-color: rgba(0, 0, 0, 0.2);
+      --header-height: 64px;
+      --green: #2CB67D;
+      --red: #EF4444;
+      --yellow: #FBBF24;
+      font-family: 'Manrope', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    @keyframes slow-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.1; }
+      50% { transform: scale(1.5); opacity: 0.2; }
+    }
+
+    body {
+      background-color: var(--primary-bg);
+      color: var(--text-primary);
+      padding-top: var(--header-height);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Splash Screen */
+    .splash-screen {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: var(--primary-bg);
+        display: flex; justify-content: center; align-items: center;
+        z-index: 9999; flex-direction: column;
+        transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+    }
+    .splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .splash-logo { display: flex; align-items: center; gap: 4px; animation: splash-fade-in 1s ease-out; }
+    .splash-logo h1 { font-size: 48px; }
+    @keyframes splash-fade-in { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+    /* Background FX */
+    body::before, body::after {
+      content: ''; position: fixed; border-radius: 50%;
+      background: var(--accent); filter: blur(150px); z-index: -1;
+      animation: slow-pulse 20s infinite ease-in-out;
+    }
+    body::before { width: 300px; height: 300px; top: -100px; left: -100px; }
+    body::after { width: 400px; height: 400px; bottom: -150px; right: -150px; animation-delay: 5s; }
+
+    /* Layout */
+    .page-container { width: 100%; }
+    .page { display: none; padding: 24px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.5s ease-out; }
+    .page.active { display: block; }
+    .page-subtitle { color: var(--text-secondary); margin-top: 4px; max-width: 600px; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .container-app { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+    .left, .sidebar { display: flex; flex-direction: column; gap: 24px; }
+
+    /* Header */
+    .app-header {
+      position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
+      background: rgba(15, 15, 26, 0.8); backdrop-filter: blur(10px);
+      z-index: 100; padding: 0 24px; display: flex; align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .header-content { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .header-left, .header-title-group { display: flex; align-items: center; gap: 4px; }
+    h1 { font-size: 22px; font-weight: 800; color: var(--text-primary); }
+
+    .hamburger-btn { background: none; border: none; cursor: pointer; padding: 8px; z-index: 110; display: flex; flex-direction: column; gap: 5px; }
+    .hamburger-btn span { display: block; width: 24px; height: 2px; background-color: var(--text-primary); transition: all 0.3s; }
+
+    /* Sidebar */
+    .sidebar-nav {
+      position: fixed; top: 0; left: 0; width: 280px; height: 100%;
+      background: var(--secondary-bg); box-shadow: 4px 0 20px var(--shadow-color);
+      transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 105; padding: calc(var(--header-height) + 24px) 24px 24px;
+      display: flex; flex-direction: column; gap: 8px; border-right: 1px solid var(--border-color);
+    }
+    .sidebar-nav.open { transform: translateX(0); }
+    .sidebar-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.6); z-index: 104; display: none; opacity: 0; transition: opacity 0.4s;
+    }
+    .sidebar-nav.open ~ .sidebar-overlay { display: block; opacity: 1; }
+
+    .welcome-user { padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); }
+    .nav-link {
+      padding: 12px 16px; text-decoration: none; color: var(--text-secondary); font-weight: 500; border-radius: 8px; 
+      display: flex; align-items: center; gap: 12px; transition: background-color 0.2s, color 0.2s;
+    }
+    .nav-link:hover { background-color: var(--primary-bg); color: var(--text-primary); }
+    .nav-link.active { background-color: var(--accent); color: white; font-weight: 600; }
+
+    /* Components */
+    .card { background-color: var(--secondary-bg); border-radius: 12px; padding: 24px; border: 1px solid var(--border-color); box-shadow: 0 4px 20px var(--shadow-color); }
+    .card-header { font-weight: 600; font-size: 16px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+    .scrollable-content { overflow-y: auto; max-height: 200px; }
+
+    .leaderboard-entry { padding: 8px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.05); display: flex; justify-content: space-between; }
+    .leaderboard-entry strong { font-weight: 600; }
+    .leaderboard-entry.current-user { background: rgba(127, 90, 240, 0.1); padding: 8px 4px; border-radius: 4px; border-bottom: none; }
+
+    /* Landing */
+    .landing-content { min-height: calc(100vh - var(--header-height) - 48px); display: flex; align-items: center; justify-content: center; text-align: center; }
+    .landing-text { max-width: 550px; }
+    .landing-text h2 { font-size: 48px; font-weight: 800; line-height: 1.2; }
+    .landing-text .highlight { color: var(--accent); }
+    .landing-text p { font-size: 18px; color: var(--text-secondary); margin: 16px 0 32px; }
+    .landing-input-group { display: flex; gap: 8px; flex-direction: column; align-items: center; }
+    .landing-input-group input { text-align: center; }
+    .landing-input-group button { width: 100%; max-width: 300px; }
+
+    /* Home */
+    .home-hero { text-align: center; padding: 48px 0; }
+    .home-hero h3 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+    .home-hero p { color: var(--text-secondary); max-width: 600px; margin: auto; }
+    .founder-section { margin-top: 48px; text-align: center; }
+    .founder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 600px; margin: auto; }
+    .founder-card { position: relative; }
+    .founder-photo { width: 150px; height: 150px; margin: auto; border-radius: 50%; overflow: hidden; border: 4px solid var(--secondary-bg); box-shadow: 0 0 0 2px var(--accent); position: relative; z-index: 2; }
+    .founder-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .founder-shape { width: 150px; height: 150px; background: var(--accent); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(15deg); opacity: 0.2; z-index: 1; }
+
+    /* Selection */
+    h2 { font-size: 28px; font-weight: 700; }
+    .selection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 24px; }
+    .selection-card { background-color: var(--secondary-bg); padding: 24px; border-radius: 12px; border: 1px solid var(--border-color); text-decoration: none; color: var(--text-primary); transition: all 0.3s; }
+    .selection-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--accent); box-shadow: 0 8px 30px rgba(127, 90, 240, 0.2); }
+
+    /* Video & Quiz */
+    .video-container { position: relative; width: 100%; padding-top: 56.25%; background-color: #000; border-radius: 8px; overflow: hidden; }
+    .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    
+    @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .question-text { animation: slideInUp 0.4s ease-out; }
+    .options { animation: slideInUp 0.4s ease-out 0.1s; animation-fill-mode: backwards; }
+    .option.correct { background-color: var(--green) !important; color: white !important; border-color: var(--green) !important; }
+    .option.wrong { background-color: var(--red) !important; color: white !important; border-color: var(--red) !important; animation: shake 0.5s; }
+    @keyframes shake { 10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); } }
+
+    /* Mentor */
+    .mentor-page-container { height: calc(100vh - var(--header-height) - 48px); display: flex; flex-direction: column; max-width: 800px; margin: auto; }
+    .mentor-log-full { flex-grow: 1; overflow-y: auto; padding: 16px; background: var(--primary-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 16px; display: flex; flex-direction: column; }
+    .msg { padding: 10px 14px; border-radius: 12px; margin-bottom: 10px; max-width: 80%; line-height: 1.5; }
+    .msg.ai { background: var(--secondary-bg); align-self: flex-start; }
+    .msg.user { background: var(--accent); color: white; align-self: flex-end; }
+    .mentor-input-full { display: flex; gap: 8px; }
+
+    /* Feedback */
+    .feedback-container { max-width: 600px; margin: 32px auto; display: flex; flex-direction: column; gap: 24px; }
+    .feedback-wrapper { text-align: center; gap: 16px; }
+    .star-rating { display: flex; justify-content: center; gap: 8px; font-size: 32px; cursor: pointer; }
+    .star-rating .star { color: var(--text-secondary); transition: all 0.2s; line-height: 1; }
+    .star-rating .star:hover, .star-rating .star.selected { color: var(--yellow); transform: scale(1.15); }
+
+    /* Buttons */
+    .btn { background: var(--secondary-bg); border: 1px solid var(--border-color); padding: 10px 16px; border-radius: 8px; cursor: pointer; color: var(--text-primary); font-weight: 500; font-family: inherit; font-size: 14px; text-decoration: none; transition: all 0.2s ease; }
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .accent-btn { background: var(--accent); color: white; border-color: var(--accent); }
+    .accent-btn:hover { background: var(--accent-secondary); border-color: var(--accent-secondary); color: white; }
+    
+    input, textarea { width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--primary-bg); color: var(--text-primary); font-size: 14px; font-family: inherit; }
+    input:focus, textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
+
+    /* Notification */
+    .notification { position: fixed; top: calc(var(--header-height) + 16px); left: 50%; transform: translateX(-50%) translateY(-100px); background-color: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 200; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease-out; opacity: 0; }
+    .notification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* Responsive */
+    @media (max-width: 900px) { .container-app { grid-template-columns: 1fr; } .sidebar { order: -1; } }
+    @media (max-width: 768px) { .page { padding: 16px; } .app-header { padding: 0 16px; } .landing-text h2 { font-size: 36px; } .home-hero h3 { font-size: 28px; } .founder-grid { grid-template-columns: 1fr; } .selection-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) { .landing-text h2 { font-size: 32px; } .card { padding: 16px; } }
+  </style>
 </head>
 <body>
   
-  <!-- 1. Landing Screen / Splash Screen -->
   <div id="splashScreen" class="splash-screen">
     <div class="splash-logo">
-      <img class="header-logo" width="48" height="48" viewBox="0 0 100 100" fill="none" src="https://res.cloudinary.com/dgzufaone/image/upload/v1761143718/Gemini_Generated_Image_hbfzexhbfzexhbfz-modified_rcnbja.png"><path d="M20 80V20L60 20C76.5685 20 90 33.4315 90 50C90 66.5685 76.5685 80 60 80H20Z" fill="#7F5AF0" fill-opacity="0.5"></path><path d="M20 70V30H55C66.0457 30 75 38.9543 75 50C75 61.0457 66.0457 70 55 70H20Z" fill="#7F5AF0"></path></img>
+      <img class="header-logo" width="48" height="48" alt="Logo" src="https://res.cloudinary.com/dgzufaone/image/upload/v1761143718/Gemini_Generated_Image_hbfzexhbfzexhbfz-modified_rcnbja.png" />
       <h1>BARBAR</h1>
     </div>
   </div>
@@ -28,22 +210,17 @@
   <header class="app-header">
     <div class="header-content">
       <div class="header-left">
-        <button id="hamburgerBtn" class="hamburger-btn">
-          <span></span><span></span><span></span>
-        </button>
+        <button id="hamburgerBtn" class="hamburger-btn"><span></span><span></span><span></span></button>
         <div class="header-title-group">
-          <img class="header-logo" width="32" height="32" viewBox="0 0 100 100" fill="none" src="https://res.cloudinary.com/dgzufaone/image/upload/v1761143718/Gemini_Generated_Image_hbfzexhbfzexhbfz-modified_rcnbja.png"><path d="M20 80V20L60 20C76.5685 20 90 33.4315 90 50C90 66.5685 76.5685 80 60 80H20Z" fill="#7F5AF0" fill-opacity="0.5"></path><path d="M20 70V30H55C66.0457 30 75 38.9543 75 50C75 61.0457 66.0457 70 55 70H20Z" fill="#7F5AF0"></path></img>
+          <img class="header-logo" width="32" height="32" alt="Logo Kecil" src="https://res.cloudinary.com/dgzufaone/image/upload/v1761143718/Gemini_Generated_Image_hbfzexhbfzexhbfz-modified_rcnbja.png" />
           <h1>BARBAR</h1>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- 4. Sidebar dengan Menu Baru -->
   <nav id="sidebar" class="sidebar-nav">
-    <div id="welcomeUser" class="welcome-user" style="display: none;">
-      Halo, <strong id="userNameDisplay"></strong>!
-    </div>
+    <div id="welcomeUser" class="welcome-user" style="display: none;">Halo, <strong id="userNameDisplay"></strong>!</div>
     <a href="#home" class="nav-link" data-page="homePage">🏠 Beranda</a>
     <a href="#belajar" class="nav-link" data-page="subjectSelectionPage">📚 Mulai Belajar</a>
     <a href="#mentor" class="nav-link" data-page="aiMentorPage">🤖 AI Mentor</a>
@@ -52,7 +229,6 @@
     <a href="#fitur" id="fiturTambahanBtn" class="nav-link">✨ Fitur Tambahan</a>
   </nav>
   
-  <!-- Overlay untuk menutup sidebar (Poin 2) -->
   <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
   <div id="pageContainer" class="page-container">
@@ -77,8 +253,8 @@
       <div class="founder-section">
         <h3>Tim Pendiri</h3>
         <div class="founder-grid">
-          <div class="founder-card"><div class="founder-photo"><img src="https://res.cloudinary.com/dgzufaone/image/upload/v1761118376/Gemini_Generated_Image_jxmjhwjxmjhwjxmj_ixh88x.jpg" alt="Foto Zulfa Fahmiy"></div><div class="founder-shape"></div><h4>Zulfa Fahmiy</h4><p>Chief Executive Officer</p></div>
-          <div class="founder-card"><div class="founder-photo"><img src="https://res.cloudinary.com/dgzufaone/image/upload/v1761119341/1000087641_pra_re9gau.png" alt="Foto Prabu Revolusi"></div><div class="founder-shape"></div><h4>Prabu Revolusi</h4><p>Chief Technology Officer</p></div>
+          <div class="founder-card"><div class="founder-photo"><img src="https://res.cloudinary.com/dgzufaone/image/upload/v1761118376/Gemini_Generated_Image_jxmjhwjxmjhwjxmj_ixh88x.jpg" alt="Zulfa"></div><div class="founder-shape"></div><h4>Zulfa Fahmiy</h4><p>CEO</p></div>
+          <div class="founder-card"><div class="founder-photo"><img src="https://res.cloudinary.com/dgzufaone/image/upload/v1761119341/1000087641_pra_re9gau.png" alt="Prabu"></div><div class="founder-shape"></div><h4>Prabu Revolusi</h4><p>CTO</p></div>
         </div>
       </div>
     </div>
@@ -99,64 +275,53 @@
     <div id="appPage" class="page">
       <div class="container-app">
         <main class="left">
-          <!-- 2. Perbaikan Kolom Video -->
           <div class="card video-card">
-             <div class="video-container">
-                <video id="topicVideo" controls preload="metadata"><source src="" type="video/mp4"></video>
-            </div>
-            <div class="video-info-wrapper">
+             <div class="video-container"><video id="topicVideo" controls preload="metadata"><source src="" type="video/mp4"></video></div>
+            <div class="video-info-wrapper" style="margin-top: 16px; display: flex; justify-content: space-between; align-items: flex-start;">
               <div class="topic-details">
                 <h3 id="topicTitle">-</h3>
-                <p class="small">Timer sesi: <span class="timer" id="sessTimer">05:00</span></p>
+                <p class="small">Timer: <span class="timer" id="sessTimer" style="font-family: monospace; font-weight: bold;">05:00</span></p>
               </div>
-              <div class="topic-controls">
-                  <div class="progress-line"><i id="progBar"></i></div>
-                  <div class="controls">
-                    <button class="btn" id="startSession">Mulai Sesi</button>
+              <div class="topic-controls" style="flex-grow: 1; margin-left: 20px;">
+                  <div class="progress-line" style="height: 6px; background: #333; border-radius: 3px; overflow: hidden; margin-bottom: 8px;">
+                      <div id="progBar" style="height: 100%; width: 0%; background: var(--accent); transition: width 0.3s;"></div>
                   </div>
+                  <div class="controls" style="text-align: right;"><button class="btn accent-btn" id="startSession">Mulai Sesi</button></div>
               </div>
             </div>
           </div>
-          <!-- 2. Perbaikan Tampilan Kuis dengan Animasi -->
+          
           <div class="card quiz" id="quizArea" style="display:none">
-            <div id="quizHeader">
+            <div id="quizHeader" style="display: flex; justify-content: space-between; margin-bottom: 16px;">
               <h4>Kuis Singkat</h4>
-              <p class="small">Soal tersisa: <span id="remainingQ">0</span></p>
+              <p class="small">Sisa: <span id="remainingQ">0</span></p>
             </div>
             <div id="questionWrap"></div>
-            <div class="quiz-controls">
-              <button class="btn" id="endSession" style="display:none">Akhiri Sesi</button>
-            </div>
+            <div class="quiz-controls" style="margin-top: 16px; text-align: right;"><button class="btn" id="endSession" style="display:none">Akhiri Sesi</button></div>
           </div>
         </main>
         <aside class="sidebar">
           <div class="card">
             <div class="card-header">Statistik</div>
-            <div class="stats-grid">
-              <div><p class="small">Topik Selesai</p><strong id="doneTopics">0</strong></div>
-              <div><p class="small">Total Poin</p><strong id="totalPoints">0</strong></div>
+            <div class="stats-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div><p class="small">Selesai</p><strong id="doneTopics" style="font-size: 20px; color: var(--green);">0</strong></div>
+              <div><p class="small">Poin</p><strong id="totalPoints" style="font-size: 20px; color: var(--yellow);">0</strong></div>
             </div>
           </div>
           <div class="card">
-            <div class="card-header">🏆 Papan Peringkat</div>
+            <div class="card-header">🏆 Papan Peringkat (Global)</div>
             <div id="leaderboard" class="scrollable-content"></div>
           </div>
         </aside>
       </div>
     </div>
     
-    <!-- 5. Halaman AI Mentor Terpisah -->
     <div id="aiMentorPage" class="page">
         <h2>AI Mentor</h2>
-        <p class="page-subtitle">Punya pertanyaan? Tanyakan pada mentor AI kami. Layanan saat ini **Gratis** karena sedang *maintenance*.</p>
+        <p class="page-subtitle">Tanyakan pada mentor AI kami.</p>
         <div class="mentor-page-container card">
-            <div id="mentorLog" class="mentor-log-full">
-              <div class="msg ai">Halo! Saya adalah mentor AI Anda. Tanyakan apa saja terkait pelajaran hari ini. (Saat ini mode maintenance, poin tidak dikurangi).</div>
-            </div>
-            <div class="mentor-input-full">
-              <input id="mentorInput" type="text" placeholder="Tanya Mentor..." />
-              <button class="btn accent-btn" id="sendMentor">Kirim</button>
-            </div>
+            <div id="mentorLog" class="mentor-log-full"><div class="msg ai">Halo! Saya adalah mentor AI Anda.</div></div>
+            <div class="mentor-input-full"><input id="mentorInput" type="text" placeholder="Tanya Mentor..." /><button class="btn accent-btn" id="sendMentor">Kirim</button></div>
         </div>
     </div>
 
@@ -164,24 +329,512 @@
       <div class="feedback-container">
         <div class="card feedback-wrapper">
           <h3>Beri Penilaian Anda</h3>
-          <p class="small">Bagaimana pengalaman belajar Anda hari ini?</p>
           <div class="star-rating" id="starRating">
-              <!-- Bintang kini menggunakan simbol Unicode yang akan diubah oleh JS -->
               <span class="star" data-value="1">☆</span><span class="star" data-value="2">☆</span><span class="star" data-value="3">☆</span><span class="star" data-value="4">☆</span><span class="star" data-value="5">☆</span>
           </div>
-          <textarea id="feedbackText" placeholder="Ketik saran atau masukan Anda di sini..."></textarea>
+          <textarea id="feedbackText" placeholder="Saran Anda..." style="min-height: 100px; resize: vertical; margin-top: 10px;"></textarea>
           <button id="submitFeedback" class="btn accent-btn animated-btn"><span>Kirim Feedback</span></button>
-          <p id="feedbackThanks" class="small" style="display:none; color: var(--green); font-weight: 600; margin-top: 16px;">Terima kasih atas masukan Anda!</p>
+          <p id="feedbackThanks" class="small" style="display:none; color: var(--green); font-weight: 600; margin-top: 16px;">Terima kasih!</p>
         </div>
       </div>
     </div>
 
   </div>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <!-- File JavaScript Eksternal -->
-  <script src="script.js" defer></script>
+  <!-- =========================================
+     FIREBASE & LOGIC
+     ========================================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // 1. SETUP FIREBASE
+    let db = null;
+    let auth = null;
+    let appId = 'default-app';
+
+    try {
+        const firebaseConfig = JSON.parse(__firebase_config);
+        appId = typeof __app_id !== 'undefined' ? __app_id : 'barbar-app';
+        
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+        console.log("Firebase initialized.");
+    } catch (e) {
+        console.warn("Firebase config not found (Offline Mode).", e);
+    }
+
+    // 2. DATA STATIC LENGKAP
+    const SUBJECTS_DATA = {
+      "Biologi": [
+        { id: "b1", title: "Sistem Pencernaan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760703550/Belajar_IPA_Sistem_Pencernaan_Manusia_SiapNaikLevel_fnur0d.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
+          { id: "b1q1", q: "Proses memecah makanan secara kimiawi pertama kali terjadi di?", opts:["Lambung","Mulut","Usus Halus"], a:1 },
+          { id: "b1q2", q: "Organ yang menyerap sebagian besar nutrisi adalah?", opts:["Usus Besar","Usus Halus","Lambung"], a:1 },
+          { id: "b1q3", q: "Enzim yang memulai pencernaan karbohidrat di mulut adalah?", opts:["Lipase","Pepsin","Amilase"], a:2 },
+          { id: "b1q4", q: "Bagian tubuh yang menghasilkan asam klorida (HCl)?", opts:["Pankreas","Lambung","Hati"], a:1 },
+          { id: "b1q5", q: "Setelah dicerna, makanan bergerak dari lambung ke?", opts:["Kerongkongan","Usus Halus","Usus Besar"], a:1 },
+          { id: "b1q6", q: "Vitamin K dan air diserap di organ?", opts:["Usus Halus","Lambung","Usus Besar"], a:2 },
+          { id: "b1q7", q: "Pencernaan protein dimulai di?", opts:["Mulut","Lambung","Usus Halus"], a:1 },
+          { id: "b1q8", q: "Yang bukan termasuk organ pencernaan tambahan?", opts:["Hati","Pankreas","Usus Halus"], a:2 },
+          { id: "b1q9", q: "Apa fungsi utama empedu?", opts:["Memecah protein","Mengemulsi lemak","Menetralkan asam lambung"], a:1 },
+          { id: "b1q10", q: "Gerakan meremas dan mendorong makanan di kerongkongan disebut?", opts:["Gerak Kimiawi","Gerak Peristaltik","Gerak Refleks"], a:1 }
+        ] },
+        { id: "b2", title: "Sirkulasi Darah", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760709823/barbar/Apa_yang_terjadi_di_dalam_tubuh_saat_darah_mengalir__-_Belajar_IPA_cj8b2r.mp4", description: "Sirkulasi darah ringkas (≤3 menit).", questions: [
+          { id: "b2q1", q: "Bagian darah yang berperan dalam pembekuan darah?", opts:["Eritrosit","Leukosit","Trombosit"], a:2 },
+          { id: "b2q2", q: "Pembuluh yang membawa darah kaya oksigen dari paru-paru ke jantung?", opts:["Vena Kava","Arteri Pulmonalis","Vena Pulmonalis"], a:2 },
+          { id: "b2q3", q: "Sel darah yang berfungsi melawan infeksi?", opts:["Eritrosit","Leukosit","Plasma Darah"], a:1 },
+          { id: "b2q4", q: "Sirkulasi darah dari jantung ke seluruh tubuh dan kembali ke jantung disebut?", opts:["Sirkulasi Paru-paru","Sirkulasi Sistemik","Sirkulasi Koroner"], a:1 },
+          { id: "b2q5", q: "Ruang jantung yang pertama kali menerima darah kaya oksigen dari paru-paru?", opts:["Serambi Kanan","Bilik Kanan","Serambi Kiri"], a:2 },
+          { id: "b2q6", q: "Pembuluh darah terkecil tempat pertukaran gas terjadi?", opts:["Arteri","Vena","Kapiler"], a:2 },
+          { id: "b2q7", q: "Warna merah darah disebabkan oleh zat?", opts:["Leukosit","Hemoglobin","Fibrinogen"], a:1 },
+          { id: "b2q8", q: "Tekanan darah sistolik terjadi saat jantung..", opts:["Mengembang","Berkontraksi","Istirahat"], a:1 },
+          { id: "b2q9", q: "Pembuluh darah yang memiliki katup sepanjang jalannya?", opts:["Arteri","Kapiler","Vena"], a:2 },
+          { id: "b2q10", q: "Organ yang berfungsi menyaring darah dan membuang limbah nitrogen?", opts:["Jantung","Paru-paru","Ginjal"], a:2 }
+        ] }
+      ],
+      "Matematika": [
+        { id: "m1", title: "Konsep Pecahan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760751491/barbar/Pecahan_-_Animasi_Matematika_SD_n2roxi.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
+          { id: "m1q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
+          { id: "m1q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 },
+          { id: "m1q3", q: "Bentuk desimal dari 3/5 adalah?", opts:["0.3","0.6","0.5"], a:1 },
+          { id: "m1q4", q: "Pecahan senilai dengan 2/3?", opts:["4/5","6/9","3/4"], a:1 },
+          { id: "m1q5", q: "Berapakah hasil dari 5/6 - 1/3?", opts:["4/3","1/2","1/3"], a:2 },
+          { id: "m1q6", q: "Angka 0.75 dalam bentuk pecahan biasa adalah?", opts:["1/4","3/4","7/10"], a:1 },
+          { id: "m1q7", q: "Hasil perkalian 2/5 x 10/4?", opts:["1","2","1/2"], a:0 },
+          { id: "m1q8", q: "Pecahan yang paling besar nilainya: 1/2, 2/5, 3/10?", opts:["1/2","2/5","3/10"], a:0 },
+          { id: "m1q9", q: "Berapakah hasil pembagian 4/5 : 2/10?", opts:["8/50","4","2"], a:1 },
+          { id: "m1q10", q: "Bentuk persen dari 1/4 adalah?", opts:["14%","25%","40%"], a:1 }
+        ] },
+        { id: "m2", title: "Teorema Pythagoras", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1761116900/Teorema_Pythagoras_dan_Pembuktian_dengan_Animasi_arpdtu.mp4", description: "Mencari sisi miring segitiga siku-siku.", questions: [
+          { id: "m2q1", q: "Rumus Teorema Pythagoras untuk sisi miring (c) adalah?", opts:["a² + b² = c²","a² - b² = c²","a + b = c"], a:0 },
+          { id: "m2q2", q: "Jika a=3 dan b=4, maka panjang sisi miring c adalah?", opts:["5","7","25"], a:0 },
+          { id: "m2q3", q: "Syarat utama penggunaan Teorema Pythagoras adalah?", opts:["Segitiga sama sisi","Segitiga siku-siku","Segitiga sembarang"], a:1 },
+          { id: "m2q4", q: "Jika c=13 dan a=5, maka panjang sisi b adalah?", opts:["8","12","144"], a:1 },
+          { id: "m2q5", q: "Tripel Pythagoras yang benar?", opts:["(2, 3, 4)","(5, 12, 13)","(6, 8, 9)"], a:1 },
+          { id: "m2q6", q: "Sisi yang berhadapan dengan sudut siku-siku disebut?", opts:["Sisi alas","Sisi tegak","Hipotenusa"], a:2 },
+          { id: "m2q7", q: "Jika luas persegi yang dibangun di sisi c adalah 100, dan sisi a adalah 6. Berapa luas persegi di sisi b?", opts:["64","136","16"], a:0 },
+          { id: "m2q8", q: "Berapa nilai $x$ jika sisi tegak adalah $x$ dan $x+1$, dan sisi miring adalah 5? ($x$ positif)", opts:["3","4","5"], a:0 },
+          { id: "m2q9", q: "Penerapan Pythagoras dalam kehidupan sehari-hari?", opts:["Menghitung volume","Mengukur kemiringan tangga","Menghitung keliling lingkaran"], a:1 },
+          { id: "m2q10", q: "Jika $a^2 + b^2 < c^2$, jenis segitiga apa itu?", opts:["Siku-siku","Tumpul","Lancip"], a:1 }
+        ] }
+      ],
+      "Ekonomi": [
+        { id: "e1", title: "Permintaan & Penawaran", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760750374/introduction-to-supply-and-demand_PwrjcZaP_x6tsu1.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
+          { id: "e1q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
+          { id: "e1q2", q: "Titik pertemuan kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 },
+          { id: "e1q3", q: "Hukum Penawaran menyatakan jika harga naik, maka jumlah barang yang ditawarkan...", opts:["Menurun","Tetap","Meningkat"], a:2 },
+          { id: "e1q4", q: "Faktor utama yang menyebabkan pergerakan sepanjang kurva permintaan?", opts:["Pendapatan Konsumen","Perubahan Harga Barang Itu Sendiri","Selera Konsumen"], a:1 },
+          { id: "e1q5", q: "Jika pendapatan konsumen meningkat, kurva permintaan akan bergeser ke...", opts:["Kiri","Kanan","Tetap di tempat"], a:1 },
+          { id: "e1q6", q: "Contoh barang komplementer?", opts:["Kopi dan Teh","Gula dan Kopi","Laptop dan PC"], a:1 },
+          { id: "e1q7", q: "Kondisi dimana jumlah barang yang diminta lebih besar dari yang ditawarkan?", opts:["Surplus","Keseimbangan","Kekurangan (Shortage)"], a:2 },
+          { id: "e1q8", q: "Kenaikan biaya produksi akan menggeser kurva penawaran ke...", opts:["Kanan","Kiri","Tetap di tempat"], a:1 },
+          { id: "e1q9", q: "Elastisitas yang nilainya lebih dari 1 disebut elastis...", opts:["Inelastis","Sempurna","Elastis"], a:2 },
+          { id: "e1q10", q: "Permintaan pasar adalah penjumlahan dari...", opts:["Permintaan Individu","Penawaran Pasar","Pendapatan Nasional"], a:0 }
+        ] }
+      ]
+    };
+
+    // 3. STATE APLIKASI
+    const appState = {
+      subjects: SUBJECTS_DATA,
+      currentSubject: null,
+      currentTopicIndex: null,
+      sessionSeconds: 300,
+      timerHandle: null,
+      remainingSeconds: 300,
+      quizQueue: [],
+      points: 0,
+      completed: {},
+      userName: '',
+      currentRating: 0,
+    };
+
+    // 4. ELEMEN UI (Helper)
+    const ui = {
+        get: (id) => document.getElementById(id),
+        getAll: (sel) => document.querySelectorAll(sel),
+        showPage: (pageId) => {
+            ui.getAll('.page').forEach(p => p.classList.remove('active'));
+            ui.get(pageId)?.classList.add('active');
+            ui.getAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.page === pageId));
+            ui.get('sidebar').classList.remove('open');
+        }
+    };
+
+    // 5. FUNGSI UTAMA
+    async function init() {
+        console.log("App Starting...");
+        
+        // Autentikasi Anonim ke Firebase
+        if (auth) {
+            try {
+                await signInAnonymously(auth);
+                console.log("User signed in anonymously");
+            } catch (error) {
+                console.error("Auth Error:", error);
+            }
+        }
+
+        loadLocalState();
+        
+        // Timeout Splash Screen
+        setTimeout(() => {
+            ui.get('splashScreen').classList.add('hidden');
+            if (appState.userName && appState.userName !== 'Pemain Anonim') {
+                ui.get('userNameDisplay').textContent = appState.userName;
+                ui.get('welcomeUser').style.display = 'block';
+                ui.showPage('homePage');
+            } else {
+                ui.showPage('landingPage');
+            }
+            renderLeaderboard(); // Ambil dari Firebase
+        }, 2000);
+
+        setupEventListeners();
+        setupStarRating();
+    }
+
+    // --- FITUR FIREBASE: LEADERBOARD ---
+    async function renderLeaderboard() {
+        const boardEl = ui.get('leaderboard');
+        if (!db) {
+            boardEl.innerHTML = '<p class="small">Mode Offline (Data Lokal).</p>';
+            return;
+        }
+
+        try {
+            // Rule: artifacts/{appId}/public/data/leaderboard
+            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+            const snapshot = await getDocs(colRef);
+            let data = [];
+            
+            snapshot.forEach(doc => {
+                data.push(doc.data());
+            });
+
+            // Sort manual (Client side) karena Rule 2 melarang orderBy kompleks tanpa index
+            data.sort((a, b) => b.score - a.score);
+            data = data.slice(0, 20); // Ambil Top 20
+
+            boardEl.innerHTML = '';
+            if (data.length === 0) boardEl.innerHTML = '<p class="small">Belum ada data.</p>';
+            
+            const emojis = ['🥇', '🥈', '🥉'];
+            data.forEach((entry, idx) => {
+                const div = document.createElement('div');
+                const isMe = entry.name === appState.userName;
+                div.className = `leaderboard-entry small ${isMe ? 'current-user' : ''}`;
+                const rank = emojis[idx] || `${idx + 1}.`;
+                div.innerHTML = `${rank} <span><strong>${entry.name}</strong></span> <span>${entry.score} pts</span>`;
+                boardEl.appendChild(div);
+            });
+
+        } catch (e) {
+            console.error("Leaderboard Error:", e);
+            boardEl.innerHTML = '<p class="small">Gagal memuat leaderboard.</p>';
+        }
+    }
+
+    async function syncScoreToFirebase() {
+        if (!db || !appState.userName || appState.userName === 'Pemain Anonim') return;
+        try {
+            // Simpan skor user berdasarkan nama (sebagai ID dokumen agar update mudah)
+            // Path: artifacts/{appId}/public/data/leaderboard/{userName}
+            // Sanitasi nama untuk ID dokumen (hapus spasi/simbol aneh)
+            const docId = appState.userName.replace(/[^a-zA-Z0-9]/g, '_');
+            
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', docId), {
+                name: appState.userName,
+                score: appState.points,
+                lastUpdated: new Date().toISOString()
+            });
+            console.log("Score synced to Firebase");
+            renderLeaderboard(); // Refresh tampilan
+        } catch (e) {
+            console.error("Sync Error:", e);
+        }
+    }
+
+    // --- FITUR FIREBASE: FEEDBACK ---
+    async function submitFeedback() {
+        const txt = ui.get('feedbackText').value.trim();
+        const rating = appState.currentRating;
+        const btn = ui.get('submitFeedback');
+
+        if (!appState.userName || appState.userName === 'Pemain Anonim') { showNotif("Masukkan nama dulu."); return; }
+        if (rating === 0) { showNotif("Beri minimal 1 bintang."); return; }
+
+        btn.disabled = true;
+        btn.textContent = "Mengirim...";
+
+        if (db) {
+            try {
+                // Path: artifacts/{appId}/public/data/feedback
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'feedback'), {
+                    user: appState.userName,
+                    rating: rating,
+                    message: txt,
+                    timestamp: new Date().toISOString()
+                });
+                showNotif("Feedback terkirim ke server!");
+            } catch (e) {
+                console.error("Feedback Error:", e);
+                showNotif("Gagal kirim (koneksi error).");
+            }
+        } else {
+            showNotif("Disimpan lokal (Offline).");
+        }
+
+        // Reset UI
+        setTimeout(() => {
+            ui.get('feedbackThanks').style.display = 'block';
+            appState.currentRating = 0;
+            ui.get('feedbackText').value = '';
+            document.querySelectorAll('.star').forEach(s => { s.textContent = '☆'; s.classList.remove('selected'); });
+            
+            setTimeout(() => {
+                ui.get('feedbackThanks').style.display = 'none';
+                btn.disabled = false;
+                btn.textContent = 'Kirim Feedback';
+            }, 2000);
+        }, 1000);
+    }
+
+    // --- LOGIKA LOKAL (Quiz, Timer, dll) ---
+    function loadLocalState() {
+        const saved = localStorage.getItem('barbar_v4');
+        if (saved) {
+            const p = JSON.parse(saved);
+            appState.points = p.points || 0;
+            appState.completed = p.completed || {};
+            appState.userName = p.userName || '';
+        }
+    }
+    function saveLocalState() {
+        localStorage.setItem('barbar_v4', JSON.stringify({
+            points: appState.points,
+            completed: appState.completed,
+            userName: appState.userName
+        }));
+        updateStatsUI();
+    }
+    function updateStatsUI() {
+        ui.get('totalPoints').innerText = appState.points;
+        ui.get('doneTopics').innerText = Object.keys(appState.completed).length;
+        // Setiap update stats, coba sync ke Firebase
+        syncScoreToFirebase();
+    }
+
+    function renderSubjects() {
+        const grid = ui.get('subjectGrid');
+        grid.innerHTML = '';
+        Object.keys(appState.subjects).forEach(sub => {
+            const div = document.createElement('a');
+            div.className = 'selection-card'; div.href="#";
+            div.innerHTML = `<h4>${sub}</h4><p>${appState.subjects[sub].length} Topik</p>`;
+            div.onclick = (e) => {
+                e.preventDefault();
+                appState.currentSubject = sub;
+                renderTopics(sub);
+                ui.showPage('topicSelectionPage');
+            }
+            grid.appendChild(div);
+        });
+    }
+
+    function renderTopics(sub) {
+        ui.get('topicSelectionTitle').innerText = `Topik: ${sub}`;
+        const grid = ui.get('topicGrid');
+        grid.innerHTML = '';
+        appState.subjects[sub].forEach((t, idx) => {
+            const div = document.createElement('a');
+            div.className = 'selection-card'; div.href="#";
+            const done = appState.completed[t.id] ? '✅' : '';
+            div.innerHTML = `<h4>${t.title} ${done}</h4><p>${t.description}</p>`;
+            div.onclick = (e) => {
+                e.preventDefault();
+                loadTopic(idx);
+            }
+            grid.appendChild(div);
+        });
+    }
+
+    function loadTopic(idx) {
+        appState.currentTopicIndex = idx;
+        const t = appState.subjects[appState.currentSubject][idx];
+        ui.get('topicTitle').innerText = t.title;
+        const v = ui.get('topicVideo');
+        v.querySelector('source').src = t.video;
+        v.load();
+        
+        // Reset
+        ui.get('quizArea').style.display = 'none';
+        ui.get('startSession').style.display = 'inline-block';
+        ui.get('startSession').disabled = false;
+        ui.get('startSession').textContent = "Mulai Sesi";
+        
+        ui.showPage('appPage');
+    }
+
+    function startSession() {
+        const btn = ui.get('startSession');
+        btn.textContent = "Sesi Berjalan"; btn.disabled = true;
+        
+        ui.get('topicVideo').play().catch(()=>{});
+        
+        // Setup Quiz Queue
+        const t = appState.subjects[appState.currentSubject][appState.currentTopicIndex];
+        appState.quizQueue = JSON.parse(JSON.stringify(t.questions)); // Deep copy
+        
+        ui.get('quizArea').style.display = 'block';
+        renderNextQuestion();
+        
+        // Timer Logic (Simplified)
+        let sec = 300;
+        if (appState.timerHandle) clearInterval(appState.timerHandle);
+        appState.timerHandle = setInterval(() => {
+            sec--;
+            const m = Math.floor(sec/60).toString().padStart(2,'0');
+            const s = (sec%60).toString().padStart(2,'0');
+            ui.get('sessTimer').innerText = `${m}:${s}`;
+            if (sec<=0) clearInterval(appState.timerHandle);
+        }, 1000);
+    }
+
+    function renderNextQuestion() {
+        const wrap = ui.get('questionWrap');
+        wrap.innerHTML = '';
+        if (appState.quizQueue.length === 0) {
+            finishTopic();
+            return;
+        }
+        const q = appState.quizQueue[0];
+        wrap.innerHTML = `<p class="question-text">${q.q}</p>`;
+        
+        const optsDiv = document.createElement('div');
+        optsDiv.className = 'options';
+        optsDiv.style.display='flex'; optsDiv.style.flexDirection='column'; optsDiv.style.gap='8px'; optsDiv.style.marginTop='16px';
+        
+        q.opts.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn option';
+            btn.innerText = opt;
+            btn.onclick = () => {
+                // Disable all
+                optsDiv.querySelectorAll('button').forEach(b => b.disabled=true);
+                if (idx === q.a) {
+                    btn.classList.add('correct');
+                    appState.quizQueue.shift();
+                    appState.points += 10; // Poin per soal
+                } else {
+                    btn.classList.add('wrong');
+                    appState.quizQueue.push(appState.quizQueue.shift()); // Pindah ke belakang
+                    showNotif("Kurang tepat, coba lagi nanti!");
+                }
+                saveLocalState();
+                setTimeout(renderNextQuestion, 1000);
+            }
+            optsDiv.appendChild(btn);
+        });
+        wrap.appendChild(optsDiv);
+        ui.get('remainingQ').innerText = appState.quizQueue.length;
+    }
+
+    function finishTopic() {
+        const wrap = ui.get('questionWrap');
+        wrap.innerHTML = '<p class="small" style="text-align:center;">🎉 Topik Selesai!</p>';
+        ui.get('endSession').style.display = 'block';
+        const tId = appState.subjects[appState.currentSubject][appState.currentTopicIndex].id;
+        if(!appState.completed[tId]) {
+            appState.points += 50; // Bonus selesai
+            appState.completed[tId] = true;
+            if(window.confetti) confetti();
+        }
+        saveLocalState();
+    }
+
+    // --- EVENT LISTENERS ---
+    function setupEventListeners() {
+        ui.get('startAppBtn').onclick = () => {
+            const n = ui.get('userNameInput').value.trim();
+            if(n.length < 3) { showNotif("Nama minimal 3 huruf."); return; }
+            appState.userName = n;
+            saveLocalState();
+            ui.get('userNameDisplay').textContent = n;
+            ui.get('welcomeUser').style.display = 'block';
+            ui.showPage('homePage');
+        };
+
+        ui.get('hamburgerBtn').onclick = () => ui.get('sidebar').classList.toggle('open');
+        ui.get('sidebarOverlay').onclick = () => ui.get('sidebar').classList.remove('open');
+        
+        ui.getAll('.nav-link').forEach(l => {
+            if(l.id === 'fiturTambahanBtn') return;
+            l.onclick = (e) => {
+                if(l.target === "_blank") return;
+                e.preventDefault();
+                const pid = l.dataset.page;
+                if(pid === 'subjectSelectionPage') renderSubjects();
+                ui.showPage(pid);
+            }
+        });
+
+        ui.get('backToSubjectsBtn').onclick = (e) => {
+            e.preventDefault();
+            renderSubjects();
+            ui.showPage('subjectSelectionPage');
+        };
+
+        ui.get('startSession').onclick = startSession;
+        ui.get('endSession').onclick = () => {
+            ui.get('quizArea').style.display = 'none';
+            ui.get('startSession').textContent = "Ulangi Sesi";
+            ui.get('startSession').disabled = false;
+        };
+        
+        ui.get('submitFeedback').onclick = submitFeedback;
+        
+        // Chat AI Simple
+        ui.get('sendMentor').onclick = () => {
+            const inp = ui.get('mentorInput');
+            const txt = inp.value.trim();
+            if(!txt) return;
+            const log = ui.get('mentorLog');
+            log.innerHTML += `<div class="msg user">${txt}</div>`;
+            inp.value = '';
+            setTimeout(() => {
+                log.innerHTML += `<div class="msg ai">Maaf, API Key belum dikonfigurasi oleh developer. (Mode Demo)</div>`;
+                log.scrollTop = log.scrollHeight;
+            }, 800);
+            log.scrollTop = log.scrollHeight;
+        };
+    }
+
+    function setupStarRating() {
+        ui.get('starRating').querySelectorAll('.star').forEach(s => {
+            s.onclick = () => {
+                appState.currentRating = parseInt(s.dataset.value);
+                ui.get('starRating').querySelectorAll('.star').forEach(st => {
+                    st.textContent = parseInt(st.dataset.value) <= appState.currentRating ? '★' : '☆';
+                    st.classList.toggle('selected', parseInt(st.dataset.value) <= appState.currentRating);
+                });
+            }
+        });
+    }
+
+    function showNotif(msg) {
+        const n = ui.get('notification');
+        n.textContent = msg; n.classList.add('show');
+        setTimeout(() => n.classList.remove('show'), 2000);
+    }
+
+    // Safety Run
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
 </body>
 </html>
