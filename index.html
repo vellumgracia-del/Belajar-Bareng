@@ -45,18 +45,18 @@
       position: relative;
     }
 
-    /* Splash Screen */
+    /* Splash Screen - DIPERHALUS */
     .splash-screen {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-color: var(--primary-bg);
         display: flex; justify-content: center; align-items: center;
         z-index: 9999; flex-direction: column;
-        transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-    .splash-logo { display: flex; align-items: center; gap: 4px; animation: splash-fade-in 1s ease-out; }
+    .splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; transform: scale(1.05); }
+    .splash-logo { display: flex; align-items: center; gap: 4px; animation: splash-fade-in 1s cubic-bezier(0.22, 1, 0.36, 1) ease-out; }
     .splash-logo h1 { font-size: 48px; }
-    @keyframes splash-fade-in { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    @keyframes splash-fade-in { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
 
     /* =========================================
        GLOBAL SVG BACKGROUND (DIPERBARUI)
@@ -77,12 +77,12 @@
     body::before { width: 300px; height: 300px; top: -100px; left: -100px; }
     body::after { width: 400px; height: 400px; bottom: -150px; right: -150px; animation-delay: 5s; }
 
-    /* Layout */
+    /* Layout - TRANSISI HALUS */
     .page-container { width: 100%; position: relative; z-index: 1; }
-    .page { display: none; padding: 24px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.5s ease-out; }
+    .page { display: none; padding: 24px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
     .page.active { display: block; }
     .page-subtitle { color: var(--text-secondary); margin-top: 4px; max-width: 600px; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
     .container-app { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
     .left, .sidebar { display: flex; flex-direction: column; gap: 24px; }
@@ -155,14 +155,19 @@
     .leaderboard-entry strong { font-weight: 600; }
     .leaderboard-entry.current-user { background: rgba(127, 90, 240, 0.1); padding: 8px 8px; border-radius: 6px; border-bottom: none; }
 
-    /* Landing & Onboarding */
-    .landing-content { min-height: calc(100vh - var(--header-height) - 48px); display: flex; align-items: center; justify-content: center; text-align: center; }
-    .landing-text { max-width: 550px; display: flex; flex-direction: column; align-items: center; }
-    .landing-text h2 { font-size: 48px; font-weight: 800; line-height: 1.2; }
-    .landing-text .highlight { color: var(--accent); }
-    .landing-text p { font-size: 18px; color: var(--text-secondary); margin: 16px 0 32px; }
+    /* Landing & Onboarding - FLUID & SMOOTH */
+    .landing-content { min-height: calc(100vh - var(--header-height) - 48px); display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 20px; }
+    .landing-text { max-width: 600px; display: flex; flex-direction: column; align-items: center; }
+    .landing-text h2 { font-size: clamp(32px, 5vw + 1rem, 56px); font-weight: 800; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 16px; }
+    .landing-text .highlight { color: var(--accent); position: relative; display: inline-block; }
+    .landing-text p { font-size: clamp(16px, 2vw + 0.5rem, 20px); color: var(--text-secondary); margin-bottom: 36px; max-width: 90%; line-height: 1.6; }
     .landing-input-group { display: flex; gap: 8px; flex-direction: column; align-items: center; width: 100%; }
-    .landing-input-group button { width: 100%; max-width: 300px; display: flex; justify-content: center; align-items: center; gap: 12px; padding: 14px 20px; font-size: 16px; }
+    .landing-input-group button { 
+        width: 100%; max-width: 320px; display: flex; justify-content: center; align-items: center; 
+        gap: 12px; padding: 16px 24px; font-size: 16px; border-radius: 12px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .landing-input-group button:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(127, 90, 240, 0.4); }
 
     /* Home */
     .home-hero { text-align: center; padding: 48px 0; }
@@ -253,7 +258,7 @@
     .forum-send-btn { position: absolute; right: 8px; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
     .forum-send-btn:hover { transform: scale(1.1); box-shadow: 0 4px 15px rgba(127, 90, 240, 0.4); }
 
-    /* Modal Styling untuk Profil */
+    /* Modal Styling Umum */
     .modal-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
@@ -290,8 +295,17 @@
         .forum-sidebar-card { max-height: 400px; flex-shrink: 0; }
         .forum-main { height: 600px; flex-shrink: 0; }
     }
-    @media (max-width: 768px) { .page { padding: 16px; } .app-header { padding: 0 16px; } .landing-text h2 { font-size: 36px; } .home-hero h3 { font-size: 28px; } .founder-grid { grid-template-columns: 1fr; } .selection-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 480px) { .landing-text h2 { font-size: 32px; } .card { padding: 16px; } }
+    @media (max-width: 768px) { 
+        .page { padding: 16px; } 
+        .app-header { padding: 0 16px; } 
+        /* h2 dan p tidak perlu media query lagi karena sudah menggunakan clamp() di atas */
+        .home-hero h3 { font-size: 28px; } 
+        .founder-grid { grid-template-columns: 1fr; } 
+        .selection-grid { grid-template-columns: 1fr; } 
+    }
+    @media (max-width: 480px) { 
+        .card { padding: 16px; } 
+    }
   </style>
 </head>
 <body>
@@ -334,6 +348,20 @@
     </div>
   </div>
 
+  <!-- Modal Tambah Topik Diskusi -->
+  <div id="addTopicModal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>Tambah Topik Diskusi</h3>
+        <p class="small" style="color: var(--text-secondary); margin-bottom: 20px;">Buat ruang diskusi baru untuk berbagi dengan komunitas.</p>
+        <input id="newTopicNameInput" type="text" placeholder="Nama topik (mis: Desain Grafis)" />
+        <input id="newTopicDescInput" type="text" placeholder="Deskripsi singkat topik ini..." />
+        <div style="display: flex; gap: 8px; margin-top: 16px;">
+            <button id="closeAddTopicBtn" class="btn" style="flex: 1;">Batal</button>
+            <button id="saveAddTopicBtn" class="btn accent-btn" style="flex: 1; background: var(--accent); color: white; border-color: var(--accent);">Buat Topik</button>
+        </div>
+    </div>
+  </div>
+
   <!-- Header -->
   <header class="app-header">
     <div class="header-left">
@@ -348,7 +376,7 @@
     </div>
   </header>
 
-  <!-- Sidebar Menu (DENGAN IKON SVG MODERN) -->
+  <!-- Sidebar Menu -->
   <nav id="sidebar" class="sidebar-nav">
     <div id="welcomeUser" class="welcome-user" style="display: none;">
       <img id="userPhotoDisplay" src="https://via.placeholder.com/40" alt="User Photo">
@@ -409,7 +437,7 @@
       </div>
     </div>
 
-    <!-- 2. Halaman Set Nama (Setelah Login Google) -->
+    <!-- 2. Halaman Set Nama -->
     <div id="setNamePage" class="page">
       <div class="landing-content">
         <div class="landing-text">
@@ -527,11 +555,10 @@
         </div>
     </div>
 
-    <!-- 8. FORUM DISKUSI (BARU & TERINTEGRASI) -->
+    <!-- 8. FORUM DISKUSI -->
     <div id="forumPage" class="page">
         <div class="forum-container">
             
-            <!-- Sidebar Forum -->
             <aside class="forum-sidebar-card">
                 <div class="forum-profile">
                     <img id="forumProfilePic" src="https://via.placeholder.com/48" alt="Profile">
@@ -545,30 +572,16 @@
                     <input type="text" placeholder="🔍 Cari topik...">
                 </div>
                 
-                <h4 style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase;">Topik Pembelajaran</h4>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h4 style="font-size: 11px; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase;">Topik Pembelajaran</h4>
+                    <!-- Tombol Tambah Topik Baru -->
+                    <button id="openAddTopicBtn" style="background: none; border: none; color: var(--accent); cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Tambah Topik Baru">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                </div>
                 
-                <div class="forum-rooms">
-                    <button class="forum-room-btn active" data-room="umum">
-                        <span class="room-icon">🌍</span>
-                        <div class="room-info">
-                            <strong>Ruang Umum</strong>
-                            <span>umum</span>
-                        </div>
-                    </button>
-                    <button class="forum-room-btn" data-room="pemrograman">
-                        <span class="room-icon">💻</span>
-                        <div class="room-info">
-                            <strong>Pemrograman</strong>
-                            <span>koding</span>
-                        </div>
-                    </button>
-                    <button class="forum-room-btn" data-room="desain">
-                        <span class="room-icon">🎨</span>
-                        <div class="room-info">
-                            <strong>Desain UI/UX</strong>
-                            <span>desain</span>
-                        </div>
-                    </button>
+                <div class="forum-rooms" id="forumRoomList">
+                    <!-- Daftar Ruang Diskusi akan di-render di sini oleh JavaScript -->
                 </div>
                 
                 <div class="forum-footer">
@@ -576,14 +589,14 @@
                 </div>
             </aside>
 
-            <!-- Main Chat Area -->
             <main class="forum-main">
                 <header class="forum-header">
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <span id="forumActiveIcon" style="font-size:24px;">🌍</span>
+                        <!-- Ikon Aktif akan menggunakan SVG yang seragam -->
+                        <span id="forumActiveIcon" style="font-size:24px; display:flex; align-items:center; color: var(--accent);"></span>
                         <div>
-                            <h3 id="forumActiveTitle" style="font-size: 20px;">Ruang Umum</h3>
-                            <p id="forumActiveDesc" class="small" style="color:var(--text-secondary); margin-top: 2px;">Tempat ngobrol bebas seputar pembelajaran.</p>
+                            <h3 id="forumActiveTitle" style="font-size: 20px;">Memuat...</h3>
+                            <p id="forumActiveDesc" class="small" style="color:var(--text-secondary); margin-top: 2px;">-</p>
                         </div>
                     </div>
                     <div class="live-indicator">
@@ -592,7 +605,6 @@
                 </header>
                 
                 <div class="forum-messages" id="forumMessages">
-                    <!-- Default Empty State -->
                     <div class="forum-empty">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 64px; height: 64px; opacity: 0.3;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                         <p>Belum ada diskusi di ruangan ini.<br>Jadilah yang pertama untuk BARBAR!</p>
@@ -675,7 +687,7 @@
         console.warn("Firebase config not found (Offline Mode).", e);
     }
 
-    // 2. DATA STATIC LENGKAP
+    // 2. DATA STATIC
     const SUBJECTS_DATA = {
       "Biologi": [
         { id: "b1", title: "Sistem Pencernaan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760703550/Belajar_IPA_Sistem_Pencernaan_Manusia_SiapNaikLevel_fnur0d.mp4", description: "Video: organ & proses pencernaan (≤3 menit).", questions: [
@@ -724,15 +736,17 @@
 
     // State Forum Diskusi
     let unsubscribeForum = null;
+    let unsubscribeRooms = null;
     let forumMessages = [];
     let activeForumRoom = 'umum';
-    const forumRoomsInfo = {
-        'umum': { title: 'Ruang Umum', icon: '🌍', desc: 'Tempat ngobrol bebas seputar pembelajaran.' },
-        'pemrograman': { title: 'Pemrograman', icon: '💻', desc: 'Diskusi seputar coding, algoritma, dan error.' },
-        'desain': { title: 'Desain UI/UX', icon: '🎨', desc: 'Berbagi inspirasi, feedback desain, dan tips UI/UX.' }
-    };
+    
+    // Ikon Seragam untuk semua ruang (SVG Modern Hashtag)
+    const uniformRoomIcon = `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>`;
 
-    // 4. ELEMEN UI (Helper)
+    // Data Ruangan
+    let forumRoomsData = [];
+
+    // 4. ELEMEN UI
     const ui = {
         get: (id) => document.getElementById(id),
         getAll: (sel) => document.querySelectorAll(sel),
@@ -745,13 +759,11 @@
         }
     };
 
-    // --- FUNGSI UPDATE TAMPILAN PROFIL ---
     function updateUIWithUser() {
         ui.get('userNameDisplay').textContent = appState.userName;
         ui.get('userPhotoDisplay').src = appState.userPhoto;
         ui.get('headerProfilePic').src = appState.userPhoto;
         
-        // Update Profil di Menu Forum
         ui.get('forumProfileName').textContent = appState.userName;
         ui.get('forumProfilePic').src = appState.userPhoto;
         
@@ -759,14 +771,12 @@
         ui.get('headerProfilePic').style.display = 'block';
     }
 
-    // 5. FUNGSI UTAMA & AUTHENTICATION STATE
     async function init() {
         console.log("App Starting...");
         loadLocalState();
         renderSubjects(); 
         setupEventListeners();
         setupStarRating();
-        initForum(); // Inisialisasi logika forum
 
         if (auth) {
             onAuthStateChanged(auth, async (user) => {
@@ -786,7 +796,8 @@
                                 updateUIWithUser();
                                 ui.showPage('homePage');
                                 renderLeaderboard();
-                                startForumListener(); // Mulai memantau pesan forum setelah login
+                                startForumRoomsListener(); // Pantau Topik yang ada
+                                startForumListener(); // Pantau pesan chat
                             } else {
                                 ui.get('onboardNameInput').value = user.displayName || '';
                                 ui.showPage('setNamePage');
@@ -798,7 +809,8 @@
                     }
                 } else {
                     currentUser = null;
-                    if(unsubscribeForum) unsubscribeForum(); // Berhenti memantau jika logout
+                    if(unsubscribeForum) unsubscribeForum(); 
+                    if(unsubscribeRooms) unsubscribeRooms();
                     ui.get('welcomeUser').style.display = 'none';
                     ui.get('headerProfilePic').style.display = 'none';
                     ui.showPage('landingPage');
@@ -817,42 +829,115 @@
         }
     }
 
-    // --- LOGIKA FORUM DISKUSI ---
-    function initForum() {
-        // Ganti Ruangan Forum
-        ui.getAll('.forum-room-btn').forEach(btn => {
+    // --- LOGIKA FORUM DISKUSI (ROOMS & CHAT) ---
+    function startForumRoomsListener() {
+        if (!db) return;
+        if (unsubscribeRooms) unsubscribeRooms();
+        
+        const q = collection(db, 'artifacts', appId, 'public', 'data', 'forum_rooms');
+        unsubscribeRooms = onSnapshot(q, (snapshot) => {
+            const customRooms = [];
+            snapshot.forEach(doc => {
+                customRooms.push({ id: doc.id, ...doc.data() });
+            });
+            
+            customRooms.sort((a,b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+            
+            // Gabungkan default statis dengan data custom
+            forumRoomsData = [
+                { id: 'umum', title: 'Ruang Umum', desc: 'Tempat ngobrol bebas seputar pembelajaran.', isDefault: true },
+                { id: 'pemrograman', title: 'Pemrograman', desc: 'Diskusi seputar coding, algoritma, dan error.', isDefault: true },
+                { id: 'desain', title: 'Desain UI/UX', desc: 'Berbagi inspirasi, feedback desain, dan tips UI/UX.', isDefault: true },
+                ...customRooms
+            ];
+            
+            renderForumRooms();
+        });
+    }
+
+    function renderForumRooms() {
+        const container = ui.get('forumRoomList');
+        if(!container) return;
+        container.innerHTML = '';
+        
+        forumRoomsData.forEach(room => {
+            const btn = document.createElement('button');
+            btn.className = `forum-room-btn ${room.id === activeForumRoom ? 'active' : ''}`;
+            btn.dataset.room = room.id;
+            
             btn.onclick = () => {
-                ui.getAll('.forum-room-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                activeForumRoom = btn.dataset.room;
-                
-                const info = forumRoomsInfo[activeForumRoom];
-                ui.get('forumActiveTitle').textContent = info.title;
-                ui.get('forumActiveIcon').textContent = info.icon;
-                ui.get('forumActiveDesc').textContent = info.desc;
-                
+                activeForumRoom = room.id;
+                renderForumRooms(); 
                 renderForumMessages();
-            }
+            };
+            
+            btn.innerHTML = `
+                <span class="room-icon">${uniformRoomIcon}</span>
+                <div class="room-info">
+                    <strong>${room.title}</strong>
+                    <span>${room.id.substring(0, 15)}</span>
+                </div>
+            `;
+            container.appendChild(btn);
         });
 
-        // Kirim Pesan Forum
-        ui.get('sendForumBtn').onclick = sendForumMessage;
-        ui.get('forumInput').onkeydown = (e) => { if(e.key === 'Enter') sendForumMessage(); };
+        // Perbarui Header Chat Room Aktif
+        const activeData = forumRoomsData.find(r => r.id === activeForumRoom) || forumRoomsData[0];
+        if(activeData) {
+            ui.get('forumActiveTitle').textContent = activeData.title;
+            ui.get('forumActiveIcon').innerHTML = uniformRoomIcon;
+            ui.get('forumActiveDesc').textContent = activeData.desc;
+        }
+    }
+
+    async function saveNewTopic() {
+        if (!db || !currentUser) { showNotif("Belum Login ke sistem."); return; }
+        
+        const title = ui.get('newTopicNameInput').value.trim();
+        const desc = ui.get('newTopicDescInput').value.trim() || 'Ruang diskusi baru.';
+        if (title.length < 3) { showNotif("Nama topik minimal 3 karakter."); return; }
+        
+        const btn = ui.get('saveAddTopicBtn');
+        btn.textContent = "Menyimpan...";
+        btn.disabled = true;
+        
+        let roomId = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+        if(!roomId) roomId = 'topik-' + Date.now();
+        
+        try {
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'forum_rooms', roomId), {
+                title: title,
+                desc: desc,
+                createdBy: currentUser.uid,
+                createdAt: new Date().toISOString()
+            });
+            showNotif("Topik berhasil ditambahkan!");
+            ui.get('addTopicModal').classList.remove('show');
+            ui.get('newTopicNameInput').value = '';
+            ui.get('newTopicDescInput').value = '';
+            
+            activeForumRoom = roomId; // Otomatis pindah ke ruangan baru
+            renderForumRooms();
+            renderForumMessages();
+        } catch(e) {
+            console.error("Gagal menambah topik:", e);
+            showNotif("Terjadi kesalahan.");
+        } finally {
+            btn.textContent = "Buat Topik";
+            btn.disabled = false;
+        }
     }
 
     function startForumListener() {
         if (!db) return;
         if (unsubscribeForum) unsubscribeForum();
         
-        // Path koleksi forum public
         const q = collection(db, 'artifacts', appId, 'public', 'data', 'forum_messages');
-        
         unsubscribeForum = onSnapshot(q, (snapshot) => {
             forumMessages = [];
             snapshot.forEach(doc => {
                 forumMessages.push({ id: doc.id, ...doc.data() });
             });
-            // Urutkan berdasarkan waktu di JavaScript memori (sesuai aturan)
             forumMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
             renderForumMessages();
         }, (error) => {
@@ -862,7 +947,6 @@
 
     function renderForumMessages() {
         const container = ui.get('forumMessages');
-        // Filter pesan berdasarkan ruangan yang sedang aktif
         const roomMsgs = forumMessages.filter(m => m.roomId === activeForumRoom);
         
         if (roomMsgs.length === 0) {
@@ -879,8 +963,6 @@
             const isMe = msg.userId === currentUser?.uid;
             const div = document.createElement('div');
             div.className = `chat-msg ${isMe ? 'me' : 'other'}`;
-            
-            // Sanitasi teks ringan
             const safeText = msg.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
             
             div.innerHTML = `
@@ -893,17 +975,16 @@
             container.appendChild(div);
         });
         
-        // Auto scroll ke bawah
         container.scrollTop = container.scrollHeight;
     }
 
     async function sendForumMessage() {
-        if (!currentUser || !db) { showNotif("Gagal mengirim: Mode Offline / Belum Login."); return; }
+        if (!currentUser || !db) { showNotif("Gagal mengirim: Belum Login."); return; }
         const inp = ui.get('forumInput');
         const text = inp.value.trim();
         if (!text) return;
         
-        inp.value = ''; // Kosongkan input
+        inp.value = ''; 
         
         try {
             await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'forum_messages'), {
@@ -920,16 +1001,11 @@
         }
     }
 
-    // --- LOGIKA SIMPAN PROFIL ---
+    // --- LOGIKA SIMPAN PROFIL & LEADERBOARD ---
     async function saveUserProfile(newName) {
         if (!db || !currentUser) {
-            appState.userName = newName;
-            saveLocalState();
-            updateUIWithUser();
-            ui.showPage('homePage');
-            return;
+            appState.userName = newName; saveLocalState(); updateUIWithUser(); ui.showPage('homePage'); return;
         }
-
         try {
             const profileRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'info');
             await setDoc(profileRef, { name: newName, updatedAt: new Date().toISOString() });
@@ -939,33 +1015,25 @@
             syncScoreToFirebase();
             ui.showPage('homePage');
             renderLeaderboard();
-            startForumListener(); // Mulai forum setelah nama diset
+            startForumRoomsListener();
+            startForumListener(); 
             showNotif("Nama profil berhasil disimpan!");
-        } catch (e) {
-            console.error("Gagal simpan profil:", e);
-            showNotif("Gagal menyimpan nama profil.");
-        }
+        } catch (e) { showNotif("Gagal menyimpan nama profil."); }
     }
 
-    // --- FITUR FIREBASE: LEADERBOARD ---
     async function renderLeaderboard() {
         const boardEl = ui.get('leaderboard');
         if (!db) { boardEl.innerHTML = '<p class="small">Mode Offline (Data Lokal).</p>'; return; }
-
         try {
             const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
             const snapshot = await getDocs(colRef);
             let data = [];
             snapshot.forEach(doc => { data.push(doc.data()); });
-
             data.sort((a, b) => b.score - a.score);
             data = data.slice(0, 20);
 
             boardEl.innerHTML = '';
-            if (data.length === 0) {
-                boardEl.innerHTML = '<p class="small">Belum ada data.</p>';
-                return;
-            }
+            if (data.length === 0) { boardEl.innerHTML = '<p class="small">Belum ada data.</p>'; return; }
             
             const emojis = ['🥇', '🥈', '🥉'];
             data.forEach((entry, idx) => {
@@ -975,8 +1043,7 @@
                 const rank = emojis[idx] || `${idx + 1}.`;
                 div.innerHTML = `
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <span>${rank}</span>
-                        <strong>${entry.name}</strong>
+                        <span>${rank}</span><strong>${entry.name}</strong>
                     </div>
                     <span>${entry.score} pts</span>
                 `;
@@ -992,7 +1059,7 @@
                 uid: currentUser.uid, name: appState.userName, score: appState.points, lastUpdated: new Date().toISOString()
             });
             renderLeaderboard();
-        } catch (e) { console.error("Sync Error:", e); }
+        } catch (e) {}
     }
 
     // --- FITUR FIREBASE: FEEDBACK ---
@@ -1000,39 +1067,30 @@
         const txt = ui.get('feedbackText').value.trim();
         const rating = appState.currentRating;
         const btn = ui.get('submitFeedback');
-
         if (!appState.userName || appState.userName === 'Pemain Anonim') { showNotif("Login terlebih dahulu."); return; }
         if (rating === 0) { showNotif("Beri minimal 1 bintang."); return; }
 
-        btn.disabled = true;
-        btn.innerHTML = "<span>Mengirim...</span>";
-
+        btn.disabled = true; btn.innerHTML = "<span>Mengirim...</span>";
         if (db) {
             try {
                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'feedback'), {
                     user: appState.userName, rating: rating, message: txt, timestamp: new Date().toISOString()
                 });
                 showNotif("Feedback terkirim ke server!");
-            } catch (e) {
-                console.error("Feedback Error:", e);
-                showNotif("Gagal kirim (koneksi error).");
-            }
-        } else { showNotif("Disimpan lokal (Offline)."); }
-
+            } catch (e) { showNotif("Gagal kirim."); }
+        }
         setTimeout(() => {
             ui.get('feedbackThanks').style.display = 'block';
-            appState.currentRating = 0;
-            ui.get('feedbackText').value = '';
+            appState.currentRating = 0; ui.get('feedbackText').value = '';
             document.querySelectorAll('.star').forEach(s => { s.textContent = '☆'; s.classList.remove('selected'); });
             setTimeout(() => {
                 ui.get('feedbackThanks').style.display = 'none';
-                btn.disabled = false;
-                btn.innerHTML = '<span>Kirim Feedback</span>';
+                btn.disabled = false; btn.innerHTML = '<span>Kirim Feedback</span>';
             }, 2000);
         }, 1000);
     }
 
-    // --- LOGIKA LOKAL (Quiz, Timer, dll) ---
+    // --- LOGIKA LOKAL (Quiz, dll) ---
     function loadLocalState() {
         const saved = localStorage.getItem('barbar_v4');
         if (saved) {
@@ -1053,26 +1111,20 @@
     }
 
     function renderSubjects() {
-        const grid = ui.get('subjectGrid');
-        grid.innerHTML = '';
+        const grid = ui.get('subjectGrid'); grid.innerHTML = '';
         Object.keys(appState.subjects).forEach(sub => {
-            const div = document.createElement('a');
-            div.className = 'selection-card'; div.href="#";
+            const div = document.createElement('a'); div.className = 'selection-card'; div.href="#";
             div.innerHTML = `<h4>${sub}</h4><p>${appState.subjects[sub].length} Topik</p>`;
-            div.onclick = (e) => {
-                e.preventDefault(); appState.currentSubject = sub; renderTopics(sub); ui.showPage('topicSelectionPage');
-            }
+            div.onclick = (e) => { e.preventDefault(); appState.currentSubject = sub; renderTopics(sub); ui.showPage('topicSelectionPage'); }
             grid.appendChild(div);
         });
     }
 
     function renderTopics(sub) {
         ui.get('topicSelectionTitle').innerText = `Topik: ${sub}`;
-        const grid = ui.get('topicGrid');
-        grid.innerHTML = '';
+        const grid = ui.get('topicGrid'); grid.innerHTML = '';
         appState.subjects[sub].forEach((t, idx) => {
-            const div = document.createElement('a');
-            div.className = 'selection-card'; div.href="#";
+            const div = document.createElement('a'); div.className = 'selection-card'; div.href="#";
             const done = appState.completed[t.id] ? '✅' : '';
             div.innerHTML = `<h4>${t.title} ${done}</h4><p>${t.description}</p>`;
             div.onclick = (e) => { e.preventDefault(); loadTopic(idx); }
@@ -1094,8 +1146,7 @@
     }
 
     function startSession() {
-        const btn = ui.get('startSession');
-        btn.textContent = "Sesi Berjalan"; btn.disabled = true;
+        const btn = ui.get('startSession'); btn.textContent = "Sesi Berjalan"; btn.disabled = true;
         ui.get('topicVideo').play().catch(()=>{});
         
         const t = appState.subjects[appState.currentSubject][appState.currentTopicIndex];
@@ -1108,27 +1159,23 @@
         if (appState.timerHandle) clearInterval(appState.timerHandle);
         appState.timerHandle = setInterval(() => {
             sec--;
-            const m = Math.floor(sec/60).toString().padStart(2,'0');
-            const s = (sec%60).toString().padStart(2,'0');
+            const m = Math.floor(sec/60).toString().padStart(2,'0'); const s = (sec%60).toString().padStart(2,'0');
             ui.get('sessTimer').innerText = `${m}:${s}`;
             if (sec<=0) clearInterval(appState.timerHandle);
         }, 1000);
     }
 
     function renderNextQuestion() {
-        const wrap = ui.get('questionWrap');
-        wrap.innerHTML = '';
+        const wrap = ui.get('questionWrap'); wrap.innerHTML = '';
         if (appState.quizQueue.length === 0) { finishTopic(); return; }
         const q = appState.quizQueue[0];
         wrap.innerHTML = `<p class="question-text">${q.q}</p>`;
         
         const optsDiv = document.createElement('div');
-        optsDiv.className = 'options';
-        optsDiv.style.display='flex'; optsDiv.style.flexDirection='column'; optsDiv.style.gap='8px'; optsDiv.style.marginTop='16px';
+        optsDiv.className = 'options'; optsDiv.style.display='flex'; optsDiv.style.flexDirection='column'; optsDiv.style.gap='8px'; optsDiv.style.marginTop='16px';
         
         q.opts.forEach((opt, idx) => {
-            const btn = document.createElement('button');
-            btn.className = 'btn option'; btn.innerText = opt;
+            const btn = document.createElement('button'); btn.className = 'btn option'; btn.innerText = opt;
             btn.onclick = () => {
                 optsDiv.querySelectorAll('button').forEach(b => b.disabled=true);
                 if (idx === q.a) {
@@ -1137,8 +1184,7 @@
                     btn.classList.add('wrong'); appState.quizQueue.push(appState.quizQueue.shift());
                     showNotif("Kurang tepat, coba lagi nanti!");
                 }
-                saveLocalState();
-                setTimeout(renderNextQuestion, 1000);
+                saveLocalState(); setTimeout(renderNextQuestion, 1000);
             }
             optsDiv.appendChild(btn);
         });
@@ -1163,7 +1209,7 @@
         ui.get('loginGoogleBtn').onclick = async () => {
             if (!auth) { showNotif("Sistem Offline."); return; }
             try { await signInWithPopup(auth, provider); } 
-            catch (error) { showNotif("Gagal Login: " + error.message); }
+            catch (error) { showNotif("Gagal Login."); }
         };
 
         ui.get('saveOnboardNameBtn').onclick = () => {
@@ -1172,14 +1218,13 @@
             saveUserProfile(name);
         };
 
+        // Buka Modal Edit Profil
         ui.get('headerProfilePic').onclick = () => {
             ui.get('modalProfilePic').src = appState.userPhoto;
             ui.get('editNameInput').value = appState.userName;
             ui.get('profileModal').classList.add('show');
         };
-
         ui.get('closeProfileBtn').onclick = () => ui.get('profileModal').classList.remove('show');
-
         ui.get('saveProfileBtn').onclick = () => {
             const newName = ui.get('editNameInput').value.trim();
             if(newName.length < 3) { showNotif("Nama minimal 3 karakter"); return; }
@@ -1190,6 +1235,12 @@
             });
         };
 
+        // Buka Modal Tambah Topik Forum
+        ui.get('openAddTopicBtn').onclick = () => { ui.get('addTopicModal').classList.add('show'); };
+        ui.get('closeAddTopicBtn').onclick = () => { ui.get('addTopicModal').classList.remove('show'); };
+        ui.get('saveAddTopicBtn').onclick = saveNewTopic;
+
+        // Logout
         ui.get('logoutBtn').onclick = async (e) => {
             e.preventDefault();
             if(auth) {
@@ -1205,7 +1256,6 @@
             ui.get('sidebar').classList.toggle('open');
             ui.get('hamburgerBtn').classList.toggle('is-active');
         };
-        
         ui.get('sidebarOverlay').onclick = () => {
             ui.get('sidebar').classList.remove('open');
             ui.get('hamburgerBtn').classList.remove('is-active');
@@ -1217,17 +1267,16 @@
                 if(l.target === "_blank") return;
                 e.preventDefault();
                 ui.showPage(l.dataset.page);
-                
-                // Panggil renderMessages lagi ketika masuk ke halaman forum untuk mastiin scroll di bawah
-                if(l.dataset.page === 'forumPage') {
-                    setTimeout(renderForumMessages, 100);
-                }
+                if(l.dataset.page === 'forumPage') { setTimeout(renderForumMessages, 100); }
             }
         });
 
         ui.get('backToSubjectsBtn').onclick = (e) => { e.preventDefault(); renderSubjects(); ui.showPage('subjectSelectionPage'); };
         ui.get('startSession').onclick = startSession;
         ui.get('endSession').onclick = () => { ui.get('quizArea').style.display = 'none'; ui.get('startSession').textContent = "Ulangi Sesi"; ui.get('startSession').disabled = false; };
+        
+        ui.get('sendForumBtn').onclick = sendForumMessage;
+        ui.get('forumInput').onkeydown = (e) => { if(e.key === 'Enter') sendForumMessage(); };
         
         ui.get('sendMentor').onclick = () => {
             const inp = ui.get('mentorInput'); const txt = inp.value.trim(); if(!txt) return;
