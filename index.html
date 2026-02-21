@@ -12,7 +12,7 @@
   
   <style>
     /* =========================================
-       CSS (DESAIN ORIGINAL - TIDAK BERUBAH)
+       CSS (DESAIN ORIGINAL & MODERN)
        ========================================= */
     :root {
       --primary-bg: #0F0F1A;
@@ -97,7 +97,7 @@
         width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
         border: 2px solid var(--accent); cursor: pointer;
         transition: transform 0.2s, box-shadow 0.2s;
-        display: none; /* Disembunyikan sampai login */
+        display: none; 
     }
     .header-profile-pic:hover { transform: scale(1.1); box-shadow: 0 0 15px var(--accent); }
 
@@ -174,7 +174,7 @@
     /* Selection */
     h2 { font-size: 28px; font-weight: 700; }
     .selection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 24px; }
-    .selection-card { background-color: var(--secondary-bg); padding: 24px; border-radius: 12px; border: 1px solid var(--border-color); text-decoration: none; color: var(--text-primary); transition: all 0.3s; }
+    .selection-card { background-color: var(--secondary-bg); padding: 24px; border-radius: 12px; border: 1px solid var(--border-color); text-decoration: none; color: var(--text-primary); transition: all 0.3s; cursor: pointer; }
     .selection-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--accent); box-shadow: 0 8px 30px rgba(127, 90, 240, 0.2); }
 
     /* Video & Quiz */
@@ -240,6 +240,7 @@
 </head>
 <body>
   
+  <!-- Splash Screen -->
   <div id="splashScreen" class="splash-screen">
     <div class="splash-logo">
       <img class="header-logo" width="48" height="48" alt="Logo" src="https://res.cloudinary.com/dgzufaone/image/upload/v1761143718/Gemini_Generated_Image_hbfzexhbfzexhbfz-modified_rcnbja.png" />
@@ -277,6 +278,7 @@
     </div>
   </header>
 
+  <!-- Sidebar Menu -->
   <nav id="sidebar" class="sidebar-nav">
     <div id="welcomeUser" class="welcome-user" style="display: none;">
       <img id="userPhotoDisplay" src="https://via.placeholder.com/40" alt="User Photo">
@@ -296,6 +298,7 @@
   
   <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
+  <!-- Main Content Container -->
   <div id="pageContainer" class="page-container">
     
     <!-- 1. Halaman Autentikasi (Landing Page) -->
@@ -327,7 +330,7 @@
           <p>Masukkan nama panggilan yang ingin Anda gunakan di Papan Peringkat BARBAR.</p>
           <div class="landing-input-group">
             <input id="onboardNameInput" type="text" placeholder="Ketik nama panggilan Anda..." />
-            <button id="saveOnboardNameBtn" class="btn accent-btn animated-btn"><span>Mulai Belajar</span></button>
+            <button id="saveOnboardNameBtn" class="btn accent-btn animated-btn" style="background:var(--accent); color:white; border-color:var(--accent);"><span>Mulai Belajar</span></button>
           </div>
         </div>
       </div>
@@ -336,11 +339,24 @@
     <!-- 3. Halaman Home -->
     <div id="homePage" class="page">
       <div class="home-hero">
-        <h3>Visi & Misi Kami</h3>
-        <p>Mendemokratisasi pendidikan berkualitas tinggi melalui teknologi, menjadikannya cepat, mudah diakses, dan menyenangkan bagi setiap pelajar di Indonesia.</p>
+        <h3>Selamat Datang di Dashboard</h3>
+        <p>Lanjutkan progres belajarmu hari ini. Mau mulai belajar materi baru atau sapa AI Mentor?</p>
       </div>
+      
+      <!-- Tombol Akses Cepat di Beranda -->
+      <div class="selection-grid" style="margin-bottom: 48px;">
+         <div class="selection-card" onclick="document.querySelector('[data-page=subjectSelectionPage]').click()">
+             <h4 style="font-size: 20px;">📚 Mulai Belajar</h4>
+             <p>Akses semua video materi dan selesaikan kuis interaktifnya.</p>
+         </div>
+         <div class="selection-card" onclick="document.querySelector('[data-page=aiMentorPage]').click()">
+             <h4 style="font-size: 20px;">🤖 Tanya AI Mentor</h4>
+             <p>Punya PR sulit? Tanyakan langsung pada Asisten Cerdas kami.</p>
+         </div>
+      </div>
+
       <div class="founder-section">
-        <h3>Tim Pendiri</h3>
+        <h3 style="font-size: 24px; margin-bottom: 24px;">Tim Pengembang</h3>
         <div class="founder-grid">
           <div class="founder-card"><div class="founder-photo"><img src="https://res.cloudinary.com/dgzufaone/image/upload/v1761118376/Gemini_Generated_Image_jxmjhwjxmjhwjxmj_ixh88x.jpg" alt="Zulfa"></div><div class="founder-shape"></div><h4>Zulfa Fahmiy</h4><p>CEO</p></div>
           <div class="founder-card"><div class="founder-photo"><img src="https://res.cloudinary.com/dgzufaone/image/upload/v1761119341/1000087641_pra_re9gau.png" alt="Prabu"></div><div class="founder-shape"></div><h4>Prabu Revolusi</h4><p>CTO</p></div>
@@ -348,19 +364,22 @@
       </div>
     </div>
     
+    <!-- 4. Pilihan Mata Pelajaran -->
     <div id="subjectSelectionPage" class="page">
         <h2>Pilih Mata Pelajaran</h2>
         <p class="page-subtitle">Pilih salah satu mata pelajaran untuk melihat topik yang tersedia.</p>
         <div id="subjectGrid" class="selection-grid"></div>
     </div>
 
+    <!-- 5. Pilihan Topik -->
     <div id="topicSelectionPage" class="page">
         <button id="backToSubjectsBtn" class="btn back-btn">← Kembali ke Mata Pelajaran</button>
-        <h2 id="topicSelectionTitle">Pilih Topik</h2>
+        <h2 id="topicSelectionTitle" style="margin-top: 16px;">Pilih Topik</h2>
         <p class="page-subtitle">Topik dirancang untuk dipelajari dalam 5 menit.</p>
         <div id="topicGrid" class="selection-grid"></div>
     </div>
 
+    <!-- 6. Aplikasi Pembelajaran (Video & Kuis) -->
     <div id="appPage" class="page">
       <div class="container-app">
         <main class="left">
@@ -389,9 +408,10 @@
             <div class="quiz-controls" style="margin-top: 16px; text-align: right;"><button class="btn" id="endSession" style="display:none">Akhiri Sesi</button></div>
           </div>
         </main>
+        
         <aside class="sidebar">
           <div class="card">
-            <div class="card-header">Statistik</div>
+            <div class="card-header">Statistik Saya</div>
             <div class="stats-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
               <div><p class="small">Selesai</p><strong id="doneTopics" style="font-size: 20px; color: var(--green);">0</strong></div>
               <div><p class="small">Poin</p><strong id="totalPoints" style="font-size: 20px; color: var(--yellow);">0</strong></div>
@@ -405,6 +425,7 @@
       </div>
     </div>
     
+    <!-- 7. AI Mentor -->
     <div id="aiMentorPage" class="page">
         <h2>AI Mentor</h2>
         <p class="page-subtitle">Tanyakan pada mentor AI kami.</p>
@@ -414,6 +435,7 @@
         </div>
     </div>
 
+    <!-- 8. Feedback -->
     <div id="feedbackPage" class="page">
       <div class="feedback-container">
         <div class="card feedback-wrapper">
@@ -441,19 +463,10 @@
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, getDocs, setDoc, getDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // 1. SETUP FIREBASE
-    let db = null;
-    let auth = null;
-    let appId = 'barbar-app';
-    let currentUser = null;
-    const provider = new GoogleAuthProvider(); 
-
     // ======================================================================
     // 🔴 TEMPAT KONFIGURASI FIREBASE ANDA DI SINI 🔴
-    // Silakan ganti nilai di dalam objek firebaseConfig di bawah dengan 
-    // config yang Anda dapatkan dari Firebase Console.
     // ======================================================================
-const firebaseConfig = {
+    const firebaseConfig = {
   apiKey: "AIzaSyCuIGFVtjoCTKtTnAu6gpw0husjyHk82hM",
   authDomain: "barbar-academy-8998b.firebaseapp.com",
   projectId: "barbar-academy-8998b",
@@ -462,26 +475,27 @@ const firebaseConfig = {
   appId: "1:898070650609:web:de9c0cf35e316403d95350"
 };
 
+    // 1. SETUP FIREBASE
+    let db = null;
+    let auth = null;
+    let appId = 'barbar-app';
+    let currentUser = null;
+    const provider = new GoogleAuthProvider(); 
+
     try {
         let finalConfig = firebaseConfig;
-        
-        // (Sistem Fallback bawaan agar tidak error jika config masih kosong)
         if (typeof __firebase_config !== 'undefined') {
             finalConfig = JSON.parse(__firebase_config);
             appId = typeof __app_id !== 'undefined' ? __app_id : 'barbar-app';
         }
-
-        // Cegah error inisialisasi jika apiKey masih "ISI_DENGAN..."
         if (finalConfig.apiKey && finalConfig.apiKey !== "ISI_DENGAN_API_KEY_ANDA") {
             const app = initializeApp(finalConfig);
             auth = getAuth(app);
             db = getFirestore(app);
-            console.log("Firebase berhasil terhubung!");
-        } else {
-            console.log("⚠️ Konfigurasi Firebase belum diisi. Berjalan dalam Mode Offline Sementara.");
+            console.log("Firebase initialized.");
         }
     } catch (e) {
-        console.warn("Error inisialisasi Firebase:", e);
+        console.warn("Firebase config not found (Offline Mode).", e);
     }
 
     // 2. DATA STATIC LENGKAP
@@ -501,6 +515,16 @@ const firebaseConfig = {
         { id: "m1", title: "Konsep Pecahan", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760751491/barbar/Pecahan_-_Animasi_Matematika_SD_n2roxi.mp4", description: "Apa itu pembilang dan penyebut?", questions: [
           { id: "m1q1", q: "Berapakah hasil dari 1/2 + 1/4?", opts:["2/6","3/4","1/3"], a:1 },
           { id: "m1q2", q: "Angka di bagian bawah pecahan disebut?", opts:["Pembilang","Penyebut","Koefisien"], a:1 }
+        ] },
+        { id: "m2", title: "Teorema Pythagoras", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1761116900/Teorema_Pythagoras_dan_Pembuktian_dengan_Animasi_arpdtu.mp4", description: "Mencari sisi miring segitiga siku-siku.", questions: [
+          { id: "m2q1", q: "Rumus Teorema Pythagoras untuk sisi miring (c) adalah?", opts:["a² + b² = c²","a² - b² = c²","a + b = c"], a:0 },
+          { id: "m2q2", q: "Jika a=3 dan b=4, maka panjang sisi miring c adalah?", opts:["5","7","25"], a:0 }
+        ] }
+      ],
+      "Ekonomi": [
+        { id: "e1", title: "Permintaan & Penawaran", video: "https://res.cloudinary.com/dgzufaone/video/upload/v1760750374/introduction-to-supply-and-demand_PwrjcZaP_x6tsu1.mp4", description: "Mengenal kurva D dan S (≤3 menit).", questions: [
+          { id: "e1q1", q: "Jika harga barang naik, maka jumlah barang yang diminta cenderung...", opts:["Naik","Tetap","Turun"], a:2 },
+          { id: "e1q2", q: "Titik pertemuan kurva permintaan dan penawaran disebut?", opts:["Harga Maksimum","Keseimbangan Pasar","Titik Impas"], a:1 }
         ] }
       ]
     };
@@ -540,7 +564,6 @@ const firebaseConfig = {
         ui.get('userPhotoDisplay').src = appState.userPhoto;
         ui.get('headerProfilePic').src = appState.userPhoto;
         
-        // Tampilkan elemen profil
         ui.get('welcomeUser').style.display = 'flex';
         ui.get('headerProfilePic').style.display = 'block';
     }
@@ -549,6 +572,7 @@ const firebaseConfig = {
     async function init() {
         console.log("App Starting...");
         loadLocalState();
+        renderSubjects(); // <-- Render Mata Pelajaran di Awal agar tidak kosong
         setupEventListeners();
         setupStarRating();
 
@@ -560,20 +584,17 @@ const firebaseConfig = {
                     currentUser = user;
                     appState.userPhoto = user.photoURL || 'https://via.placeholder.com/40';
                     
-                    // Cek apakah user sudah pernah set nama di Firebase
                     if (db) {
                         try {
                             const profileRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info');
                             const docSnap = await getDoc(profileRef);
                             
                             if (docSnap.exists()) {
-                                // Nama sudah ada, langsung masuk menu utama
                                 appState.userName = docSnap.data().name;
                                 updateUIWithUser();
                                 ui.showPage('homePage');
                                 renderLeaderboard();
                             } else {
-                                // Pengguna baru Google, minta input nama
                                 ui.get('onboardNameInput').value = user.displayName || '';
                                 ui.showPage('setNamePage');
                             }
@@ -583,7 +604,6 @@ const firebaseConfig = {
                         }
                     }
                 } else {
-                    // Jika belum login, tampilkan Landing Page
                     currentUser = null;
                     ui.get('welcomeUser').style.display = 'none';
                     ui.get('headerProfilePic').style.display = 'none';
@@ -591,7 +611,6 @@ const firebaseConfig = {
                 }
             });
         } else {
-            // Fallback Offline
             setTimeout(() => {
                 ui.get('splashScreen').classList.add('hidden');
                 if (appState.userName && appState.userName !== 'Pemain Anonim') {
@@ -607,7 +626,6 @@ const firebaseConfig = {
     // --- LOGIKA SIMPAN PROFIL ---
     async function saveUserProfile(newName) {
         if (!db || !currentUser) {
-            // Mode offline
             appState.userName = newName;
             saveLocalState();
             updateUIWithUser();
@@ -616,7 +634,6 @@ const firebaseConfig = {
         }
 
         try {
-            // Simpan ke private path sesuai Rule
             const profileRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'info');
             await setDoc(profileRef, {
                 name: newName,
@@ -625,7 +642,7 @@ const firebaseConfig = {
             
             appState.userName = newName;
             updateUIWithUser();
-            syncScoreToFirebase(); // Update nama di leaderboard
+            syncScoreToFirebase();
             ui.showPage('homePage');
             renderLeaderboard();
             showNotif("Nama profil berhasil disimpan!");
@@ -659,7 +676,7 @@ const firebaseConfig = {
             const emojis = ['🥇', '🥈', '🥉'];
             data.forEach((entry, idx) => {
                 const div = document.createElement('div');
-                const isMe = entry.uid === (currentUser?.uid); // Pengecekan via UID (Lebih aman)
+                const isMe = entry.uid === (currentUser?.uid);
                 div.className = `leaderboard-entry small ${isMe ? 'current-user' : ''}`;
                 
                 const rank = emojis[idx] || `${idx + 1}.`;
@@ -680,7 +697,6 @@ const firebaseConfig = {
     async function syncScoreToFirebase() {
         if (!db || !currentUser || !appState.userName) return;
         try {
-            // Menggunakan currentUser.uid sebagai Document ID agar tidak ada duplikasi jika ganti nama
             await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', currentUser.uid), {
                 uid: currentUser.uid,
                 name: appState.userName,
@@ -689,6 +705,49 @@ const firebaseConfig = {
             });
             renderLeaderboard();
         } catch (e) { console.error("Sync Error:", e); }
+    }
+
+    // --- FITUR FIREBASE: FEEDBACK ---
+    async function submitFeedback() {
+        const txt = ui.get('feedbackText').value.trim();
+        const rating = appState.currentRating;
+        const btn = ui.get('submitFeedback');
+
+        if (!appState.userName || appState.userName === 'Pemain Anonim') { showNotif("Login terlebih dahulu."); return; }
+        if (rating === 0) { showNotif("Beri minimal 1 bintang."); return; }
+
+        btn.disabled = true;
+        btn.innerHTML = "<span>Mengirim...</span>";
+
+        if (db) {
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'feedback'), {
+                    user: appState.userName,
+                    rating: rating,
+                    message: txt,
+                    timestamp: new Date().toISOString()
+                });
+                showNotif("Feedback terkirim ke server!");
+            } catch (e) {
+                console.error("Feedback Error:", e);
+                showNotif("Gagal kirim (koneksi error).");
+            }
+        } else {
+            showNotif("Disimpan lokal (Offline).");
+        }
+
+        setTimeout(() => {
+            ui.get('feedbackThanks').style.display = 'block';
+            appState.currentRating = 0;
+            ui.get('feedbackText').value = '';
+            document.querySelectorAll('.star').forEach(s => { s.textContent = '☆'; s.classList.remove('selected'); });
+            
+            setTimeout(() => {
+                ui.get('feedbackThanks').style.display = 'none';
+                btn.disabled = false;
+                btn.innerHTML = '<span>Kirim Feedback</span>';
+            }, 2000);
+        }, 1000);
     }
 
     // --- LOGIKA LOKAL (Quiz, Timer, dll) ---
@@ -842,30 +901,25 @@ const firebaseConfig = {
     // --- EVENT LISTENERS LENGKAP ---
     function setupEventListeners() {
         
-        // 1. EVENT LOGIN GOOGLE (Murni Login saja)
         ui.get('loginGoogleBtn').onclick = async () => {
             if (!auth) { showNotif("Sistem Offline."); return; }
             try { await signInWithPopup(auth, provider); } 
             catch (error) { showNotif("Gagal Login: " + error.message); }
         };
 
-        // 2. EVENT SET NAMA (Onboarding awal)
         ui.get('saveOnboardNameBtn').onclick = () => {
             const name = ui.get('onboardNameInput').value.trim();
             if(name.length < 3) { showNotif("Nama minimal 3 karakter"); return; }
             saveUserProfile(name);
         };
 
-        // 3. EVENT MODAL PENGATURAN PROFIL
         ui.get('headerProfilePic').onclick = () => {
             ui.get('modalProfilePic').src = appState.userPhoto;
             ui.get('editNameInput').value = appState.userName;
             ui.get('profileModal').classList.add('show');
         };
 
-        ui.get('closeProfileBtn').onclick = () => {
-            ui.get('profileModal').classList.remove('show');
-        };
+        ui.get('closeProfileBtn').onclick = () => ui.get('profileModal').classList.remove('show');
 
         ui.get('saveProfileBtn').onclick = () => {
             const newName = ui.get('editNameInput').value.trim();
@@ -878,7 +932,6 @@ const firebaseConfig = {
             });
         };
 
-        // 4. EVENT LOGOUT
         ui.get('logoutBtn').onclick = async (e) => {
             e.preventDefault();
             if(auth) {
@@ -890,11 +943,11 @@ const firebaseConfig = {
             }
         };
 
-        // Event UI Lainnya
         ui.get('hamburgerBtn').onclick = () => {
             ui.get('sidebar').classList.toggle('open');
             ui.get('hamburgerBtn').classList.toggle('is-active');
         };
+        
         ui.get('sidebarOverlay').onclick = () => {
             ui.get('sidebar').classList.remove('open');
             ui.get('hamburgerBtn').classList.remove('is-active');
@@ -913,7 +966,6 @@ const firebaseConfig = {
         ui.get('startSession').onclick = startSession;
         ui.get('endSession').onclick = () => { ui.get('quizArea').style.display = 'none'; ui.get('startSession').textContent = "Ulangi Sesi"; ui.get('startSession').disabled = false; };
         
-        // Chat AI Simple
         ui.get('sendMentor').onclick = () => {
             const inp = ui.get('mentorInput'); const txt = inp.value.trim(); if(!txt) return;
             const log = ui.get('mentorLog');
@@ -923,6 +975,8 @@ const firebaseConfig = {
                 log.scrollTop = log.scrollHeight;
             }, 800);
         };
+        
+        ui.get('submitFeedback').onclick = submitFeedback;
     }
 
     function setupStarRating() { /* Logika Bintang Tetap Sama */ }
@@ -933,7 +987,6 @@ const firebaseConfig = {
         setTimeout(() => n.classList.remove('show'), 2000);
     }
 
-    // Eksekusi Mulai Aplikasi
     window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
